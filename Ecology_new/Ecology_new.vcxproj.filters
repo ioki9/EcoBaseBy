@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\PDF Creation">
+      <UniqueIdentifier>{523ab505-3b82-469b-afda-b695c3341d12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PDF Creation">
+      <UniqueIdentifier>{d9ea852d-2ab3-4b0b-aa0c-db6659bf61d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Global variables">
+      <UniqueIdentifier>{d5e9d4a7-972c-49dc-97f4-04050c19a42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DataBase">
+      <UniqueIdentifier>{b145a351-956c-4b8d-900e-ce74494987f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DataBase">
+      <UniqueIdentifier>{cc127429-cbb5-4f68-a4cc-0e6b5267fac8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Utility">
+      <UniqueIdentifier>{7c63f23d-7c86-41ad-9335-3aa5cd4c5520}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Utility">
+      <UniqueIdentifier>{000206c1-2cd0-4782-8095-48e93dd266db}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cMain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cMenuAddDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Global variables.h">
+      <Filter>Header Files\Global variables</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMain.h">
+      <Filter>Header Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Header Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DMColumnEnums.h">
+      <Filter>Header Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Pod9.h">
+      <Filter>Header Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Pod10.h">
+      <Filter>Header Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Main.h">
+      <Filter>Header Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Helper.h">
+      <Filter>Header Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Header Files\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cApp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cMenuAddDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DBMain.cpp">
+      <Filter>Source Files\DataBase</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Pod9.cpp">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Pod10.cpp">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Main.cpp">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Helper.cpp">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClCompile>
+    <ClCompile Include="Utility.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
