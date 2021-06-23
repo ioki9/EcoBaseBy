@@ -1,5 +1,6 @@
 #pragma once
 #include <wx/string.h>
+#include <string>
 #include <wx/dynarray.h>
 #include <algorithm>
 #include <wx/textfile.h>

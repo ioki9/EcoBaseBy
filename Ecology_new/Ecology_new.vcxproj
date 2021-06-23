@@ -118,15 +118,15 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\SDKs\wxsqlite3\include;E:\SDKs\wx314\include\msvc;E:\SDKs\wx314\include;E:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\wxsqlite3\include;D:\SDKs\wx314\include\msvc;D:\SDKs\wx314\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\SDKs\wxsqlite3\lib\vc_lib;E:\SDKs\wx314\lib\vc_lib;E:\SDKs\wxpdfdoc-0.9.8\lib\vc_lib;E:\SDKs\wxpdfdoc-0.9.8\lib\fonts</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wx314\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\fonts</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,7 +137,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\SDKs\wxsqlite3\include;E:\SDKs\wx314\include\msvc;E:\SDKs\wx314\include;E:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\wxsqlite3\include;D:\SDKs\wx314\include\msvc;D:\SDKs\wx314\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -146,8 +146,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>E:\SDKs\wxsqlite3\lib\vc_lib;E:\SDKs\wx314\lib\vc_lib;E:\SDKs\wxpdfdoc-0.9.8\lib\vc_lib;E:\SDKs\wxpdfdoc-0.9.8\lib\fonts</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wx314\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\fonts</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxsqlite3.lib;wxpdfdoc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">

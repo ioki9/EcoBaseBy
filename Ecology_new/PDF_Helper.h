@@ -30,9 +30,9 @@ private:
 
 
 protected:
-	double getMulticellRowHeight(int row, double *w);
-	void tableRow(const std::vector<double> &w, std::vector<wxString> &str, int border, int align);
-	void POD10TableRow(const std::vector<double> &w, std::vector<wxString> &str, int frowBorder, int align, int border);
+	double getMulticellRowHeight(double h, const std::vector<wxString> &arr, const std::vector<double> &w) ;
+	void tableRow(double h, const std::vector<double> &w, std::vector<wxString> &str, int border, int align);
+	void POD10TableRow(double h,const std::vector<double> &w, std::vector<wxString> &str, int align, int border);
 	void centerRotatedText(double w, double h, const wxString &string1, const wxString &string2 = "", const wxString &string3 = "");
 	void tableMultiCell(double w, double h, const wxString &text, int border = 0,int ln = 0, int align = 0);
 	wxString autoCellHyphenation(double w, const wxString &text);

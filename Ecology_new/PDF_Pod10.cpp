@@ -41,10 +41,11 @@ void PDF_Pod10::drawTable()
     SetFont(font);
     Cell(0, 10, convertDateToMonthString(m_data.date), 0, 1, wxPDF_ALIGN_CENTER);
     // Column parameters
-    double w[18] = { 17,32.5,17,12,12,27,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5};
+    const std::vector<double> w{ 17,32.5,17,12,12,27,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5};
     drawTableHeader(w);
     drawMulticellRows(w);
     drawTableSignature();
+   
 }
 
 
@@ -114,100 +115,25 @@ void PDF_Pod10::drawTableHeader(const std::vector<double> &w)
 void PDF_Pod10::drawMulticellRows(const std::vector<double> &w)
 {
     
-    double h{};
+    double h{4.5};
     double currentY{};
     double currentX{};
-    std::vector<wxString> str{}; 
+    std::vector<wxString> rowData{};
 
     SetAutoPageBreak(0);
     for (int row{ 0 }, nextRow{ 1 }; row < m_data.rowCount; ++row,++nextRow)
     {
-        str.empty();
-        str = {m_data.codeDescription[row], m_data.code[row], m_data.codeDangerLVL[row], 
+        
+        rowData.clear();
+        rowData = {m_data.date, m_data.codeDescription[row], m_data.code[row], m_data.codeDangerLVL[row],
             m_data.wasteNorm[row], m_data.structuralUnit[row], m_data.amountFormed[row],
             m_data.amountReOrg[row] ,m_data.amountRePhys[row], m_data.amountUsed[row], 
             m_data.amountDefused[row], m_data.amountSelfstorage[row] ,m_data.amountBurial[row],
             m_data.amountTransferUsed[row], m_data.amountTransferDefused[row], m_data.amountTransferStorage[row], 
             m_data.amountTransferBurial[row], m_data.amountSelfstorageFull[row] };
 
-        currentY = GetY();
-        currentX = GetX();
-        
-        
-        
-            if (currentY == 5.0)
-        {
-                POD10TableRow(w, str, wxPDF_BORDER_LEFT | wxPDF_BORDER_TOP, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME);
-            //Cell(w[0], h, wxS(""), wxPDF_BORDER_LEFT | wxPDF_BORDER_TOP);
-            //tableMultiCell(w[1], h, m_data.codeDescription[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_LEFT);
-            //tableMultiCell(w[2], h, m_data.code[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[3], h, m_data.codeDangerLVL[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[4], h, m_data.wasteNorm[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[5], h, m_data.structuralUnit[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[6], h, m_data.amountFormed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[7], h, m_data.amountReOrg[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[8], h, m_data.amountRePhys[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[9], h, m_data.amountUsed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[10], h, m_data.amountDefused[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[11], h, m_data.amountSelfstorage[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[12], h, m_data.amountBurial[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[13], h, m_data.amountTransferUsed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[14], h, m_data.amountTransferDefused[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[15], h, m_data.amountTransferStorage[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[16], h, m_data.amountTransferBurial[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[17], h, m_data.amountSelfstorageFull[row], wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
-        }
-          else if (nextRow != m_data.rowCount && (currentY + getMulticellRowHeight(nextRow, w)) > (GetPageHeight() - 10.0))
-        {
-            POD10TableRow(w, str, wxPDF_BORDER_LEFT | wxPDF_BORDER_BOTTOM, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME);
-            //Cell(w[0], h, wxS(""), wxPDF_BORDER_LEFT | wxPDF_BORDER_BOTTOM);
-            //tableMultiCell(w[1], h, m_data.codeDescription[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_LEFT);
-            //tableMultiCell(w[2], h, m_data.code[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[3], h, m_data.codeDangerLVL[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[4], h, m_data.wasteNorm[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[5], h, m_data.structuralUnit[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[6], h, m_data.amountFormed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[7], h, m_data.amountReOrg[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[8], h, m_data.amountRePhys[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[9], h, m_data.amountUsed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[10], h, m_data.amountDefused[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[11], h, m_data.amountSelfstorage[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[12], h, m_data.amountBurial[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[13], h, m_data.amountTransferUsed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[14], h, m_data.amountTransferDefused[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[15], h, m_data.amountTransferStorage[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[16], h, m_data.amountTransferBurial[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[17], h, m_data.amountSelfstorageFull[row], wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
-            AddPage();
-        }
-        else
-        {
-            POD10TableRow(w, str, wxPDF_BORDER_LEFT, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME);
-            //Cell(w[0], h, wxS(""), wxPDF_BORDER_LEFT);
-            //tableMultiCell(w[1], h, m_data.codeDescription[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_LEFT);
-            //tableMultiCell(w[2], h, m_data.code[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[3], h, m_data.codeDangerLVL[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[4], h, m_data.wasteNorm[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[5], h, m_data.structuralUnit[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[6], h, m_data.amountFormed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[7], h, m_data.amountReOrg[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[8], h, m_data.amountRePhys[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[9], h, m_data.amountUsed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[10], h, m_data.amountDefused[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[11], h, m_data.amountSelfstorage[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[12], h, m_data.amountBurial[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[13], h, m_data.amountTransferUsed[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[14], h, m_data.amountTransferDefused[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[15], h, m_data.amountTransferStorage[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[16], h, m_data.amountTransferBurial[row], wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-            //tableMultiCell(w[17], h, m_data.amountSelfstorageFull[row], wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
-        }
-
-
-      /*  Ln();*/
-        
-
-
+        POD10TableRow(h, w, rowData, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME);
+          
     }
     SetXY(GetX(), GetY() - h);
     Cell(w[0], h, "", wxPDF_BORDER_BOTTOM);

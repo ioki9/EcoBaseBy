@@ -79,13 +79,12 @@ namespace {
 
 wxString utility::Hyphenate(const wxString &word)
 {
-
 	wxString word_string{ "." + word + "." };
 	wxString word_levels{};
 	
 	word_levels.assign(word_string.size(), '0');
 
-	for (size_t ch{ 0 }; ch < word_string.size()-2; ++ch) //word
+	for (size_t ch{ 0 }; ch < word_string.size() - 2; ++ch) //word
 	{
 		std::vector<u_pattern*>::const_iterator pattern_iter = pattern_list.list.begin();
 
@@ -116,13 +115,14 @@ wxString utility::Hyphenate(const wxString &word)
 	unsigned char *mask = new unsigned char[mask_size];
 	for (size_t i = 0; i < mask_size; ++i)
 	{
-		if (word_levels[i+1].GetValue() % 2 && i)
+		if (word_levels[i+1].GetValue() % 2 && i && word_levels[i+1].GetValue() != '7')
 			mask[i] = 1;
 		else
 			mask[i] = 0;
 	}
 	word_string.Remove(0, 1);
 	word_string.RemoveLast();
+	
 	unsigned int offset{ 0 };
 	for (size_t k = 0; k < word_string.size()-2; ++k)
 	{
@@ -139,9 +139,8 @@ wxString utility::Hyphenate(const wxString &word)
 
 void utility::draw()
 {
-
-
-	wxMessageBox(Hyphenate(wxS("перерабатывающий")));
+	wxMessageBox(Hyphenate(wxS("остатки")));
+	
 	wxMessageBox(wxString::Format("%i", pattern_list.list.capacity()));
 	//wxString string;
 	//double summ{};
