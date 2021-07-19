@@ -12,18 +12,23 @@ void PDF_Pod10::createDoc()
     wxPdfDocument pdft;
     for (int t = 0; t < tableCount; t++)
     {
-        nextTable++;
-        m_db->getPod10TableInfo(m_data, m_data.allDates[t]);
-        m_db->getPod10TableCodeDngr(m_data, m_data.code);
-        if (nextTable == tableCount)
-            m_tableLast = true;
-        else
-            m_tableLast = false;
-        drawTable();
        
+            nextTable++;
+
+            m_db->getPod10TableInfo(m_data, m_data.allDates[t]);
+            m_db->getPod10TableCodeDngr(m_data, m_data.code);
+         
+            if (nextTable == tableCount)
+                m_tableLast = true;
+            else
+                m_tableLast = false;
+        
+            drawTable();
+           
+
         
     }
-    SaveAsFile(wxS("1testPOD10.pdf"));
+    SaveAsFile(wxGetCwd() + wxS("/Test/1testPOD10.pdf"));
 }
 
 void PDF_Pod10::Footer()
@@ -41,7 +46,7 @@ void PDF_Pod10::drawTable()
     SetFont(font);
     Cell(0, 10, convertDateToMonthString(m_data.date), 0, 1, wxPDF_ALIGN_CENTER);
     // Column parameters
-    const std::vector<double> w{ 17,32.5,17,12,12,27,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5};
+    const std::vector<double> w{ 17,32.5,15,14,12,27,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5,13.5};
     drawTableHeader(w);
     drawMulticellRows(w);
     drawTableSignature();
@@ -119,26 +124,36 @@ void PDF_Pod10::drawMulticellRows(const std::vector<double> &w)
     double currentY{};
     double currentX{};
     std::vector<wxString> rowData{};
+    rowData.reserve(18);
 
     SetAutoPageBreak(0);
+
     for (int row{ 0 }, nextRow{ 1 }; row < m_data.rowCount; ++row,++nextRow)
     {
-        
+      
+    
+ 
         rowData.clear();
         rowData = {m_data.date, m_data.codeDescription[row], m_data.code[row], m_data.codeDangerLVL[row],
-            m_data.wasteNorm[row], m_data.structuralUnit[row], m_data.amountFormed[row],
-            m_data.amountReOrg[row] ,m_data.amountRePhys[row], m_data.amountUsed[row], 
-            m_data.amountDefused[row], m_data.amountSelfstorage[row] ,m_data.amountBurial[row],
-            m_data.amountTransferUsed[row], m_data.amountTransferDefused[row], m_data.amountTransferStorage[row], 
-            m_data.amountTransferBurial[row], m_data.amountSelfstorageFull[row] };
-
+            getAmountString(m_data.wasteNorm[row]), m_data.structuralUnit[row],  getAmountString(m_data.amountFormed[row]),
+             getAmountString(m_data.amountReOrg[row]) , getAmountString(m_data.amountRePhys[row]), getAmountString(m_data.amountUsed[row]),
+            getAmountString(m_data.amountDefused[row]),  getAmountString(m_data.amountSelfstorage[row]) , getAmountString(m_data.amountBurial[row]),
+            getAmountString(m_data.amountTransferUsed[row]), getAmountString(m_data.amountTransferDefused[row]), 
+            getAmountString(m_data.amountTransferStorage[row]), getAmountString(m_data.amountTransferBurial[row]), 
+             getAmountString(m_data.amountSelfstorageFull[row]) };
+        
+ 
+     
         POD10TableRow(h, w, rowData, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME);
-          
+      
+  
     }
     SetXY(GetX(), GetY() - h);
     Cell(w[0], h, "", wxPDF_BORDER_BOTTOM);
     Ln();
     SetAutoPageBreak(1, 5.0);
+        
+
 }
 
 

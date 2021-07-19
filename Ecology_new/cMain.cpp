@@ -1,20 +1,23 @@
 #pragma once
 #include "cMain.h"
-
-
-
+#include <chrono>
+#include <string>
+#include <wx/pdffontmanager.h>
+using namespace std::chrono;
 
 
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wxSize(800,600))
 {
+	wxPdfFontManager::GetFontManager()->RegisterSystemFonts();
+	wxPdfFontManager::GetFontManager()->RegisterFontDirectory(wxGetCwd() + wxS("/Fonts"));
 
 	Center();
 
-	wxPanel *mainPanel = new wxPanel(this, -1);
-	wxListCtrl *myList = new wxListCtrl(mainPanel,-1,wxPoint(80,50), wxSize(600,300),wxLC_REPORT| wxLC_HRULES| wxLC_VRULES);
-	wxMenu *menuFile = new wxMenu();
-	wxMenu *menuAbout = new wxMenu();
+	mainPanel = new wxPanel(this, -1);
+	myList = new wxListCtrl(mainPanel,-1,wxPoint(80,50), wxSize(600,300),wxLC_REPORT| wxLC_HRULES| wxLC_VRULES);
+	menuFile = new wxMenu();
+	menuAbout = new wxMenu();
 	menuFile->Append(ID_MenuFileAdd, "&Add");
 	menuFile->Append(wxID_EXIT);
 	menuAbout->Append(wxID_ABOUT);
@@ -56,23 +59,33 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 	//	count++;
 	//}
 	/*delete db;*/
+	
 	Connect(ID_TEST_BUTTON, wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler(cMain::onTestButton));
 	Connect(ID_MenuFileAdd,wxEVT_COMMAND_MENU_SELECTED,wxCommandEventHandler(cMain::OnMenuFileAdd));
 }
 
 cMain::~cMain()
 {
+	//delete myList;
+	//delete menuAbout;
+	//delete menuFile;
+	//delete mainPanel;
+
 }
 
 void cMain::onTestButton(wxCommandEvent &evt)
 {
+	auto start = high_resolution_clock::now();
+	PDF_Main pdfMain;
 	PDF_Pod10 pdf;
-	//PDF_Main pdf9;
 	///*wxMessageBox(wxString::Format(wxT("%f"), pdf.GetStringWidth(' ')));*/
-	//pdf9.formPod9();
+	pdfMain.formPod9();
+	pdfMain.formJournal();
 	pdf.createDoc();
 	
-	utility::draw();
+	auto end = high_resolution_clock::now();
+	auto duration = duration_cast<milliseconds>(end - start);
+	wxMessageBox(std::to_string(duration.count()));
 }
 
 void cMain::OnMenuFileAdd(wxCommandEvent & evt)

@@ -5,6 +5,7 @@
 #include "Global variables.h"
 #include "PDF_Pod9.h"
 #include "Utility.h"
+#include "PDF_Journal.h"
 
 class cMain : public wxFrame
 {
@@ -15,7 +16,10 @@ public:
 public:
 
 	wxMenuBar* m_MenuBar = nullptr;
-
+	wxMenu* menuFile;
+	wxMenu* menuAbout;
+	wxListCtrl* myList;
+	wxPanel* mainPanel;
 	void onTestButton(wxCommandEvent &evt);
 	void OnMenuFileAdd(wxCommandEvent & evt);
 

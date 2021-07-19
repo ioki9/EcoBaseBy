@@ -20,7 +20,7 @@ private:
 	wxSQLite3ResultSet m_rs;
 	map_IntWxstring m_dbStorageColumns;
 	void getStorageColumnNames();
-protected:
+protected: 
 	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
 
 public:
@@ -32,5 +32,7 @@ public:
 	void getPod10TableCount(pod10Info &data);
 	void getPod10TableInfo(pod10Info &data, const wxString &date);
 	void getPod10TableCodeDngr(pod10Info &data,const wxArrayString &codes);
+	void getJournalTableInfo(passportJournalInfo& data, const wxString& startDate);
+	void getJournalCodeInfo(passportJournalInfo& data);
 };
 

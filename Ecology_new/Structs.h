@@ -2,6 +2,7 @@
 #include <wx/string.h>
 #include <wx/arrstr.h>
 #include <wx/dynarray.h>
+#include <vector>
 
 
 struct pod10Info
@@ -53,6 +54,27 @@ public:
 		structuralUnit.Empty();
 		rowCount = 0;
 	}
+	~pod10Info()
+	{
+		allDates.Clear();
+		code.Clear();
+		amountTransferBurial.Clear();
+		amountTransferUsed.Clear();
+		amountTransferDefused.Clear();
+		amountTransferStorage.Clear();
+		amountSelfstorageFull.Clear();
+		amountSelfstorage.Clear();
+		amountBurial.Clear();
+		amountDefused.Clear();
+		amountUsed.Clear();
+		amountRePhys.Clear();
+		amountReOrg.Clear();
+		amountFormed.Clear();
+		codeDangerLVL.Clear();
+		codeDescription.Clear();
+		wasteNorm.Clear();
+		structuralUnit.Clear();
+	}
 };
 
 struct passportPod9Info
@@ -86,6 +108,32 @@ struct passportPod9Info
 	wxString codeDangerLVL;
 	wxString codeDescription;
 	int rowCount{ 0 };
+	~passportPod9Info()
+	{
+		uniqueCodes.Clear();
+		id.Clear();
+		idString.Clear();
+		owner.Clear();
+		manufacturer.Clear();
+		amountString.Clear();
+		codeDangerLVL.Clear();
+		receiver.Clear();
+		transporter.Clear();
+		regnum.Clear();
+		date.Clear();
+		amountTransferBurial.Clear();
+		amountTransferUsed.Clear();
+		amountTransferDefused.Clear();
+		amountTransferStorage.Clear();
+		amountFullStorage.Clear();
+		amountSelfstorage.Clear();
+		amountBurial.Clear();
+		amountDefused.Clear();
+		amountUsed.Clear();
+		amountReceivedPhys.Clear();
+		amountReceivedOrg.Clear();
+		amountFormed.Clear();
+	}
 
 	void emptyPodStruct9Info()
 	{
@@ -131,3 +179,31 @@ struct passportStorageInfo
 	wxString wasteNorm{ "" };
 	wxString structuralUnit{ "" };
 };
+
+struct passportJournalInfo
+{
+	std::vector<double> amountTransferUsed{ 0 };
+	std::vector<double> amountTransferDefused{ 0 };
+	std::vector<double> amountTransferStorage{ 0 };
+	std::vector<double> amountTransferBurial{ 0 };
+	wxArrayString date{};
+	wxArrayString regnum{};
+	wxArrayString transporter{};
+	wxArrayString receiver{};
+	wxArrayString code{};
+	wxArrayString codeDangerLVL{};
+	~passportJournalInfo()
+	{
+		code.Clear();
+		codeDangerLVL.Clear();
+		receiver.Clear();
+		transporter.Clear();
+		regnum.Clear();
+		date.Clear();
+		amountTransferBurial.clear();
+		amountTransferUsed.clear();
+		amountTransferDefused.clear();
+		amountTransferStorage.clear();
+	}
+};
+

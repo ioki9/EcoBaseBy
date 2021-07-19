@@ -111,6 +111,7 @@ wxString utility::Hyphenate(const wxString &word)
 			
 		}
 	}
+
 	unsigned int mask_size = word_levels.size() - 2;
 	unsigned char *mask = new unsigned char[mask_size];
 	for (size_t i = 0; i < mask_size; ++i)
@@ -124,34 +125,39 @@ wxString utility::Hyphenate(const wxString &word)
 	word_string.RemoveLast();
 	
 	unsigned int offset{ 0 };
-	for (size_t k = 0; k < word_string.size()-2; ++k)
+	for (size_t k{ 0 }; k < mask_size; ++k)
 	{
-		if (mask[k] == 1)
-		{
-			word_string.insert(k + offset, '\u00AD');
-			++offset;
-		}
+		//try
+		//{
+			if (mask[k] == 1)
+			{
+				word_string.insert(k + offset, '\u00AD');
+				++offset;
+			}
+		//}
+		//catch (...)
+		//{
+		//	
+		//	wxMessageBox("word: " + word_string + "\nk: " + std::to_string(k) + "\nmask: " + mask + "\noffset: " + std::to_string(offset));
+		//}
+
 
 	}
 	delete[]mask;
+
+
 	return word_string;
+}
+
+
+wxString utility::convertDate(const wxString& date)
+{
+	wxDateTime newDate;
+	newDate.ParseDate(date);
+	return newDate.Format(wxS("%d.%m.%Y"));
 }
 
 void utility::draw()
 {
-	wxMessageBox(Hyphenate(wxS("остатки")));
-	
-	wxMessageBox(wxString::Format("%i", pattern_list.list.capacity()));
-	//wxString string;
-	//double summ{};
-	//
-	//for (const auto &i: pattern_list.list)
-	//{
-	//	summ += i->str.length();
-	//}
-	//summ = summ / pattern_list.list.size();
-	//wxMessageBox(wxString::Format("%f", summ));
-
-
 
 }

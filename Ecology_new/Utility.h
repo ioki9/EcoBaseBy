@@ -16,6 +16,6 @@
 
 	void draw();
 	wxString Hyphenate(const wxString &word);
-
+	wxString convertDate(const wxString& date);
 }
 

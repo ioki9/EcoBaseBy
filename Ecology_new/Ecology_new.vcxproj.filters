@@ -72,6 +72,9 @@
     <ClInclude Include="Utility.h">
       <Filter>Header Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="PDF_Journal.h">
+      <Filter>Header Files\PDF Creation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cApp.cpp">
@@ -100,6 +103,9 @@
     </ClCompile>
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Journal.cpp">
+      <Filter>Source Files\PDF Creation</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

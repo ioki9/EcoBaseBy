@@ -88,7 +88,7 @@ void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code)
 			data.amountTransferDefused.Add(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_DEFUSED));
 			data.amountTransferStorage.Add(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_STORAGE));
 			data.amountTransferBurial.Add(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_BURIAL));
-
+			data.amountFullStorage.Add(m_rs.GetDouble(DB_COLUMN_AMOUNT_SELFSTORAGE_FULL));
 			count++;
 		}
 		data.rowCount = std::move(count);
@@ -290,4 +290,60 @@ wxString DBMain::calculateFullStorageResult(const wxString &code, const wxString
 	return wxString::Format(wxS("%f"), fullStorageAmount);
 }
 
+void DBMain::getJournalTableInfo(passportJournalInfo& data,const wxString& startDate)
+{
 
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Date >= '" + startDate + "' ORDER BY Date"));
+	while (m_rs.NextRow())
+	{
+		data.amountTransferBurial.push_back(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_BURIAL));
+		data.amountTransferDefused.push_back(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_DEFUSED));
+		data.amountTransferUsed.push_back(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_USED));
+		data.amountTransferStorage.push_back(m_rs.GetDouble(DB_COLUMN_AMOUNT_TRANSFER_STORAGE));
+		data.code.push_back(m_rs.GetAsString(DB_COLUMN_CODE));
+		data.date.push_back(m_rs.GetAsString(DB_COLUMN_DATE));
+		data.receiver.push_back(m_rs.GetAsString(DB_COLUMN_RECEIVER));
+		data.regnum.push_back(m_rs.GetAsString(DB_COLUMN_REGNUM));
+		data.transporter.push_back(m_rs.GetAsString(DB_COLUMN_TRANSPORT));
+
+	}
+	m_rs.Finalize();
+	getJournalCodeInfo(data);
+	
+}
+
+void DBMain::getJournalCodeInfo(passportJournalInfo& data)
+{
+	wxString query1{ "SELECT * FROM " + DBCodesTableName + " WHERE Code IN(" };
+	wxString query2{ ") ORDER BY " };
+	size_t nextCode{ 0 };
+	size_t codeCount{ data.code.GetCount() };
+	for (size_t i = 0; i < codeCount; ++i)
+	{
+		nextCode++;
+		if (nextCode == codeCount)
+		{
+			query1 = query1 + data.code[i];
+			query2 = query2 + "Code = " + data.code[i] + " DESC";
+		}
+
+		else
+		{
+			query1 = query1 + data.code[i] + ", ";
+			query2 = query2 + "Code = " + data.code[i] + " DESC, ";
+		}
+	}
+	m_rs = ExecuteQuery(query1 + query2);
+	std::map<wxString, wxString> codeDng{};
+	int count{ 0 };
+	while (m_rs.NextRow())
+	{
+		codeDng[m_rs.GetAsString(0)] = m_rs.GetAsString(2);
+	}
+	for (size_t i = 0; i < codeCount; ++i)
+	{
+		data.codeDangerLVL.Add(codeDng[data.code[i]]);
+	}
+	
+	m_rs.Finalize();
+}

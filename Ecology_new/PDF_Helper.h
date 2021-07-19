@@ -26,7 +26,7 @@ public:
 private:
 	
 	wxFont m_font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString, wxFONTENCODING_CP1251 };
-
+	size_t removeUnwantedHyphens(wxString& word, unsigned int pos);
 
 
 protected:
@@ -36,6 +36,9 @@ protected:
 	void centerRotatedText(double w, double h, const wxString &string1, const wxString &string2 = "", const wxString &string3 = "");
 	void tableMultiCell(double w, double h, const wxString &text, int border = 0,int ln = 0, int align = 0);
 	wxString autoCellHyphenation(double w, const wxString &text);
-
+	wxString getAmountString(double amount);
+	wxString getAmountString(wxString& amount);
+	int compareDates(const wxString& startDate, const wxString& endDate);
+	void tableHeaderCell(double w, double h, const wxString& text, int border, int ln, int align);
 };
 

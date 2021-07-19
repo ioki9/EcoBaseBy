@@ -22,6 +22,7 @@
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cMain.h" />
     <ClInclude Include="cMenuAddDialog.h" />
+    <ClInclude Include="PDF_Journal.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="PDF_Helper.h" />
     <ClInclude Include="PDF_Pod10.h" />
@@ -36,6 +37,7 @@
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cMain.cpp" />
     <ClCompile Include="cMenuAddDialog.cpp" />
+    <ClCompile Include="PDF_Journal.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="PDF_Helper.cpp" />
     <ClCompile Include="PDF_Pod10.cpp" />
@@ -97,6 +99,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <AllProjectIncludesArePublic>false</AllProjectIncludesArePublic>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -112,21 +115,24 @@
     <VcpkgManifestInstall>true</VcpkgManifestInstall>
     <VcpkgAutoLink>true</VcpkgAutoLink>
   </PropertyGroup>
+  <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <VcpkgUseStatic>false</VcpkgUseStatic>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\SDKs\wxsqlite3\include;D:\SDKs\wx314\include\msvc;D:\SDKs\wx314\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wx314\include\msvc;D:\SDKs\wx314\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wx314\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\fonts</AdditionalLibraryDirectories>
-      <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wxpdfdoc098\lib\vc14x_lib;D:\SDKs\wxpdfdoc098\lib\fonts</AdditionalLibraryDirectories>
+      <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -137,7 +143,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\SDKs\wxsqlite3\include;D:\SDKs\wx314\include\msvc;D:\SDKs\wx314\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -146,7 +152,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wx314\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\vc_lib;D:\SDKs\wxpdfdoc-0.9.8\lib\fonts</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wxpdfdoc098\lib\vc14x_lib;D:\SDKs\wxpdfdoc098\lib\fonts</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxsqlite3.lib;wxpdfdoc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

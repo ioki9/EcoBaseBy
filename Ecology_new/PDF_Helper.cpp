@@ -4,28 +4,34 @@
 #include <wx/hashmap.h>
 
 
-
-
-void PDF_Helper::centerRotatedText(double w, double h, const wxString &string1, const wxString &string2, const wxString &string3)
+void PDF_Helper::tableRow(double h, const std::vector<double>& w, std::vector<wxString>& str, int border, int align)
 {
-
-    if (string2.IsEmpty())
-    {
-        RotatedText(GetX() - (w * 0.5) + 1, GetY() + h - ((h - GetStringWidth(string1)) / 2), string1, 90);
-    }
-    else if (string3.IsEmpty())
-    {
-        RotatedText(GetX() - (w * 0.5), GetY() + h - ((h - GetStringWidth(string1)) / 2), string1, 90);
-        RotatedText(GetX() - (w * 0.5) + 3, GetY() + h - ((h - GetStringWidth(string2)) / 2), string2, 90);
-    }
-    else
+    for (size_t k{ 0 }; k < str.size(); ++k)
     {
 
-        RotatedText(GetX() - (w * 0.5) - 2, GetY() + h - ((h - GetStringWidth(string1)) / 2), string1, 90);
-        RotatedText(GetX() - (w * 0.5) + 1, GetY() + h - ((h - GetStringWidth(string2)) / 2), string2, 90);
-        RotatedText(GetX() - (w * 0.5) + 4, GetY() + h - ((h - GetStringWidth(string3)) / 2), string3, 90);
+        str[k] = autoCellHyphenation(w[k], str[k]);
+
     }
+    double r_h{ getMulticellRowHeight(h,str,w) };
+    double currentX{ 0 };
+    double  currentY{ 0 };
+    for (size_t col{ 0 }; col < str.size(); ++col)
+    {
+        currentY = GetY();
+        currentX = GetX();
+        Cell(w[col], r_h, wxEmptyString, border, 0, align);
+        SetXY(currentX, currentY + ((r_h - (LineCount(w[col], str[col]) * h)) / 2.0));
+        MultiCell(w[col], h, str[col], 0, align);
+        if (col != str.size() - 1)
+            SetXY(currentX + w[col], currentY);
+        else
+            SetXY(GetX(), currentY + r_h);
+
+    }
+
 }
+
+
 
 // h - height of one line cell(reak height will be h*linecount)
 void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vector<wxString> &str, int align, int border)
@@ -33,6 +39,7 @@ void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vect
     
     for (size_t k{ 1 }; k < str.size(); ++k)
     {
+
         str[k] = autoCellHyphenation(w[k], str[k]);
 
     }
@@ -74,41 +81,19 @@ void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vect
     }
 }
 
-// h - height of one line cell(reak height will be h*linecount)
-double PDF_Helper::getMulticellRowHeight(double h,const std::vector<wxString>& arr, const std::vector<double>& w)
+
+
+void PDF_Helper::tableHeaderCell(double w, double h, const wxString& text, int border, int ln, int align)
 {
-    int maxLineCount{ 0 };
-    for (size_t k{ 0 }; k < arr.size(); ++k)
-    {
-        if (LineCount(w[k], arr[k]) > maxLineCount)
-            maxLineCount = LineCount(w[k], arr[k]);
-    }
-
-    return static_cast<double>(maxLineCount) * h;
-}
-
-void PDF_Helper::tableRow(double h, const std::vector<double> &w, std::vector<wxString> &str,int border,int align)
-{
-    for (size_t k{ 0 }; k < str.size(); ++k)
-    {
-        str[k] = autoCellHyphenation(w[k], str[k]);
-
-    }
-    double r_h{ getMulticellRowHeight(h,str,w) };
     double currentX{ GetX() };
     double  currentY{ GetY() };
-    for (size_t col{ 0 }; col < str.size(); ++col)
-    {
-        Cell(w[col], r_h, wxEmptyString, border, 0, align);
-        SetXY(currentX, currentY + ((r_h - (LineCount(w[col], str[col]) * r_h)) / 2.0));
-        MultiCell(w[col], r_h, str[col], 0, align);
-        if (col == str.size()-1)
-            SetXY(currentX + w[col], currentY);
-        else
-            SetXY(GetX(), currentY + r_h);
-
-    }
-
+    Cell(w, h, wxS(""), border, 0, align);
+    SetXY(currentX, currentY + ((h - static_cast<double>((LineCount(w,text) * 4))) / 2.0));
+    MultiCell(w, 4, text, 0, align);
+    if (ln != 1)
+        SetXY(currentX + w, currentY);
+    else
+        SetXY(GetX(), currentY + h);
 }
 
 
@@ -130,11 +115,20 @@ void PDF_Helper::tableMultiCell(double w, double h,const wxString &text,int bord
 
 wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
 {
+
     if (text.IsEmpty())
         return text;
 
+    if (text.Contains("Шлам"))
+        bool kek{};
+  
     wxStringTokenizer tokens(text,' ');
     wxArrayString wordsArray{};
+    wxString hyphenatedString{};
+
+    bool haveHyphens{ false };
+    size_t pos{ 0 };
+    size_t minOffset{ 0 };
     double lineWidth{ 0 };
     while (tokens.HasMoreTokens())
     {
@@ -143,99 +137,112 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
 
     for (size_t word{ 0 }; word < wordsArray.GetCount(); ++word)
     {
+      
 
 
-        lineWidth += GetStringWidth(wordsArray[word]) + GetStringWidth(' ') ;
+        size_t noHyphOffset{};
+        lineWidth += GetStringWidth(wordsArray[word]) + GetStringWidth(' ');
         if (lineWidth - GetStringWidth(' ') > (w - 2.0)) // 2.0 is cell margins
         {
+            haveHyphens = 0; //reseting variables for next word hyphenation 
+            pos = 0;
             while (lineWidth > (w - 2.0)) // in case of word taking 2+ lines
             {
+                wxString c_hyphString{};
+                wxString substr{};
+                if (haveHyphens)
+                    substr = wordsArray[word].Mid(noHyphOffset + 2);
+                else
+                    substr = wordsArray[word];
 
-                wxString substr{ wordsArray[word] };
-                wxString hyphenatedString{};
-                size_t minOffset{ 0 };
 
-
-                while ((GetStringWidth(substr) + GetStringWidth('-')) > (w - (lineWidth - GetStringWidth(wordsArray[word]))))
+                minOffset = 0;
+                if (!haveHyphens)
                 {
-                    if (substr.size() == 1)
-                        break;
-                    substr.RemoveLast();
-                    ++minOffset;
-
+                    while ((GetStringWidth(substr) + GetStringWidth('-')) > (w - (lineWidth - GetStringWidth(wordsArray[word]))))
+                    {
+                        if (substr.size() == 1)
+                            break;
+                        substr.RemoveLast();
+                        ++minOffset;
+                    }
+                }
+                else
+                {
+                    while ((GetStringWidth(substr) + GetStringWidth('-')) > w)
+                    {
+                        if (substr.size() == 1)
+                            break;
+                        substr.RemoveLast();
+                        ++minOffset;
+                    }
                 }
 
-                if ( substr.size() == 1 ) // multicell will line break for us
+                noHyphOffset = wordsArray[word].size() - minOffset;
+
+                if (substr.size() == 1) // multicell will line break for us
                 {
                     lineWidth = GetStringWidth(wordsArray[word]);
                     break;
                 }
-                
-                hyphenatedString = utility::Hyphenate(wordsArray[word]);
-                size_t hyphCount{ hyphenatedString.size() - wordsArray[word].size() };
 
-                for (size_t i{ 0 }, offset{ hyphenatedString.size() - 1}; i != minOffset + 1; ++i, --offset)
+                if (!haveHyphens)
                 {
-                    if (hyphenatedString.at(offset) == '\u00AD')
+                    c_hyphString = utility::Hyphenate(wordsArray[word]);
+                    hyphenatedString = c_hyphString;
+                }
+                else
+                    c_hyphString = hyphenatedString;
+
+                haveHyphens = false;
+                for (size_t i{ 0 }, offset{ c_hyphString.size() - 1 }; i != minOffset + 1; ++i, --offset)
+                {
+                    if (c_hyphString.at(offset) == '\u00AD')
                     {
+                        haveHyphens = true;
                         ++minOffset;
                     }
-                
+
                 }
 
-                size_t pos{ 0 };
-           
-                for (size_t k{ hyphenatedString.size() - minOffset - 1 }; k > 0; --k)
+                for (size_t k{ c_hyphString.size() - minOffset - 1 }; k > 0; --k)
                 {
-                    if (k > hyphenatedString.size() - 3 && hyphenatedString[k] == '\u00AD')
+                    if (k > c_hyphString.size() - 3 && c_hyphString[k] == '\u00AD')
                         continue;
-                    if (hyphenatedString[k] == '\u00AD' || hyphenatedString[k] == '-')
+                    if (c_hyphString[k] == '\u00AD' || c_hyphString[k] == '-')
                     {
                         pos = k;
                         break;
                     }
                     else if (k == 1)
                         pos = 0;
-                
+                    --noHyphOffset;
                 }
-
 
                 if (pos <= 1) // multicell will line break for us
                 {
                     lineWidth = GetStringWidth(wordsArray[word]);
-                   break;
+                    break;
                 }
                 else
                 {
-                    hyphenatedString.insert(pos + 1, '\n');
+                    c_hyphString.insert(pos + 1, '\n');
                     ++minOffset;
-                    for (size_t ch{ 0 }; ch < pos - 1; ++ch)
+                    size_t posNoHyph{ removeUnwantedHyphens(c_hyphString, pos) };
+                    if (posNoHyph != 0)
                     {
-                        if (hyphenatedString.size() < ch)
-                            break;
-                        if (hyphenatedString.at(ch) == '\u00AD')
-                        {
-                            hyphenatedString.erase(ch, 1);
-                            --ch;
-                            --pos;
-                        }
+                        wordsArray[word].insert(posNoHyph, '\n');
+
+                        if(wordsArray[word][posNoHyph-1] != '-')
+                            wordsArray[word].insert(posNoHyph, '\u00AD');
                     }
-                    for (size_t ch{ pos + 1 }; ch < hyphenatedString.size(); ++ch)
-                    {
-                        if (hyphenatedString.size() < ch)
-                            break;
-                        if (hyphenatedString.at(ch) == '\u00AD')
-                        {
-                            hyphenatedString.erase(ch, 1);;
-                            --ch;
-                        }
-                    }
-                    wordsArray[word] = hyphenatedString;
-                    if (wordsArray[word].find('\n') != -1)
-                        lineWidth = GetStringWidth(wordsArray[word].After('\n'));
-                    else
-                        lineWidth = GetStringWidth(wordsArray[word]);
+
                 }
+
+                lineWidth = GetStringWidth(wordsArray[word].AfterLast('\n'));
+
+                if (!haveHyphens)
+                    break;
             }
         }
     }
@@ -243,9 +250,112 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
     for (size_t i{ 0 }; i < wordsArray.size(); ++i)
     {
         hyphenatedText += wordsArray[i];
-        if(i+1!=wordsArray.size())
+        if (i + 1 != wordsArray.size())
             hyphenatedText += " ";
     }
     return hyphenatedText;
+
 }
 
+size_t PDF_Helper::removeUnwantedHyphens(wxString& word, unsigned int pos)
+{
+
+    size_t wordSize{ word.size() };
+
+    for (size_t ch{ 1 }; ch < wordSize; ++ch)
+    {
+        if (word[ch] == '\u00AD')
+        {
+        word.erase(ch, 1);;
+        --ch;
+        --wordSize;
+        }
+    }
+
+    for (size_t ch{ 1 }; ch < wordSize; ++ch)
+    {
+
+        if (word[ch] == '\n' )
+        {
+            return ch;
+        }
+            
+    }
+    return 0;
+}
+
+void PDF_Helper::centerRotatedText(double w, double h, const wxString& string1, const wxString& string2, const wxString& string3)
+{
+
+    if (string2.IsEmpty())
+    {
+        RotatedText(GetX() - (w * 0.5) + 1, GetY() + h - ((h - GetStringWidth(string1)) / 2), string1, 90);
+    }
+    else if (string3.IsEmpty())
+    {
+        RotatedText(GetX() - (w * 0.5), GetY() + h - ((h - GetStringWidth(string1)) / 2), string1, 90);
+        RotatedText(GetX() - (w * 0.5) + 4, GetY() + h - ((h - GetStringWidth(string2)) / 2), string2, 90);
+    }
+    else
+    {
+
+        RotatedText(GetX() - (w * 0.5) - 2, GetY() + h - ((h - GetStringWidth(string1)) / 2), string1, 90);
+        RotatedText(GetX() - (w * 0.5) + 2, GetY() + h - ((h - GetStringWidth(string2)) / 2), string2, 90);
+        RotatedText(GetX() - (w * 0.5) + 5.5, GetY() + h - ((h - GetStringWidth(string3)) / 2), string3, 90);
+    }
+}
+
+
+// h - height of one line cell(reak height will be h*linecount)
+double PDF_Helper::getMulticellRowHeight(double h, const std::vector<wxString>& arr, const std::vector<double>& w)
+{
+    int maxLineCount{ 0 };
+    for (size_t k{ 0 }; k < arr.size(); ++k)
+    {
+        if (LineCount(w[k], arr[k]) > maxLineCount)
+            maxLineCount = LineCount(w[k], arr[k]);
+    }
+
+    return static_cast<double>(maxLineCount) * h;
+}
+
+wxString PDF_Helper::getAmountString(double amount)
+{
+    if (amount == 0) 
+        return wxString("");
+    else
+    {
+        wxString string = wxNumberFormatter::ToString(amount, 3, 3);
+        string.Replace(".", ",");
+        if (!string.Contains(","))
+            string.insert(string.Len(), wxS(",0"));
+        return string;
+    }
+}
+
+wxString PDF_Helper::getAmountString(wxString& amount)
+{
+    if (amount == "")
+        return amount;
+    else
+    {
+        amount.Replace(".", ",");
+        if (!amount.Contains(","))
+            amount.insert(amount.Len(), wxS(",0"));
+        return amount;
+    }
+}
+
+
+int PDF_Helper::compareDates(const wxString& startDate, const wxString& endDate)
+{
+    wxDateTime sDate{};
+    wxDateTime eDate{};
+    sDate.ParseFormat(startDate, wxS("%Y.%m"));
+    eDate.ParseFormat(endDate, wxS("%Y.%m"));
+    wxDateSpan dsDate{ wxAtoi(sDate.Format(wxS("%Y"))), wxAtoi(sDate.Format(wxS("%m"))) };
+    wxDateSpan deDate{ wxAtoi(eDate.Format(wxS("%Y"))), wxAtoi(eDate.Format(wxS("%m"))) };
+    wxDateSpan dfDate = deDate - dsDate;
+    return dfDate.GetTotalMonths();
+                    
+}

@@ -28,13 +28,14 @@ private:
 	
 
 protected:
-
+	void drawTableHeader(const std::vector<double>& w);
 	void Footer() override;
 	void Header() override;
-	void drawResultRow(double w[]);
+	void drawResultRow(const std::vector<double>& w, const std::array<double, 7>& value);
 
 public:
 
 	void drawTable();
+private:
 
 };
