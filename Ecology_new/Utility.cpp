@@ -3,7 +3,12 @@
 
 using namespace utility;
 
+
+
 namespace {
+
+	const wxString patternsFileName{ "/hyph-ru.pat.txt" };
+
 	struct u_pattern
 	{
 		wxString str;
@@ -84,7 +89,7 @@ wxString utility::Hyphenate(const wxString &word)
 	
 	word_levels.assign(word_string.size(), '0');
 
-	for (size_t ch{ 0 }; ch < word_string.size() - 2; ++ch) //word
+	for (size_t ch{ 1 }; ch < word_string.size() - 2; ++ch) //word
 	{
 		std::vector<u_pattern*>::const_iterator pattern_iter = pattern_list.list.begin();
 
@@ -127,19 +132,12 @@ wxString utility::Hyphenate(const wxString &word)
 	unsigned int offset{ 0 };
 	for (size_t k{ 0 }; k < mask_size; ++k)
 	{
-		//try
-		//{
+
 			if (mask[k] == 1)
 			{
 				word_string.insert(k + offset, '\u00AD');
 				++offset;
 			}
-		//}
-		//catch (...)
-		//{
-		//	
-		//	wxMessageBox("word: " + word_string + "\nk: " + std::to_string(k) + "\nmask: " + mask + "\noffset: " + std::to_string(offset));
-		//}
 
 
 	}

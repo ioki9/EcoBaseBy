@@ -6,17 +6,18 @@
 #endif
 wxIMPLEMENT_APP(cApp);
 
+
 cApp::cApp()
 {
+	wxInitAllImageHandlers();
 
-	
 	
 }
 
 
 cApp::~cApp()
 {
-
+	
 }
 
 bool cApp::OnInit()

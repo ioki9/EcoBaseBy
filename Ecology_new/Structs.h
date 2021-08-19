@@ -207,3 +207,31 @@ struct passportJournalInfo
 	}
 };
 
+
+struct addPageInfo
+{
+	wxString receiver;
+	wxString transporter;
+	wxString owner;
+	wxString regnum;
+	wxString code;
+	wxString amountGet;
+	wxString amountReceivedPhys;
+	wxString amountReceivedOrg;
+	wxString amountFormed;
+	wxString date;
+	wxString entryDate;
+	wxString wasteNorm;
+	wxString structUnit10;
+	wxString structUnit9;
+	wxString amountStrgFull;
+	wxString amountUsed;
+	wxString amountDefused;
+	wxString amountStorage;
+	wxString amountBurial;
+	wxString tamountUsed;
+	wxString tamountDefused;
+	wxString tamountStorage;
+	wxString tamountBurial;
+
+};

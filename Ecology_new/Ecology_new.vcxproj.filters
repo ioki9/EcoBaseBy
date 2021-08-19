@@ -5,87 +5,95 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\PDF Creation">
-      <UniqueIdentifier>{523ab505-3b82-469b-afda-b695c3341d12}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\PDF Creation">
       <UniqueIdentifier>{d9ea852d-2ab3-4b0b-aa0c-db6659bf61d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Global variables">
-      <UniqueIdentifier>{d5e9d4a7-972c-49dc-97f4-04050c19a42d}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\DataBase">
       <UniqueIdentifier>{b145a351-956c-4b8d-900e-ce74494987f0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\DataBase">
-      <UniqueIdentifier>{cc127429-cbb5-4f68-a4cc-0e6b5267fac8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Utility">
-      <UniqueIdentifier>{7c63f23d-7c86-41ad-9335-3aa5cd4c5520}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Utility">
       <UniqueIdentifier>{000206c1-2cd0-4782-8095-48e93dd266db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Global variables">
+      <UniqueIdentifier>{d5e9d4a7-972c-49dc-97f4-04050c19a42d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{f40eed41-cb2b-4292-8ac4-d69bb3602585}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Controls">
+      <UniqueIdentifier>{2cd1714c-f0ed-428b-b1b3-2c4b1c7555f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Frames">
+      <UniqueIdentifier>{24d93635-bd8f-4ad9-9054-177fe89fe306}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="cApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cMain.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cMenuAddDialog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Global variables.h">
-      <Filter>Header Files\Global variables</Filter>
-    </ClInclude>
-    <ClInclude Include="DBMain.h">
-      <Filter>Header Files\DataBase</Filter>
-    </ClInclude>
-    <ClInclude Include="Structs.h">
-      <Filter>Header Files\DataBase</Filter>
-    </ClInclude>
-    <ClInclude Include="DMColumnEnums.h">
-      <Filter>Header Files\DataBase</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Pod9.h">
-      <Filter>Header Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Pod10.h">
-      <Filter>Header Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Main.h">
-      <Filter>Header Files\PDF Creation</Filter>
-    </ClInclude>
     <ClInclude Include="PDF_Helper.h">
-      <Filter>Header Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="Utility.h">
-      <Filter>Header Files\Utility</Filter>
+      <Filter>Source Files\PDF Creation</Filter>
     </ClInclude>
     <ClInclude Include="PDF_Journal.h">
-      <Filter>Header Files\PDF Creation</Filter>
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Main.h">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Pod9.h">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Pod10.h">
+      <Filter>Source Files\PDF Creation</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility.h">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DBMain.h">
+      <Filter>Source Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="DMColumnEnums.h">
+      <Filter>Source Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Source Files\DataBase</Filter>
+    </ClInclude>
+    <ClInclude Include="Add_panel.h">
+      <Filter>GUI\Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="cApp.h">
+      <Filter>GUI\Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="cMain.h">
+      <Filter>GUI\Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="cMenuAddDialog.h">
+      <Filter>GUI\Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="ColSelectDialog.h">
+      <Filter>GUI\Frames</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCheckBox.h">
+      <Filter>GUI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="itemdata.h">
+      <Filter>GUI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialButton.h">
+      <Filter>GUI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualListCtrl.h">
+      <Filter>GUI\Controls</Filter>
+    </ClInclude>
+    <ClInclude Include="cMainListEditDialog.h">
+      <Filter>GUI\Frames</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cMenuAddDialog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DBMain.cpp">
       <Filter>Source Files\DataBase</Filter>
     </ClCompile>
@@ -107,5 +115,47 @@
     <ClCompile Include="PDF_Journal.cpp">
       <Filter>Source Files\PDF Creation</Filter>
     </ClCompile>
+    <ClCompile Include="Add_panel.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="cApp.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="cMain.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="cMenuAddDialog.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="ColSelectDialog.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCheckBox.cpp">
+      <Filter>GUI\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualListCtrl.cpp">
+      <Filter>GUI\Controls</Filter>
+    </ClCompile>
+    <ClCompile Include="cMainListEditDialog.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialButton.cpp">
+      <Filter>GUI\Frames</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rcdata1.bin">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="line_green.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

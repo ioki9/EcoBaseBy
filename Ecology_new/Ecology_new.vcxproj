@@ -19,24 +19,36 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Add_panel.h" />
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cMain.h" />
+    <ClInclude Include="cMainListEditDialog.h" />
     <ClInclude Include="cMenuAddDialog.h" />
+    <ClInclude Include="ColSelectDialog.h" />
+    <ClInclude Include="CustomCheckBox.h" />
+    <ClInclude Include="itemdata.h" />
+    <ClInclude Include="MaterialButton.h" />
     <ClInclude Include="PDF_Journal.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="PDF_Helper.h" />
     <ClInclude Include="PDF_Pod10.h" />
     <ClInclude Include="PDF_Pod9.h" />
-    <ClInclude Include="Global variables.h" />
     <ClInclude Include="DBMain.h" />
     <ClInclude Include="DMColumnEnums.h" />
     <ClInclude Include="PDF_Main.h" />
     <ClInclude Include="Structs.h" />
+    <ClInclude Include="VirtualListCtrl.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Add_panel.cpp" />
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cMain.cpp" />
+    <ClCompile Include="cMainListEditDialog.cpp" />
     <ClCompile Include="cMenuAddDialog.cpp" />
+    <ClCompile Include="ColSelectDialog.cpp" />
+    <ClCompile Include="CustomCheckBox.cpp" />
+    <ClCompile Include="MaterialButton.cpp" />
     <ClCompile Include="PDF_Journal.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="PDF_Helper.cpp" />
@@ -44,6 +56,16 @@
     <ClCompile Include="PDF_Pod9.cpp" />
     <ClCompile Include="DBMain.cpp" />
     <ClCompile Include="PDF_Main.cpp" />
+    <ClCompile Include="VirtualListCtrl.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="rcdata1.bin" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="line_green.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -124,7 +146,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wx314\include\msvc;D:\SDKs\wx314\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>
@@ -134,6 +156,10 @@
       <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wxpdfdoc098\lib\vc14x_lib;D:\SDKs\wxpdfdoc098\lib\fonts</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest />
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -155,6 +181,10 @@
       <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wxpdfdoc098\lib\vc14x_lib;D:\SDKs\wxpdfdoc098\lib\fonts</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxsqlite3.lib;wxpdfdoc.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <Manifest />
+    <Manifest>
+      <EnableDpiAwareness>PerMonitorHighDPIAware</EnableDpiAwareness>
+    </Manifest>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

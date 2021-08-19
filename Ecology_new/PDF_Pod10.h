@@ -1,27 +1,28 @@
 #pragma once
-#include "DBMain.h"
 #include <wx/pdfdoc.h>
+#include <algorithm>
+#include <wx/pdfxml.h>
 #include "PDF_Main.h"
 #include "PDF_Helper.h"
 #include "Structs.h"
+#include "DBMain.h"
 
 class PDF_Pod10 : public PDF_Helper
 {
 public:
-	PDF_Pod10(int orientation = wxLANDSCAPE,
-		const wxString &unit = wxString(wxT("mm")),
-		wxPaperSize format = wxPaperSize::wxPAPER_A4) : PDF_Helper{orientation, unit, format }
+	PDF_Pod10(DBMain* dataBase, int orientation = wxLANDSCAPE,
+		const wxString& unit = wxString(wxT("mm")),
+		wxPaperSize format = wxPaperSize::wxPAPER_A4) : PDF_Helper{ orientation, unit, format }, m_dataBase{ dataBase }
 	{
 		SetMargins(10.0, 5.0, 10.0);
 		SetAutoPageBreak(1,5.0);
 	}
-	~PDF_Pod10() { delete m_db; };
+	~PDF_Pod10() { delete m_dataBase; };
 private:
 	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString, wxFONTENCODING_CP1251 };
 	pod10Info m_data;
-	DBMain *m_db = new DBMain;
 	bool m_tableLast{ 0 };
-
+	DBMain *m_dataBase;
 protected:
 
 	void drawTableSignature();

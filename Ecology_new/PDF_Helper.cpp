@@ -4,6 +4,10 @@
 #include <wx/hashmap.h>
 
 
+PDF_Helper::~PDF_Helper()
+{
+}
+
 void PDF_Helper::tableRow(double h, const std::vector<double>& w, std::vector<wxString>& str, int border, int align)
 {
     for (size_t k{ 0 }; k < str.size(); ++k)
@@ -12,14 +16,15 @@ void PDF_Helper::tableRow(double h, const std::vector<double>& w, std::vector<wx
         str[k] = autoCellHyphenation(w[k], str[k]);
 
     }
+
     double r_h{ getMulticellRowHeight(h,str,w) };
     double currentX{ 0 };
     double  currentY{ 0 };
     for (size_t col{ 0 }; col < str.size(); ++col)
     {
-        currentY = GetY();
         currentX = GetX();
         Cell(w[col], r_h, wxEmptyString, border, 0, align);
+        currentY = GetY();
         SetXY(currentX, currentY + ((r_h - (LineCount(w[col], str[col]) * h)) / 2.0));
         MultiCell(w[col], h, str[col], 0, align);
         if (col != str.size() - 1)
@@ -113,21 +118,22 @@ void PDF_Helper::tableMultiCell(double w, double h,const wxString &text,int bord
 }
 
 
-wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
+wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
 {
 
     if (text.IsEmpty())
         return text;
 
-    if (text.Contains("Шлам"))
-        bool kek{};
-  
-    wxStringTokenizer tokens(text,' ');
+
+    wxStringTokenizer tokens(text,wxDEFAULT_DELIMITERS);
     wxArrayString wordsArray{};
     wxString hyphenatedString{};
 
     bool haveHyphens{ false };
     size_t pos{ 0 };
+    double spaceWidth{ GetStringWidth(' ') };
+    double hyphWidth{ GetStringWidth('-') };
+    double cellWidth{ w - 2.0 };
     size_t minOffset{ 0 };
     double lineWidth{ 0 };
     while (tokens.HasMoreTokens())
@@ -141,9 +147,14 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
 
 
         size_t noHyphOffset{};
-        lineWidth += GetStringWidth(wordsArray[word]) + GetStringWidth(' ');
-        if (lineWidth - GetStringWidth(' ') > (w - 2.0)) // 2.0 is cell margins
+        lineWidth += GetStringWidth(wordsArray[word]) + spaceWidth;
+        if (lineWidth - spaceWidth > cellWidth) // 2.0 is cell margins
         {
+            if ((cellWidth -(lineWidth - spaceWidth - GetStringWidth(wordsArray[word]))) < (2.0 + hyphWidth))
+            {
+                lineWidth = GetStringWidth(wordsArray[word])+ spaceWidth;
+                continue;
+            }
             haveHyphens = 0; //reseting variables for next word hyphenation 
             pos = 0;
             while (lineWidth > (w - 2.0)) // in case of word taking 2+ lines
@@ -182,7 +193,7 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
 
                 if (substr.size() == 1) // multicell will line break for us
                 {
-                    lineWidth = GetStringWidth(wordsArray[word]);
+                    lineWidth = GetStringWidth(wordsArray[word]) + spaceWidth;
                     break;
                 }
 
@@ -221,7 +232,7 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
 
                 if (pos <= 1) // multicell will line break for us
                 {
-                    lineWidth = GetStringWidth(wordsArray[word]);
+                    lineWidth = GetStringWidth(wordsArray[word]) + spaceWidth;
                     break;
                 }
                 else
@@ -239,7 +250,7 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString &text)
 
                 }
 
-                lineWidth = GetStringWidth(wordsArray[word].AfterLast('\n'));
+                lineWidth = GetStringWidth(wordsArray[word].AfterLast('\n')) + spaceWidth;
 
                 if (!haveHyphens)
                     break;
@@ -349,10 +360,12 @@ wxString PDF_Helper::getAmountString(wxString& amount)
 
 int PDF_Helper::compareDates(const wxString& startDate, const wxString& endDate)
 {
+    if (endDate == "01.04.2018")
+        bool cool{};
     wxDateTime sDate{};
     wxDateTime eDate{};
-    sDate.ParseFormat(startDate, wxS("%Y.%m"));
-    eDate.ParseFormat(endDate, wxS("%Y.%m"));
+    sDate.ParseFormat(startDate, wxS("%d.%m.%Y"));
+    eDate.ParseFormat(endDate, wxS("%d.%m.%Y"));
     wxDateSpan dsDate{ wxAtoi(sDate.Format(wxS("%Y"))), wxAtoi(sDate.Format(wxS("%m"))) };
     wxDateSpan deDate{ wxAtoi(eDate.Format(wxS("%Y"))), wxAtoi(eDate.Format(wxS("%m"))) };
     wxDateSpan dfDate = deDate - dsDate;

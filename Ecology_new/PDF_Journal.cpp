@@ -1,5 +1,8 @@
 #include "PDF_Journal.h"
-#include <array>
+
+
+
+
 
 void PDF_Journal::drawHeader()
 {
@@ -51,20 +54,26 @@ void PDF_Journal::drawTable()
 	for (auto& elem : resultRowCol)
 		std::fill(elem.begin(), elem.end(), 0);
 	wxString newDate{};
-	wxString lastResultDate{ m_data.date[0] };
+	wxString lastResultDate{ utility::convertDate(m_data.date[0]) };
+	int dateDiff{ 0 };
 	rowData.reserve(10);
 	for (size_t row{ 0 }; row < m_data.date.GetCount(); ++row)
 	{
-		if (compareDates(lastResultDate, m_data.date[row]) > 3)
+		if(row!=0)
+			lastResultDate = utility::convertDate(m_data.date[row-1]);
+		newDate = utility::convertDate(m_data.date[row]);
+		if (compareDates(lastResultDate, newDate) != 0)
+			++dateDiff;
+		if(dateDiff>2)
 		{
 			drawResultRow(resultRowCol);
 			lastResultDate = m_data.date[row];
 			for (auto &elem : resultRowCol) 
 				std::fill(elem.begin(), elem.end(), 0);
+			dateDiff = 0;
 		}
 			
 
-		newDate = utility::convertDate(m_data.date[row]);
 		rowData.clear();
 		resultData(resultRowCol, m_data.codeDangerLVL[row], row);
 		rowData = { m_data.regnum[row], newDate , m_data.transporter[row], m_data.receiver[row],
@@ -163,7 +172,7 @@ void PDF_Journal::drawResultRow(const std::array<std::array<double, 5>, 4>& valu
 
 void PDF_Journal::createJournal()
 {
-	m_db->getJournalTableInfo(m_data,m_startDate);
+	m_dataBase->getJournalTableInfo(m_data,m_startDate);
 	drawTable();
 	SaveAsFile(wxGetCwd() + wxS("/Test/11Журнал.pdf"));
 }

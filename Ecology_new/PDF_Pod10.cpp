@@ -1,11 +1,11 @@
 #pragma once
 #include "PDF_Pod10.h"
-#include <algorithm>
-#include <wx/pdfxml.h>
+
+
 
 void PDF_Pod10::createDoc()
 {
-    m_db->getPod10TableCount(m_data);
+    m_dataBase->getPod10TableCount(m_data);
     int tableCount{ m_data.tableCount };
     int nextTable{ 0 };
     AddPage();
@@ -15,8 +15,8 @@ void PDF_Pod10::createDoc()
        
             nextTable++;
 
-            m_db->getPod10TableInfo(m_data, m_data.allDates[t]);
-            m_db->getPod10TableCodeDngr(m_data, m_data.code);
+            m_dataBase->getPod10TableInfo(m_data, m_data.allDates[t]);
+            m_dataBase->getPod10TableCodeDngr(m_data, m_data.code);
          
             if (nextTable == tableCount)
                 m_tableLast = true;

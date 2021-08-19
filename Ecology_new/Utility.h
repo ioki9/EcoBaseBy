@@ -6,7 +6,6 @@
 #include <wx/textfile.h>
 #include <wx/wx.h>
 #include <vector>
-#include "Global variables.h"
 
 
 

@@ -1,25 +1,27 @@
 #pragma once
 #include <wx\pdfdoc.h>
-#include "PDF_Helper.h"
 #include <vector>
 #include <wx/font.h>
 #include <array>
+#include "PDF_Helper.h"
+#include "PDF_Main.h"
+#include "DBMain.h"
 
 class PDF_Journal : public PDF_Helper
 {
 public:
-	PDF_Journal(const passportJournalInfo& data, const wxString &startDate, int orientation = wxLANDSCAPE,
+	PDF_Journal(DBMain *dataBase,const passportJournalInfo& data, const wxString &startDate, int orientation = wxLANDSCAPE,
 		const wxString& unit = wxString(wxS("mm")), wxPaperSize format = wxPaperSize::wxPAPER_A4)
-		: m_data{ data }, m_startDate{ startDate }, PDF_Helper{ orientation, unit, format }
+		: m_dataBase{ dataBase }, m_data {data}, m_startDate{ startDate }, PDF_Helper{ orientation, unit, format }
 	{
 		SetMargins(10.0, 5.0, 10.0);
-		SetAutoPageBreak(1);
+		SetAutoPageBreak(1, 5.0);
 	}
-	~PDF_Journal() { delete m_db; };
+	~PDF_Journal() { delete m_dataBase; };
 private:
-	DBMain* m_db = new DBMain;
 	passportJournalInfo m_data;
 	wxString m_startDate;
+	DBMain* m_dataBase;
 	const std::vector<double> w { 20.5,19.5,60.5,60.5,17.0,19.0,20.0,20.0,20.0,20.0 };
 	const double h{ 5.0 };
 protected:
@@ -31,8 +33,6 @@ private:
 	void Header() override;
 public:
 	void createJournal();
-
-
-
+	
 };
 

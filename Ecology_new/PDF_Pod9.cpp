@@ -176,16 +176,16 @@ void PDF_Pod9::drawTable()
     Ln();
     
    //////table
-    wxDateTime myDate, myFirstDate;
+    wxString prevDate{ m_data.date[0] };
     int j;
     std::vector<wxString> rowData{};
     double transferValue{};
+
     for (j = 0; j < m_data.rowCount; j++)
     {
         if (j != 0)
         {
-            myDate.ParseDate(m_data.date[j]);
-            myFirstDate.ParseDate(m_data.date[j - 1]);
+            prevDate = m_data.date[j - 1];
         }
 
 
@@ -195,7 +195,7 @@ void PDF_Pod9::drawTable()
                     getAmountString(m_data.amountDefused[j]), getAmountString(m_data.amountTransferStorage[j]),m_data.manufacturer[j],
                        " ", getAmountString(m_data.amountFullStorage[j]) };
 
-       if (j != 0 && myDate.GetMonth()!=myFirstDate.GetMonth())
+       if (j != 0 && compareDates(prevDate,m_data.date[j]) != 0)
        {
            drawResultRow(w, results);
            std::fill(results.begin(), results.end(), 0);

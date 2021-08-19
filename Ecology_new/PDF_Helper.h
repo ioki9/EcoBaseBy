@@ -1,14 +1,13 @@
 #pragma once
 #include <wx/pdfdoc.h>
-#include "Structs.h"
+
 #include <wx/datetime.h>
 #include <wx/string.h>
 #include <wx/font.h>
 #include <wx/pdfdoc.h>
 #include <wx/numformatter.h>
-#include "DBMain.h"
 #include "Utility.h"
-
+#include "Structs.h"
 
 
 
@@ -23,6 +22,7 @@ public:
 		SetAutoPageBreak(1, 10);
 		SetFont(m_font);
 	}
+	virtual ~PDF_Helper();
 private:
 	
 	wxFont m_font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString, wxFONTENCODING_CP1251 };
