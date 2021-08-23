@@ -15,7 +15,7 @@
 #include "MaterialButton.h"
 #include "DBMain.h"
 #include "cMainListEditDialog.h"
-
+#include "GUI_parameters.h"
 
 
 class cMain : public wxFrame
@@ -26,26 +26,29 @@ public:
 
 public:
 	DBMain *m_dataBase = new DBMain();
-	int kek = 34;
 
 private:
-	wxFont m_myFont = (wxFontInfo(13).FaceName("Segoe UI Semibold"));
 	wxMenuBar* m_MenuBar = nullptr;
 	wxMenu* m_menuFile = nullptr;
 	wxMenu* m_menuAbout = nullptr;
-	VirtualListCtrl* m_myList;
 
+	//LIST PANEL
+	VirtualListCtrl* m_myList;
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
 	wxPanel* m_listBottomPanel = nullptr;
 	wxPanel* m_listBotRightPanel = nullptr;
 
+	//MENU PANEL
 	wxPanel* m_mainMenu = nullptr;
 	wxPanel* m_dataMenuTab = nullptr;
 	wxStaticText* m_dataMenuText = nullptr;
 	wxBoxSizer* m_mainSizer = nullptr;
 
+	//ADD PANEL
 	wxPanel* m_addPanel = nullptr;
+
+	wxPanel* m_formPDFPanel = nullptr;
 
 	void onTestButton(wxCommandEvent& evt);
 	void OnMenuFileAdd(wxCommandEvent& evt);
@@ -55,6 +58,8 @@ private:
 	void initListPanel();
 	void initAddPanel();
 	void initMainMenu();
+	void initNewOrgPage();
+	void initFormPDFPage();
 	void OnSize(wxSizeEvent& evt);
 	enum ID_MAINFRAME
 	{

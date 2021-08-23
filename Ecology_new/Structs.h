@@ -233,5 +233,5 @@ struct addPageInfo
 	wxString tamountDefused;
 	wxString tamountStorage;
 	wxString tamountBurial;
-
+	wxString id;
 };

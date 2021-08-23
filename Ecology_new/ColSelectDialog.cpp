@@ -24,9 +24,9 @@ ColSelectDialog::ColSelectDialog(wxWindow* parent,uint32_t activeColFlags, wxWin
 
 
 	checkBoxPanel->SetSizer(btnSizer);
-	checkBoxes = new CustomCheckBox * [22];
-	checkText = new wxStaticText * [22];
-	for (size_t i{ 0 }; i < 22; ++i)
+	checkBoxes = new CustomCheckBox * [20];
+	checkText = new wxStaticText * [20];
+	for (size_t i{ 0 }; i < 20; ++i)
 	{
 		checkBoxes[i] = new CustomCheckBox(checkBoxPanel, 3567 + i, "", wxPoint(40, 30 + i * 21));
 		if (activeColFlags & (1ul << i))
@@ -55,18 +55,16 @@ ColSelectDialog::~ColSelectDialog()
 
 void ColSelectDialog::initLabels()
 {
-	m_labels.reserve(22);
+	m_labels.reserve(20);
 	m_labels.push_back( "Регистрационный номер");
 	m_labels.push_back("Дата");
-	m_labels.push_back("Дата внесения");
-	m_labels.push_back("Производитель");
-	m_labels.push_back("Собственник отходов");
+	m_labels.push_back("Поступило от орг.");
 	m_labels.push_back("Получатель отходов");
 	m_labels.push_back("Перевозчик отходов");
 	m_labels.push_back("Код отходов");
 	m_labels.push_back("Образовалось, т.(шт.)");
-	m_labels.push_back("Поступило от др. орг., т.(шт.)");
 	m_labels.push_back("Поступило от физ. лиц, т.(шт.)");
+	m_labels.push_back("Поступило от др. орг., т.(шт.)");
 	m_labels.push_back("Использовано, т.(шт.)");
 	m_labels.push_back("Обезврежено, т.(шт.)");
 	m_labels.push_back("Направлено на хранение, т.(шт.)");
@@ -76,8 +74,8 @@ void ColSelectDialog::initLabels()
 	m_labels.push_back("Передано на хранение, т.(шт.)");
 	m_labels.push_back("Передано на захоронение, т.(шт.)");
 	m_labels.push_back("Хранится суммарно, т.(шт.)");
-	m_labels.push_back("Норматив образования отходов");
-	m_labels.push_back("Структурные подразделения");
+	m_labels.push_back("Структурные подразделения (ПОД 10)");
+	m_labels.push_back("Структурные подразделения (ПОД 9)");
 }
 
 void ColSelectDialog::OnCancel(wxMouseEvent& evt)
@@ -88,7 +86,7 @@ void ColSelectDialog::OnCancel(wxMouseEvent& evt)
 
 void ColSelectDialog::OnApply(wxMouseEvent& evt)
 {
-	for (size_t i{ 0 }; i < 22; ++i)
+	for (size_t i{ 0 }; i < 20; ++i)
 	{
 		if (checkBoxes[i]->status & checkBoxes[i]->flag_active)
 		{

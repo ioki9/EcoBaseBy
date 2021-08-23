@@ -1,8 +1,8 @@
 #include "Add_panel.h"
 
 
-Add_panel::Add_panel(wxWindow* parent, wxWindowID winid, const wxPoint& pos, const wxSize& size)
-	:wxPanel(parent,winid,pos,size)
+Add_panel::Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listItems)
+	:wxPanel(parent,wxID_ANY), m_listItems{listItems}
 {
 	SetDoubleBuffered(true);
 	this->initPage1();
@@ -30,8 +30,37 @@ Add_panel::Add_panel(wxWindow* parent, wxWindowID winid, const wxPoint& pos, con
 
 Add_panel::~Add_panel()
 {
-
+	
 }
+
+void Add_panel::addItem()
+{
+	std::vector<wxString> item;
+	item.push_back(m_record.regnum);
+	item.push_back(m_record.date);
+	item.push_back(m_record.owner);
+	item.push_back(m_record.receiver);
+	item.push_back(m_record.transporter);
+	item.push_back(m_record.code);
+	item.push_back(m_record.amountFormed);
+	item.push_back(m_record.amountReceivedPhys);
+	item.push_back(m_record.amountReceivedOrg);
+	item.push_back(m_record.amountUsed);
+	item.push_back(m_record.amountDefused);
+	item.push_back(m_record.amountBurial);
+	item.push_back(m_record.amountStorage);
+	item.push_back(m_record.tamountUsed);
+	item.push_back(m_record.tamountDefused);
+	item.push_back(m_record.tamountStorage);
+	item.push_back(m_record.tamountBurial);
+	item.push_back(m_record.amountStrgFull);
+	item.push_back(m_record.wasteNorm);
+	item.push_back(m_record.structUnit10);
+	item.push_back("");
+	m_listItems->push_back(item);
+	item.clear();
+}
+
 
 void Add_panel::initPage1()
 {
@@ -337,6 +366,7 @@ void Add_panel::initResultPage()
 	
 	m_resultPage = new wxPanel(this, wxID_ANY);
 	
+	m_resultPage->Hide();
 	m_resultPage->SetFont(m_textFont);
 	pr_mainPanel = new wxScrolledWindow(m_resultPage);
 
@@ -379,7 +409,7 @@ void Add_panel::initResultPage()
 	else if (amountReceivedPhysRadio->GetValue())
 	{
 		valAmountStr = m_record.amountReceivedPhys;
-	amountStr = "Êîëè÷åñòâî îòõîäîâ (ïîñòóïèëî îò ôèç. ëèö): ";
+		amountStr = "Êîëè÷åñòâî îòõîäîâ (ïîñòóïèëî îò ôèç. ëèö): ";
 	}
 		 
 	else
@@ -388,6 +418,25 @@ void Add_panel::initResultPage()
 		valAmountStr = m_record.amountReceivedOrg;
 	}
 		 
+
+	m_rButtonPanel = new wxPanel(m_resultPage, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+	mainSizer->Add(m_rButtonPanel, 0, wxEXPAND | wxBOTTOM | wxTOP, 30);
+	pr_buttonPrevious = new MaterialButton(m_rButtonPanel, wxID_ANY, "ÍÀÇÀÄ", true, wxDefaultPosition, wxSize(200, 55));
+	pr_buttonPrevious->SetButtonLineColour(wxColour(34, 139, 34));
+	pr_buttonPrevious->SetLabelColour(wxColour(34, 139, 34));
+	pr_buttonApply = new MaterialButton(m_rButtonPanel, wxID_ANY, "ÄÎÁÀÂÈÒÜ", false, wxDefaultPosition, wxSize(200, 55));
+	pr_buttonApply->SetButtonColour(wxColour(34, 139, 34));
+	pr_buttonApply->SetLabelColour(*wxWHITE);
+	buttonSizer->Add(pr_buttonPrevious, 0, wxEXPAND | wxLEFT, 50);
+	buttonSizer->AddStretchSpacer(1);
+	buttonSizer->Add(pr_buttonApply, 0, wxEXPAND | wxRIGHT, 50);
+	pr_buttonApply->Bind(wxEVT_LEFT_UP, &Add_panel::OnPR_ButtonApply, this);
+	pr_buttonPrevious->Bind(wxEVT_LEFT_UP, &Add_panel::OnPR_ButtonPrevious, this);
+
+	m_rButtonPanel->SetSizer(buttonSizer);
+
+	pr_mainPanel->SetSizer(lhMainSizer);
+	m_resultPage->SetSizer(mainSizer);
 
 	wxStaticText* label = new wxStaticText(pr_mainPanel, wxID_ANY, "ÈÒÎÃÎÂÛÉ ÇÀÃËÎÂÎÊ");
 	label->SetFont(wxFontInfo(20).FaceName("Segoe UI Semibold"));
@@ -458,19 +507,7 @@ void Add_panel::initResultPage()
 
 
 	
-	m_rButtonPanel = new wxPanel(m_resultPage, wxID_ANY, wxDefaultPosition, wxDefaultSize);
-	mainSizer->Add(m_rButtonPanel, 0, wxEXPAND | wxBOTTOM | wxTOP, 30);
-	pr_buttonPrevious = new MaterialButton(m_rButtonPanel, wxID_ANY, "ÍÀÇÀÄ", true, wxDefaultPosition, wxSize(200, 55));
-	pr_buttonPrevious->SetButtonLineColour(wxColour(34, 139, 34));
-	pr_buttonPrevious->SetLabelColour(wxColour(34, 139, 34));
-	pr_buttonApply = new MaterialButton(m_rButtonPanel, wxID_ANY, "ÄÎÁÀÂÈÒÜ", false, wxDefaultPosition, wxSize(200, 55));
-	pr_buttonApply->SetButtonColour(wxColour(34, 139, 34));
-	pr_buttonApply->SetLabelColour(*wxWHITE);
-	buttonSizer->Add(pr_buttonPrevious, 0, wxEXPAND | wxLEFT, 50);
-	buttonSizer->AddStretchSpacer(1);
-	buttonSizer->Add(pr_buttonApply, 0, wxEXPAND | wxRIGHT, 50);
-	pr_buttonApply->Bind(wxEVT_LEFT_UP, &Add_panel::OnPR_ButtonApply, this);
-	pr_buttonPrevious->Bind(wxEVT_LEFT_UP, &Add_panel::OnPR_ButtonPrevious, this);
+	
 	
 
 
@@ -538,17 +575,13 @@ void Add_panel::initResultPage()
 	lhMainSizer->Add(lsRow20, 0, wxEXPAND | wxTOP, 5);
 
 
-
-	m_rButtonPanel->SetSizer(buttonSizer);
-
-	pr_mainPanel->SetSizer(lhMainSizer);
-	m_resultPage->SetSizer(mainSizer);
-	m_rButtonPanel->Layout();
-	m_rButtonPanel->Fit();
-	pr_mainPanel->Fit();
-	pr_mainPanel->Layout();
-	m_resultPage->Fit();
-	m_resultPage->Layout();
+	m_resultPage->Show();
+	//m_rButtonPanel->Layout();
+	//m_rButtonPanel->Fit();
+	//pr_mainPanel->Fit();
+	//pr_mainPanel->Layout();
+	//m_resultPage->Fit();
+	//m_resultPage->Layout();
 	pr_mainPanel->SetScrollRate(5, 5);
 
 }
@@ -634,6 +667,7 @@ void Add_panel::OnP3_ButtonNext(wxMouseEvent& evt)
 	m_resultPage->Show();
 	mainSizer->Layout();
 
+
 	evt.Skip();
 
 }
@@ -684,16 +718,45 @@ void Add_panel::OnPR_ButtonApply(wxMouseEvent& evt)
 			m_record.amountStrgFull = "";
 			dataBase->insertNewEntry(m_record);
 		}
-		else
-			dataBase->insertFirstEntry(m_record);
+		/*else*/
+			/*dataBase->insertFirstEntry(m_record);*/
 	}
 	else
 	{
 		dataBase->insertNewEntry(m_record);
 	}
-	
-
 	delete dataBase;
+
+	this->addItem();
+
+	m_codeCtrl->Clear();
+	m_regnumCtrl->Clear();
+	m_ownerCtrl->Clear();
+	m_transporterCtrl->Clear();
+	m_receiverCtrl->Clear();
+	m_amountReceivedCtrl->Clear();
+	m_amBurialCtrl->Clear();
+	m_amStorageCtrl-> Clear();
+	m_amUsedCtrl->Clear();
+	m_amDefusedCtrl->Clear();
+	m_tamBurialCtrl->Clear();
+	m_tamStorageCtrl->Clear();
+	m_tamUsedCtrl->Clear();
+	m_tamDefusedCtrl->Clear();
+	m_wasteNormCtrl->Clear();
+	m_structUnit10Ctrl->Clear();
+	m_structUnit9Ctrl->Clear();
+	m_amFullStrgCtrl->Clear();
+
+
+
+	mainSizer->Detach(0);
+	m_resultPage->Hide();
+	mainSizer->Add(m_page1, 1, wxEXPAND);
+	m_page1->Show();
+	mainSizer->Layout();
+
+	evt.Skip();
 
 }
 void Add_panel::OnPR_ButtonPrevious(wxMouseEvent& evt)

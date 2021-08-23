@@ -152,9 +152,7 @@ void VirtualListCtrl::initHeaderList()
 {
 	m_headerLabels.push_back("Рег. №");
 	m_headerLabels.push_back("Дата");
-	m_headerLabels.push_back("Дата внесения");
-	m_headerLabels.push_back("Производитель");
-	m_headerLabels.push_back("Собственник отходов");
+	m_headerLabels.push_back("Поступило от орг.");
 	m_headerLabels.push_back("Получатель отходов");
 	m_headerLabels.push_back("Перевозчик отходов");
 	m_headerLabels.push_back("Код отходов");
@@ -170,8 +168,8 @@ void VirtualListCtrl::initHeaderList()
 	m_headerLabels.push_back("Передано на хранение, т.(шт.)");
 	m_headerLabels.push_back("Передано на захоронение, т.(шт.)");
 	m_headerLabels.push_back("Хранится суммарно, т.(шт.)");
-	m_headerLabels.push_back("Норматив образования отходов");
-	m_headerLabels.push_back("Структурные подразделения");
+	m_headerLabels.push_back("Структурные подразделения (ПОД 10)");
+	m_headerLabels.push_back("Структурные подразделения (ПОД 9)");
 	int count{ 0 };
 	for (auto it = m_headerLabels.begin(); it != m_headerLabels.end(); ++it)
 	{
@@ -216,10 +214,12 @@ void VirtualListCtrl::SetHeaderFont(const wxFont& font)
 	this->SetHeaderAttr(item);
 }
 
-std::vector<wxString>& VirtualListCtrl::GetSelectedItemRef()
+std::optional < std::reference_wrapper<std::vector<wxString>>> VirtualListCtrl::GetSelectedItemRef()
 {
+	if (GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED) == -1)
+		return std::nullopt;
 	
-	return m_items[GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)];
+	return  std::optional < std::reference_wrapper <std::vector<wxString>> > {m_items[GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)]};
 }
 
 std::vector<wxString> VirtualListCtrl::GetColumnLabels()

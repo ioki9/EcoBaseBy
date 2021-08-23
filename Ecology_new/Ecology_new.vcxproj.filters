@@ -30,23 +30,26 @@
     <Filter Include="GUI\Frames">
       <UniqueIdentifier>{24d93635-bd8f-4ad9-9054-177fe89fe306}</UniqueIdentifier>
     </Filter>
+    <Filter Include="GUI\Frames\Headers">
+      <UniqueIdentifier>{83d9746c-bffa-4408-8fdb-080400103a44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Frames\Source">
+      <UniqueIdentifier>{5934b323-13ce-4c2e-bfc8-ca730cb9ce3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Controls\Headers">
+      <UniqueIdentifier>{4e80afcd-242f-4576-acf9-e6f5f0d0427f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI\Controls\Soruce">
+      <UniqueIdentifier>{2e0419a7-1cec-4bc9-b4dc-47046b1646b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PDF Creation\Headers">
+      <UniqueIdentifier>{6a694438-0089-4c41-972d-cbe80508c7e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\PDF Creation\Source">
+      <UniqueIdentifier>{66aa5362-66c4-442a-923f-760a9f321c5a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="PDF_Helper.h">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Journal.h">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Main.h">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Pod9.h">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClInclude>
-    <ClInclude Include="PDF_Pod10.h">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClInclude>
     <ClInclude Include="Utility.h">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
@@ -62,85 +65,109 @@
     <ClInclude Include="Structs.h">
       <Filter>Source Files\DataBase</Filter>
     </ClInclude>
-    <ClInclude Include="Add_panel.h">
-      <Filter>GUI\Frames</Filter>
-    </ClInclude>
-    <ClInclude Include="cApp.h">
-      <Filter>GUI\Frames</Filter>
-    </ClInclude>
-    <ClInclude Include="cMain.h">
-      <Filter>GUI\Frames</Filter>
-    </ClInclude>
-    <ClInclude Include="cMenuAddDialog.h">
-      <Filter>GUI\Frames</Filter>
+    <ClInclude Include="GUI_parameters.h">
+      <Filter>Source Files\Global variables</Filter>
     </ClInclude>
     <ClInclude Include="ColSelectDialog.h">
-      <Filter>GUI\Frames</Filter>
+      <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="CustomCheckBox.h">
-      <Filter>GUI\Controls</Filter>
+    <ClInclude Include="Add_panel.h">
+      <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="itemdata.h">
-      <Filter>GUI\Controls</Filter>
+    <ClInclude Include="cApp.h">
+      <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="MaterialButton.h">
-      <Filter>GUI\Controls</Filter>
-    </ClInclude>
-    <ClInclude Include="VirtualListCtrl.h">
-      <Filter>GUI\Controls</Filter>
+    <ClInclude Include="cMain.h">
+      <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
     <ClInclude Include="cMainListEditDialog.h">
-      <Filter>GUI\Frames</Filter>
+      <Filter>GUI\Frames\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="cMenuAddDialog.h">
+      <Filter>GUI\Frames\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualListCtrl.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialButton.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="MainMenuTabButton.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="itemdata.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCheckBox.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Helper.h">
+      <Filter>Source Files\PDF Creation\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Journal.h">
+      <Filter>Source Files\PDF Creation\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Main.h">
+      <Filter>Source Files\PDF Creation\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Pod9.h">
+      <Filter>Source Files\PDF Creation\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="PDF_Pod10.h">
+      <Filter>Source Files\PDF Creation\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
       <Filter>Source Files\DataBase</Filter>
     </ClCompile>
-    <ClCompile Include="PDF_Pod9.cpp">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClCompile>
-    <ClCompile Include="PDF_Pod10.cpp">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClCompile>
-    <ClCompile Include="PDF_Main.cpp">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClCompile>
-    <ClCompile Include="PDF_Helper.cpp">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClCompile>
     <ClCompile Include="Utility.cpp">
       <Filter>Source Files\Utility</Filter>
     </ClCompile>
-    <ClCompile Include="PDF_Journal.cpp">
-      <Filter>Source Files\PDF Creation</Filter>
-    </ClCompile>
     <ClCompile Include="Add_panel.cpp">
-      <Filter>GUI\Frames</Filter>
+      <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="cApp.cpp">
-      <Filter>GUI\Frames</Filter>
+      <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="cMain.cpp">
-      <Filter>GUI\Frames</Filter>
-    </ClCompile>
-    <ClCompile Include="cMenuAddDialog.cpp">
-      <Filter>GUI\Frames</Filter>
-    </ClCompile>
-    <ClCompile Include="ColSelectDialog.cpp">
-      <Filter>GUI\Frames</Filter>
-    </ClCompile>
-    <ClCompile Include="CustomCheckBox.cpp">
-      <Filter>GUI\Controls</Filter>
-    </ClCompile>
-    <ClCompile Include="VirtualListCtrl.cpp">
-      <Filter>GUI\Controls</Filter>
+      <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="cMainListEditDialog.cpp">
-      <Filter>GUI\Frames</Filter>
+      <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="cMenuAddDialog.cpp">
+      <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ColSelectDialog.cpp">
+      <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualListCtrl.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCheckBox.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="MainMenuTabButton.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
     </ClCompile>
     <ClCompile Include="MaterialButton.cpp">
-      <Filter>GUI\Frames</Filter>
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Helper.cpp">
+      <Filter>Source Files\PDF Creation\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Journal.cpp">
+      <Filter>Source Files\PDF Creation\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Main.cpp">
+      <Filter>Source Files\PDF Creation\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Pod9.cpp">
+      <Filter>Source Files\PDF Creation\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="PDF_Pod10.cpp">
+      <Filter>Source Files\PDF Creation\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

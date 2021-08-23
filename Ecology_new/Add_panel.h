@@ -9,7 +9,7 @@
 #include "Utility.h"
 #include "cMain.h"
 #include "Structs.h"
-
+#include "VirtualListCtrl.h"
 
 
 class cMain;
@@ -19,13 +19,14 @@ class Add_panel :
     public wxPanel
 {
 public:
-    Add_panel(wxWindow* parent, wxWindowID winid = wxID_ANY, 
-        const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
+    Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listItems);
     ~Add_panel();
 
 private:
 
 
+    std::vector<std::vector<wxString>> *m_listItems;
+    void addItem();
 
     addPageInfo m_record;
     float m_validatorValue;

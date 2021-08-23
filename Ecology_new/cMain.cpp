@@ -48,8 +48,8 @@ void cMain::initListPanel()
 	wxBoxSizer* topButtonSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* vtopButtonSizer = new wxBoxSizer(wxVERTICAL);
 	MaterialButton* editButton = new MaterialButton(m_listTopPanel, wxID_ANY, "ÈÇÌÅÍÈÒÜ", true,wxDefaultPosition, wxSize(100, 40));
-	editButton->SetButtonLineColour(wxColour(34, 139, 34));
-	editButton->SetLabelColour(wxColour(34, 139, 34));
+	editButton->SetButtonLineColour(gui_MainColour);
+	editButton->SetLabelColour(gui_MainColour);
 	editButton->SetButtonRadius(0);
 	MaterialButton* deleteButton = new MaterialButton(m_listTopPanel, wxID_ANY, "ÓÄÀËÈÒÜ", false,wxDefaultPosition,wxSize(100,40));
 	deleteButton->SetButtonColour(wxColour(165, 42, 42));
@@ -86,7 +86,7 @@ void cMain::initAddPanel()
 
 	m_addPanel = new wxPanel(this, ID_LIST_PANEL, wxDefaultPosition, wxSize(800, 600));
 	m_addPanel->SetBackgroundColour(wxColor(255, 255, 255));
-	Add_panel* AddPanel = new Add_panel(m_addPanel, -1, wxDefaultPosition, wxDefaultSize);
+	Add_panel* AddPanel = new Add_panel(m_addPanel, &m_myList->m_items);
 	wxBoxSizer* mainAddsizer = new wxBoxSizer(wxVERTICAL);
 	mainAddsizer->Add(AddPanel,1,wxEXPAND);
 	m_addPanel->SetSizerAndFit(mainAddsizer);
@@ -97,16 +97,16 @@ void cMain::initMainMenu()
 {
 
 	m_mainMenu = new wxPanel(this, ID_MAINMENU_PANEL, wxDefaultPosition, wxSize(270, 200));
-	m_mainMenu->SetBackgroundColour(wxColour(34, 139, 34));
+	m_mainMenu->SetBackgroundColour(gui_MainColour);
 
 	//================================= DATA BUTTON====================================================
 	m_dataMenuTab = new wxPanel(m_mainMenu, ID_MAINMENU_LIST_BUTTON, wxPoint(0, 150), wxSize(200, 50));
 	m_dataMenuText = new wxStaticText(m_dataMenuTab, ID_MAINMENU_LIST_BUTTON, wxS("Òàáëèöà"),
 		wxDefaultPosition, wxSize(150, 30), wxALIGN_LEFT);
 	m_dataMenuText->CentreOnParent();
-	m_dataMenuText->SetFont(m_myFont);
+	m_dataMenuText->SetFont(gui_MenuFont);
 	m_dataMenuText->SetForegroundColour(wxColour(*wxWHITE));
-	m_dataMenuTab->SetBackgroundColour(wxColour(34, 139, 34));
+	m_dataMenuTab->SetBackgroundColour(gui_MainColour);
 	m_dataMenuTab->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
 	m_dataMenuText->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
 
@@ -115,9 +115,9 @@ void cMain::initMainMenu()
 	wxStaticText* addMenuText = new wxStaticText(addMenuTab, ID_MAINMENU_ADD_BUTTON, wxS("Äîáàâèòü çàïèñü"),
 		wxDefaultPosition, wxSize(150, 30), wxALIGN_LEFT);
 	addMenuText->CentreOnParent();
-	addMenuText->SetFont(m_myFont);
+	addMenuText->SetFont(gui_MenuFont);
 	addMenuText->SetForegroundColour(wxColour(*wxWHITE));
-	addMenuTab->SetBackgroundColour(wxColour(34, 139, 34));
+	addMenuTab->SetBackgroundColour(gui_MainColour);
 	addMenuTab->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
 	addMenuText->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
 
@@ -125,11 +125,23 @@ void cMain::initMainMenu()
 	wxPanel* testMenuTab = new wxPanel(m_mainMenu, 779, wxPoint(0, 250), wxSize(200, 50));
 	wxStaticText* testMenuText = new wxStaticText(testMenuTab, 779, wxS("Òåñò"), wxDefaultPosition, wxSize(150, 30), wxALIGN_LEFT);
 	testMenuText->CentreOnParent();
-	testMenuText->SetFont(m_myFont);
+	testMenuText->SetFont(gui_MenuFont);
 	testMenuText->SetForegroundColour(wxColour(*wxWHITE));
-	testMenuTab->SetBackgroundColour(wxColour(34, 139, 34));
+	testMenuTab->SetBackgroundColour(gui_MainColour);
 	testMenuTab->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
 	testMenuText->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
+}
+
+void cMain::initNewOrgPage()
+{
+
+}
+void  cMain::initFormPDFPage()
+{
+	m_formPDFPanel = new wxPanel(this);
+	m_formPDFPanel->Hide();
+	m_formPDFPanel->SetBackgroundColour(*wxWHITE);
+
 }
 
 void cMain::OnSize(wxSizeEvent& evt)
@@ -148,23 +160,32 @@ void cMain::OnSize(wxSizeEvent& evt)
 
 void cMain::OnTabSwitch(wxMouseEvent& evt)
 {
-	m_mainSizer->Detach(1);
+
 	switch (evt.GetId())
 	{
 	case ID_MAINMENU_ADD_BUTTON:
 	{
-		m_listPanel->Hide();
-		m_mainSizer->Add(m_addPanel, 1, wxEXPAND);
-		m_addPanel->Show();
+		if (!m_addPanel->IsShown())
+		{
+			m_mainSizer->Detach(1);
+			m_listPanel->Hide();
+			m_mainSizer->Add(m_addPanel, 1, wxEXPAND);
+			m_addPanel->Show();
+		}
 		break;
 	}
 
 	case ID_MAINMENU_LIST_BUTTON:
 	{
-		m_addPanel->Hide();
-		m_mainSizer->Add(m_listPanel, 1, wxEXPAND);
-		m_listPanel->Show();
-
+		if (!m_listPanel->IsShown())
+		{
+			m_mainSizer->Detach(1);
+			m_addPanel->Hide();
+			m_mainSizer->Add(m_listPanel, 1, wxEXPAND);
+			m_listPanel->Show();
+			m_myList->SetItemCount(m_myList->m_items.size());
+			m_myList->Refresh();
+		}
 		break;
 	}
 
@@ -177,15 +198,44 @@ void cMain::OnTabSwitch(wxMouseEvent& evt)
 
 void cMain::OnListEditButton(wxMouseEvent& evt)
 {
-
-	cMainListEditDialog* dialog = new cMainListEditDialog(this, m_myList->GetSelectedItemRef(),m_myList->GetColumnLabels());
-	dialog->Destroy();
+	if (m_myList->GetSelectedItemRef())
+	{
+		cMainListEditDialog* dialog = new cMainListEditDialog(this, m_myList->GetSelectedItemRef()->get(), m_myList->GetColumnLabels());
+		dialog->Destroy();
+	}
 
 }
 
 void cMain::OnListDeleteButton(wxMouseEvent& evt)
 {
+	if (m_myList->GetSelectedItemRef())
+	{
 
+		addPageInfo m_record;
+		std::vector<wxString> m_item = m_myList->GetSelectedItemRef()->get();
+		m_record.regnum = m_item[0];
+		m_record.date = m_item[1];
+		m_record.owner = m_item[2];
+		m_record.receiver = m_item[3];
+		m_record.transporter = m_item[4];
+		m_record.code = m_item[5];
+		m_record.amountFormed = m_item[6];
+		m_record.amountReceivedPhys = m_item[7];
+		m_record.amountReceivedOrg = m_item[8];
+		m_record.amountUsed = m_item[9];
+		m_record.amountDefused = m_item[10];
+		m_record.amountBurial = m_item[11];
+		m_record.amountStorage = m_item[12];
+		m_record.tamountUsed = m_item[13];
+		m_record.tamountDefused = m_item[14];
+		m_record.tamountStorage = m_item[15];
+		m_record.tamountBurial = m_item[16];
+		m_record.amountStrgFull = m_item[17];
+		m_record.wasteNorm = m_item[18];
+		m_record.structUnit10 = m_item[19];
+		m_record.id = m_item.back();
+		m_dataBase->deleteEntry(m_record);
+	}
 }
 
 void cMain::onTestButton(wxCommandEvent &evt)

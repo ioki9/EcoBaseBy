@@ -26,7 +26,9 @@
     <ClInclude Include="cMenuAddDialog.h" />
     <ClInclude Include="ColSelectDialog.h" />
     <ClInclude Include="CustomCheckBox.h" />
+    <ClInclude Include="GUI_parameters.h" />
     <ClInclude Include="itemdata.h" />
+    <ClInclude Include="MainMenuTabButton.h" />
     <ClInclude Include="MaterialButton.h" />
     <ClInclude Include="PDF_Journal.h" />
     <ClInclude Include="resource.h" />
@@ -48,6 +50,7 @@
     <ClCompile Include="cMenuAddDialog.cpp" />
     <ClCompile Include="ColSelectDialog.cpp" />
     <ClCompile Include="CustomCheckBox.cpp" />
+    <ClCompile Include="MainMenuTabButton.cpp" />
     <ClCompile Include="MaterialButton.cpp" />
     <ClCompile Include="PDF_Journal.cpp" />
     <ClCompile Include="Utility.cpp" />

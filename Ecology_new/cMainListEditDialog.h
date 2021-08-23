@@ -1,6 +1,8 @@
 #pragma once
 #include <wx\wx.h>
 #include "MaterialButton.h"
+#include "Structs.h"
+#include "DBMain.h"
 
 class cMainListEditDialog : public wxDialog
 {
@@ -12,8 +14,12 @@ public:
 private:
 	wxScrolledWindow *m_mainPanel = nullptr;
 	wxPanel* m_buttonPanel = nullptr;
+	addPageInfo m_record;
 	std::vector<wxString> m_item;
 	wxStaticText** m_staticText;
 	wxTextCtrl** m_textCtrl;
+	void OnApply(wxMouseEvent& evt);
+	void OnCancel(wxMouseEvent& evt);
+	void setNewItem();
 };
 

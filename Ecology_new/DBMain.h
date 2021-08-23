@@ -32,8 +32,12 @@ private:
 	void getPassportColumnNames();
 protected: 
 	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
-	void updateSubsequentStorage(const wxString& code, const wxString& date, const wxString& diffAm);
+	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm);
+	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm);
 public:
+	bool insertInitStorageEntry();
+	bool deleteEntry(const addPageInfo& info);
+	bool editEntry(const addPageInfo& info);
 	bool insertNewEntry(const addPageInfo& info);
 	void insertFirstEntry(const addPageInfo& info);
 	wxString checkFullStorage(const wxString& code);
@@ -52,6 +56,8 @@ public:
 	void getJournalCodeInfo(passportJournalInfo& data);
 
 	void getListItemData(std::vector<ItemData>& item);
+
+	//ID should always be last in array
 	void getListItemData(std::vector<std::vector<wxString>>& item);
 };
  

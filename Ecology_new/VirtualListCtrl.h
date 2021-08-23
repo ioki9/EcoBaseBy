@@ -3,7 +3,7 @@
 #include <wx/listctrl.h>
 #include <vector>
 #include <cstdint>
-
+#include <optional>
 #include <wx/imaglist.h>
 #include <wx/gdicmn.h> 
 #include "ColSelectDialog.h"
@@ -47,7 +47,7 @@ private:
 public:
 
 	void SetHeaderFont(const wxFont& font);
-	std::vector<wxString>& GetSelectedItemRef();
+	std::optional < std::reference_wrapper<std::vector<wxString>>> GetSelectedItemRef();
 	std::vector<wxString> GetColumnLabels();
 	void SetActiveColumns(std::uint32_t activeCol);
 	enum class ColumnFlags : std::uint32_t
