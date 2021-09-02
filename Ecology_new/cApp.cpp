@@ -10,7 +10,7 @@ wxIMPLEMENT_APP(cApp);
 cApp::cApp()
 {
 	wxInitAllImageHandlers();
-
+	wxLocale(wxLANGUAGE_RUSSIAN);
 	
 }
 

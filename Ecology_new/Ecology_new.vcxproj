@@ -30,6 +30,7 @@
     <ClInclude Include="itemdata.h" />
     <ClInclude Include="MainMenuTabButton.h" />
     <ClInclude Include="MaterialButton.h" />
+    <ClInclude Include="myDirPicker.h" />
     <ClInclude Include="PDF_Journal.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Utility.h" />
@@ -52,6 +53,7 @@
     <ClCompile Include="CustomCheckBox.cpp" />
     <ClCompile Include="MainMenuTabButton.cpp" />
     <ClCompile Include="MaterialButton.cpp" />
+    <ClCompile Include="myDirPicker.cpp" />
     <ClCompile Include="PDF_Journal.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="PDF_Helper.cpp" />
@@ -149,7 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\IconFontCppHeaders-main;D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>

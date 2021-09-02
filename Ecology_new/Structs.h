@@ -215,11 +215,13 @@ struct addPageInfo
 	wxString owner;
 	wxString regnum;
 	wxString code;
+	wxString oldCode;
 	wxString amountGet;
 	wxString amountReceivedPhys;
 	wxString amountReceivedOrg;
 	wxString amountFormed;
 	wxString date;
+	wxString oldDate;
 	wxString entryDate;
 	wxString wasteNorm;
 	wxString structUnit10;

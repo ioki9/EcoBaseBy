@@ -8,6 +8,7 @@
 #include <vector>
 #include <wx/pdfdoc.h>
 #include <wx/pdffontmanager.h>
+#include <wx/filepicker.h>
 #include "Add_panel.h"
 #include "cMenuAddDialog.h"
 #include "Utility.h"
@@ -15,7 +16,10 @@
 #include "MaterialButton.h"
 #include "DBMain.h"
 #include "cMainListEditDialog.h"
+#include "myDirPicker.h"
 #include "GUI_parameters.h"
+#include "MainMenuTabButton.h"
+
 
 
 class cMain : public wxFrame
@@ -28,45 +32,73 @@ public:
 	DBMain *m_dataBase = new DBMain();
 
 private:
-	wxMenuBar* m_MenuBar = nullptr;
-	wxMenu* m_menuFile = nullptr;
-	wxMenu* m_menuAbout = nullptr;
+
 
 	//LIST PANEL
 	VirtualListCtrl* m_myList;
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
 	wxPanel* m_listBottomPanel = nullptr;
-	wxPanel* m_listBotRightPanel = nullptr;
+	void initListPanel();
 
 	//MENU PANEL
 	wxPanel* m_mainMenu = nullptr;
-	wxPanel* m_dataMenuTab = nullptr;
-	wxStaticText* m_dataMenuText = nullptr;
+	wxWindow* m_activePanel = nullptr;
+	MainMenuTabButton* m_menuButtonList = nullptr;
+	MainMenuTabButton* m_menuButtonAdd = nullptr;
+	MainMenuTabButton* m_menuButtonForm = nullptr;
+	std::vector<MainMenuTabButton*> m_allMenuButtons;
 	wxBoxSizer* m_mainSizer = nullptr;
+	int m_mainMenuWidth = 270;
+	void initMainMenu();
+	//sets all menu buttons inactive, to then activate the one we need
+	void setAllMenuBtnInactive();
+	void setActiveButton(MainMenuTabButton* activeBtn);
+	//changes the active page by hiding, deataching old one and showing,ataching new one
+	void changeActivePage(wxWindow* newPage);
 
 	//ADD PANEL
 	wxPanel* m_addPanel = nullptr;
+	void initAddPanel();
 
-	wxPanel* m_formPDFPanel = nullptr;
+	//FORM PDF PANEL
+	void initFormPDFPage();
+	wxScrolledWindow* m_formPDFPanel = nullptr;
+	myDirPicker* m_dir_pod10 = nullptr;
+	myDirPicker* m_dir_journal = nullptr;
+	myDirPicker* m_dir_pod9 = nullptr;
+	wxDatePickerCtrl* m_date1_pod9 = nullptr;
+	wxDatePickerCtrl* m_date2_pod9 = nullptr;
+	wxDatePickerCtrl* m_date1_pod10 = nullptr;
+	wxDatePickerCtrl* m_date2_pod10 = nullptr;
+	wxDatePickerCtrl* m_date1_journal = nullptr;
+	wxDatePickerCtrl* m_date2_journal = nullptr;
 
+	//EVENTS
 	void onTestButton(wxCommandEvent& evt);
 	void OnMenuFileAdd(wxCommandEvent& evt);
-	void OnTabSwitch(wxMouseEvent& evt);
-	void OnListEditButton(wxMouseEvent& evt);
-	void OnListDeleteButton(wxMouseEvent& evt);
-	void initListPanel();
-	void initAddPanel();
-	void initMainMenu();
-	void initNewOrgPage();
-	void initFormPDFPage();
+	void OnTabSwitch(wxCommandEvent& evt);
+	void OnListEditButton(wxCommandEvent& evt);
+	void OnListDeleteButton(wxCommandEvent& evt);
+	void OnFromPDFButton(wxCommandEvent& evt);
 	void OnSize(wxSizeEvent& evt);
+
+
+	
+	void initNewOrgPage();
+
+
+
 	enum ID_MAINFRAME
 	{
-		ID_LIST_PANEL,
+		ID_LIST_PANEL=800,
 		ID_MAINMENU_PANEL,
 		ID_MAINMENU_LIST_BUTTON,
 		ID_MAINMENU_ADD_BUTTON,
+		ID_MAINMENU_FORM_BUTTON,
+		ID_FORMPDF_POD9_BUTTON,
+		ID_FORMPDF_POD10_BUTTON,
+		ID_FORMPDF_JOURNAL_BUTTON,
 		ID_MAXIDS
 	};
 

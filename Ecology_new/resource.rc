@@ -15,6 +15,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 ICON_LIST_LINE               RCDATA                  "List_line_green 32x32.png"
 ICON_HLIST_TRANSP			RCDATA						"Transp32x32.png"
+ICON_MAINMENU_LINE			RCDATA						"Menu_line_white_32x11.png"
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////

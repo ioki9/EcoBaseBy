@@ -140,6 +140,9 @@ void MaterialButton::OnLeftDown(wxMouseEvent& evt)
 void MaterialButton::OnLeftUp(wxMouseEvent& evt)
 {
 	status &= ~(flag_leftKeyDown);
+	wxCommandEvent event(wxEVT_COMMAND_BUTTON_CLICKED, GetId());
+	evt.SetEventObject(this);
+	HandleWindowEvent(event);
 	this->Refresh();
 	evt.Skip();
 }

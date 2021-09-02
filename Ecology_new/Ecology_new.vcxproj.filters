@@ -116,6 +116,9 @@
     <ClInclude Include="PDF_Pod10.h">
       <Filter>Source Files\PDF Creation\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="myDirPicker.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -168,6 +171,9 @@
     </ClCompile>
     <ClCompile Include="PDF_Pod10.cpp">
       <Filter>Source Files\PDF Creation\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="myDirPicker.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

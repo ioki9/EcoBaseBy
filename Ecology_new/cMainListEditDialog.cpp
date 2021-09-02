@@ -74,10 +74,12 @@ void cMainListEditDialog::OnApply(wxMouseEvent& evt)
 {
 	m_record.regnum = m_textCtrl[0]->GetValue();
 	m_record.date = m_textCtrl[1]->GetValue();
+	m_record.oldDate = m_item[1];
 	m_record.owner = m_textCtrl[2]->GetValue();
 	m_record.receiver = m_textCtrl[3]->GetValue();
 	m_record.transporter = m_textCtrl[4]->GetValue();
 	m_record.code = m_textCtrl[5]->GetValue();
+	m_record.oldCode = m_item[5];
 	m_record.amountFormed = m_textCtrl[6]->GetValue();
 	m_record.amountReceivedPhys = m_textCtrl[7]->GetValue();
 	m_record.amountReceivedOrg = m_textCtrl[8]->GetValue();
@@ -89,7 +91,6 @@ void cMainListEditDialog::OnApply(wxMouseEvent& evt)
 	m_record.tamountDefused = m_textCtrl[14]->GetValue();
 	m_record.tamountStorage = m_textCtrl[15]->GetValue();
 	m_record.tamountBurial = m_textCtrl[16]->GetValue();
-	m_record.amountStrgFull = m_textCtrl[17]->GetValue();
 	m_record.wasteNorm = m_textCtrl[18]->GetValue();
 	m_record.structUnit9 = m_textCtrl[19]->GetValue();
 	m_record.id = m_item.back();
@@ -102,7 +103,6 @@ void cMainListEditDialog::OnApply(wxMouseEvent& evt)
 
 void cMainListEditDialog::OnCancel(wxMouseEvent& evt)
 {
-	wxMessageBox(m_textCtrl[8]->GetValue());
 	this->Close();
 }
 

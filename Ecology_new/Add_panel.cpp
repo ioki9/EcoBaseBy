@@ -19,11 +19,11 @@ Add_panel::Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listI
 	this->SetSizer(mainSizer);
 	mainSizer->Add(m_page1, 1, wxEXPAND);
 
-	p1_buttonNext->Bind(wxEVT_LEFT_UP, &Add_panel::OnP1_ButtonNext, this);
-	p2_buttonNext->Bind(wxEVT_LEFT_UP, &Add_panel::OnP2_ButtonNext, this);
-	p2_buttonPrevious->Bind(wxEVT_LEFT_UP, &Add_panel::OnP2_ButtonPrev, this);
-	p3_buttonNext->Bind(wxEVT_LEFT_UP, &Add_panel::OnP3_ButtonNext, this);
-	p3_buttonPrevious->Bind(wxEVT_LEFT_UP, &Add_panel::OnP3_ButtonPrev, this);
+	p1_buttonNext->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP1_ButtonNext, this);
+	p2_buttonNext->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP2_ButtonNext, this);
+	p2_buttonPrevious->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP2_ButtonPrev, this);
+	p3_buttonNext->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP3_ButtonNext, this);
+	p3_buttonPrevious->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP3_ButtonPrev, this);
 	p3_strgCheck->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP3_CheckBoxUp, this);
 
 }
@@ -33,7 +33,7 @@ Add_panel::~Add_panel()
 	
 }
 
-void Add_panel::addItem()
+void Add_panel::addItem(const wxString &id)
 {
 	std::vector<wxString> item;
 	item.push_back(m_record.regnum);
@@ -47,8 +47,8 @@ void Add_panel::addItem()
 	item.push_back(m_record.amountReceivedOrg);
 	item.push_back(m_record.amountUsed);
 	item.push_back(m_record.amountDefused);
-	item.push_back(m_record.amountBurial);
 	item.push_back(m_record.amountStorage);
+	item.push_back(m_record.amountBurial);
 	item.push_back(m_record.tamountUsed);
 	item.push_back(m_record.tamountDefused);
 	item.push_back(m_record.tamountStorage);
@@ -57,6 +57,7 @@ void Add_panel::addItem()
 	item.push_back(m_record.wasteNorm);
 	item.push_back(m_record.structUnit10);
 	item.push_back("");
+	item.push_back(id);
 	m_listItems->push_back(item);
 	item.clear();
 }
@@ -109,8 +110,8 @@ void Add_panel::initPage1()
 	amountReceivedOrgRadio = new wxRadioButton(midRightSizPanel, ID_PAGE1_AMOUNTRADIO, "Ïîñòóïèëî îò äð. îðã.", wxDefaultPosition, wxDefaultSize);
 
 	p1_buttonNext = new MaterialButton(botPanel, ID_PAGE1_BUTTON_NEXT, wxS("ÄÀËÅÅ"),true,wxDefaultPosition,wxSize(200,55));
-	p1_buttonNext->SetButtonLineColour(wxColour(34, 139, 34));
-	p1_buttonNext->SetLabelColour(wxColour(34, 139, 34));
+	p1_buttonNext->SetButtonLineColour(gui_MainColour);
+	p1_buttonNext->SetLabelColour(gui_MainColour);
 	buttonSizer->Add(p1_buttonNext, 1, wxALIGN_RIGHT | wxRIGHT, 50);
 
 	//____________MAIN_______________________________
@@ -204,11 +205,11 @@ void Add_panel::initPage2()
 	m_tamBurialCtrl = new wxTextCtrl(p2_midRightSizPanel, ID_PAGE1_AMOUNTTXT, wxEmptyString, wxDefaultPosition, wxSize(250, 30), 0L, floatValidator);
 
 	p2_buttonNext = new MaterialButton(p2_botPanel, ID_PAGE1_BUTTON_NEXT, wxS("ÄÀËÅÅ"),true, wxDefaultPosition, wxSize(200, 55));
-	p2_buttonNext->SetButtonLineColour(wxColour(34, 139, 34));
-	p2_buttonNext->SetLabelColour(wxColour(34, 139, 34));
+	p2_buttonNext->SetButtonLineColour(gui_MainColour);
+	p2_buttonNext->SetLabelColour(gui_MainColour);
 	p2_buttonPrevious = new MaterialButton(p2_botPanel, ID_PAGE1_BUTTON_NEXT, wxS("ÍÀÇÀÄ"), true, wxDefaultPosition, wxSize(200, 55));
-	p2_buttonPrevious->SetButtonLineColour(wxColour(34, 139, 34));
-	p2_buttonPrevious->SetLabelColour(wxColour(34, 139, 34));
+	p2_buttonPrevious->SetButtonLineColour(gui_MainColour);
+	p2_buttonPrevious->SetLabelColour(gui_MainColour);
 
 	p2_buttonSizerH->Add(p2_buttonPrevious,0,wxLEFT,50);
 	p2_buttonSizerH->AddStretchSpacer();
@@ -314,11 +315,11 @@ void Add_panel::initPage3()
 
 
 	p3_buttonNext = new MaterialButton(p3_botPanel, ID_PAGE1_BUTTON_NEXT, wxS("ÄÀËÅÅ"),true, wxDefaultPosition, wxSize(200, 55));
-	p3_buttonNext->SetButtonLineColour(wxColour(34, 139, 34));
-	p3_buttonNext->SetLabelColour(wxColour(34, 139, 34));
+	p3_buttonNext->SetButtonLineColour(gui_MainColour);
+	p3_buttonNext->SetLabelColour(gui_MainColour);
 	p3_buttonPrevious = new MaterialButton(p3_botPanel, ID_PAGE1_BUTTON_NEXT, wxS("ÍÀÇÀÄ"), true, wxDefaultPosition, wxSize(200, 55));
-	p3_buttonPrevious->SetButtonLineColour(wxColour(34, 139, 34));
-	p3_buttonPrevious->SetLabelColour(wxColour(34, 139, 34));
+	p3_buttonPrevious->SetButtonLineColour(gui_MainColour);
+	p3_buttonPrevious->SetLabelColour(gui_MainColour);
 
 	p3_buttonSizerH->Add(p3_buttonPrevious, 0, wxLEFT, 50);
 	p3_buttonSizerH->AddStretchSpacer(1);
@@ -422,16 +423,16 @@ void Add_panel::initResultPage()
 	m_rButtonPanel = new wxPanel(m_resultPage, wxID_ANY, wxDefaultPosition, wxDefaultSize);
 	mainSizer->Add(m_rButtonPanel, 0, wxEXPAND | wxBOTTOM | wxTOP, 30);
 	pr_buttonPrevious = new MaterialButton(m_rButtonPanel, wxID_ANY, "ÍÀÇÀÄ", true, wxDefaultPosition, wxSize(200, 55));
-	pr_buttonPrevious->SetButtonLineColour(wxColour(34, 139, 34));
-	pr_buttonPrevious->SetLabelColour(wxColour(34, 139, 34));
+	pr_buttonPrevious->SetButtonLineColour(gui_MainColour);
+	pr_buttonPrevious->SetLabelColour(gui_MainColour);
 	pr_buttonApply = new MaterialButton(m_rButtonPanel, wxID_ANY, "ÄÎÁÀÂÈÒÜ", false, wxDefaultPosition, wxSize(200, 55));
-	pr_buttonApply->SetButtonColour(wxColour(34, 139, 34));
+	pr_buttonApply->SetButtonColour(gui_MainColour);
 	pr_buttonApply->SetLabelColour(*wxWHITE);
 	buttonSizer->Add(pr_buttonPrevious, 0, wxEXPAND | wxLEFT, 50);
 	buttonSizer->AddStretchSpacer(1);
 	buttonSizer->Add(pr_buttonApply, 0, wxEXPAND | wxRIGHT, 50);
-	pr_buttonApply->Bind(wxEVT_LEFT_UP, &Add_panel::OnPR_ButtonApply, this);
-	pr_buttonPrevious->Bind(wxEVT_LEFT_UP, &Add_panel::OnPR_ButtonPrevious, this);
+	pr_buttonApply->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnPR_ButtonApply, this);
+	pr_buttonPrevious->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnPR_ButtonPrevious, this);
 
 	m_rButtonPanel->SetSizer(buttonSizer);
 
@@ -592,7 +593,7 @@ void Add_panel::OnPaint(wxPaintEvent &evt)
 }
 
 
-void Add_panel::OnP1_ButtonNext(wxMouseEvent& evt)
+void Add_panel::OnP1_ButtonNext(wxCommandEvent& evt)
 {
 
 	m_record.date = m_date->GetValue().Format((wxS("%Y.%m.%d")));
@@ -619,7 +620,7 @@ void Add_panel::OnP1_ButtonNext(wxMouseEvent& evt)
 }
 
 
-void Add_panel::OnP2_ButtonNext(wxMouseEvent& evt)
+void Add_panel::OnP2_ButtonNext(wxCommandEvent& evt)
 {
 	m_record.amountBurial = m_amBurialCtrl->GetValue();
 	m_record.amountStorage = m_amStorageCtrl->GetValue();
@@ -639,7 +640,7 @@ void Add_panel::OnP2_ButtonNext(wxMouseEvent& evt)
 	evt.Skip();
 }
 
-void Add_panel::OnP2_ButtonPrev(wxMouseEvent& evt)
+void Add_panel::OnP2_ButtonPrev(wxCommandEvent& evt)
 {
 	mainSizer->Detach(0);
 	m_page2->Hide();
@@ -650,7 +651,7 @@ void Add_panel::OnP2_ButtonPrev(wxMouseEvent& evt)
 	evt.Skip();
 }
 
-void Add_panel::OnP3_ButtonNext(wxMouseEvent& evt)
+void Add_panel::OnP3_ButtonNext(wxCommandEvent& evt)
 {
 	m_record.wasteNorm = m_wasteNormCtrl->GetValue();
 	m_record.structUnit10 = m_structUnit10Ctrl->GetValue();
@@ -672,7 +673,7 @@ void Add_panel::OnP3_ButtonNext(wxMouseEvent& evt)
 
 }
 
-void Add_panel::OnP3_ButtonPrev(wxMouseEvent& evt)
+void Add_panel::OnP3_ButtonPrev(wxCommandEvent& evt)
 {
 	mainSizer->Detach(0);
 	m_page3->Hide();
@@ -703,7 +704,7 @@ void Add_panel::OnP3_CheckBoxUp(wxCommandEvent& evt)
 }
 
 
-void Add_panel::OnPR_ButtonApply(wxMouseEvent& evt)
+void Add_panel::OnPR_ButtonApply(wxCommandEvent& evt)
 {
 
 	DBMain* dataBase = new DBMain;
@@ -725,9 +726,10 @@ void Add_panel::OnPR_ButtonApply(wxMouseEvent& evt)
 	{
 		dataBase->insertNewEntry(m_record);
 	}
+	this->addItem(dataBase->GetLastPassportID());
 	delete dataBase;
 
-	this->addItem();
+	
 
 	m_codeCtrl->Clear();
 	m_regnumCtrl->Clear();
@@ -759,7 +761,7 @@ void Add_panel::OnPR_ButtonApply(wxMouseEvent& evt)
 	evt.Skip();
 
 }
-void Add_panel::OnPR_ButtonPrevious(wxMouseEvent& evt)
+void Add_panel::OnPR_ButtonPrevious(wxCommandEvent& evt)
 {
 	mainSizer->Detach(0);
 	

@@ -26,7 +26,7 @@ private:
 
 
     std::vector<std::vector<wxString>> *m_listItems;
-    void addItem();
+    void addItem(const wxString& id);
 
     addPageInfo m_record;
     float m_validatorValue;
@@ -46,8 +46,8 @@ private:
     wxRadioButton* amountReceivedOrgRadio;
     wxDatePickerCtrl* m_date;
     MaterialButton* p1_buttonNext;
-    void OnP1_ButtonNext(wxMouseEvent& evt);
-
+    void OnP1_ButtonNext(wxCommandEvent& evt);
+    
     //___________PAGE2____________
     void initPage2();
     wxPanel* m_page2;
@@ -61,8 +61,8 @@ private:
     wxTextCtrl* m_tamBurialCtrl;
     MaterialButton* p2_buttonNext;
     MaterialButton* p2_buttonPrevious;
-    void OnP2_ButtonNext(wxMouseEvent& evt);
-    void OnP2_ButtonPrev(wxMouseEvent& evt);
+    void OnP2_ButtonNext(wxCommandEvent& evt);
+    void OnP2_ButtonPrev(wxCommandEvent& evt);
 
     //___________PAGE3____________
     void initPage3();
@@ -78,8 +78,8 @@ private:
   
    
     void OnP3_CheckBoxUp(wxCommandEvent& evt);
-    void OnP3_ButtonNext(wxMouseEvent& evt);
-    void OnP3_ButtonPrev(wxMouseEvent& evt);
+    void OnP3_ButtonNext(wxCommandEvent& evt);
+    void OnP3_ButtonPrev(wxCommandEvent& evt);
     //__________RESULT PAGE________
     void initResultPage();
     wxPanel* m_resultPage;
@@ -88,8 +88,8 @@ private:
     MaterialButton* pr_buttonPrevious;
     MaterialButton* pr_buttonApply;
     wxScrolledWindow* pr_mainPanel;
-    void OnPR_ButtonApply(wxMouseEvent& evt);
-    void OnPR_ButtonPrevious(wxMouseEvent& evt);
+    void OnPR_ButtonApply(wxCommandEvent& evt);
+    void OnPR_ButtonPrevious(wxCommandEvent& evt);
 
 
 

@@ -18,8 +18,12 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 	Center();
 	this->initListPanel();
 	this->initAddPanel();
+	this->initFormPDFPage();
 	this->initMainMenu();
 
+
+	m_activePanel = m_listPanel;
+	setActiveButton(m_menuButtonList);
 	m_mainSizer = new wxBoxSizer(wxHORIZONTAL);
 	this->SetSizer(m_mainSizer);
 	m_mainSizer->Add(m_mainMenu, 0, wxEXPAND | wxBOTTOM);
@@ -61,8 +65,8 @@ void cMain::initListPanel()
 	vtopButtonSizer->AddStretchSpacer();
 	vtopButtonSizer->Add(topButtonSizer, 0, wxALIGN_RIGHT| wxBOTTOM,5);
 
-	deleteButton->Bind(wxEVT_LEFT_UP, &cMain::OnListDeleteButton, this);
-	editButton->Bind(wxEVT_LEFT_UP, &cMain::OnListEditButton, this);
+	deleteButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListDeleteButton, this);
+	editButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListEditButton, this);
 
 
 	m_listBottomPanel = new wxPanel(m_listPanel, -1);
@@ -81,6 +85,7 @@ void cMain::initListPanel()
 	m_listBottomPanel->SetSizerAndFit(mainBotPanelSizer);
 	m_listTopPanel->SetSizerAndFit(vtopButtonSizer);
 }
+
 void cMain::initAddPanel()
 {
 
@@ -93,55 +98,163 @@ void cMain::initAddPanel()
 	m_addPanel->Hide();
 }
 
+
+
 void cMain::initMainMenu()
 {
 
-	m_mainMenu = new wxPanel(this, ID_MAINMENU_PANEL, wxDefaultPosition, wxSize(270, 200));
+	m_mainMenu = new wxPanel(this, ID_MAINMENU_PANEL, wxDefaultPosition, wxSize(m_mainMenuWidth, 200));
 	m_mainMenu->SetBackgroundColour(gui_MainColour);
 
-	//================================= DATA BUTTON====================================================
-	m_dataMenuTab = new wxPanel(m_mainMenu, ID_MAINMENU_LIST_BUTTON, wxPoint(0, 150), wxSize(200, 50));
-	m_dataMenuText = new wxStaticText(m_dataMenuTab, ID_MAINMENU_LIST_BUTTON, wxS("Таблица"),
-		wxDefaultPosition, wxSize(150, 30), wxALIGN_LEFT);
-	m_dataMenuText->CentreOnParent();
-	m_dataMenuText->SetFont(gui_MenuFont);
-	m_dataMenuText->SetForegroundColour(wxColour(*wxWHITE));
-	m_dataMenuTab->SetBackgroundColour(gui_MainColour);
-	m_dataMenuTab->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
-	m_dataMenuText->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
+	m_menuButtonList = new MainMenuTabButton(m_mainMenu, "Таблица", ID_MAINMENU_LIST_BUTTON,false,wxSize(m_mainMenuWidth,50),wxPoint(0,150));
+	m_menuButtonList->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
+	m_allMenuButtons.push_back(m_menuButtonList);
 
-	//================================= ADD BUTTON====================================================
-	wxPanel* addMenuTab = new wxPanel(m_mainMenu, ID_MAINMENU_ADD_BUTTON, wxPoint(0, 200), wxSize(200, 50));
-	wxStaticText* addMenuText = new wxStaticText(addMenuTab, ID_MAINMENU_ADD_BUTTON, wxS("Добавить запись"),
-		wxDefaultPosition, wxSize(150, 30), wxALIGN_LEFT);
-	addMenuText->CentreOnParent();
-	addMenuText->SetFont(gui_MenuFont);
-	addMenuText->SetForegroundColour(wxColour(*wxWHITE));
-	addMenuTab->SetBackgroundColour(gui_MainColour);
-	addMenuTab->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
-	addMenuText->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
+	m_menuButtonAdd = new MainMenuTabButton(m_mainMenu, "Добавить запись", ID_MAINMENU_ADD_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 200));
+	m_menuButtonAdd->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
+	m_allMenuButtons.push_back(m_menuButtonAdd);
 
-	//================================= TEST BUTTON====================================================
-	wxPanel* testMenuTab = new wxPanel(m_mainMenu, 779, wxPoint(0, 250), wxSize(200, 50));
-	wxStaticText* testMenuText = new wxStaticText(testMenuTab, 779, wxS("Тест"), wxDefaultPosition, wxSize(150, 30), wxALIGN_LEFT);
-	testMenuText->CentreOnParent();
-	testMenuText->SetFont(gui_MenuFont);
-	testMenuText->SetForegroundColour(wxColour(*wxWHITE));
-	testMenuTab->SetBackgroundColour(gui_MainColour);
-	testMenuTab->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
-	testMenuText->Bind(wxEVT_LEFT_UP, &cMain::OnTabSwitch, this);
+	m_menuButtonForm = new MainMenuTabButton(m_mainMenu, "Сформировать", ID_MAINMENU_FORM_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 250));
+	m_menuButtonForm->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
+	m_allMenuButtons.push_back(m_menuButtonForm);
+
 }
 
-void cMain::initNewOrgPage()
+void cMain::setActiveButton(MainMenuTabButton* activeBtn)
 {
-
+	this->setAllMenuBtnInactive();
+	activeBtn->setSelected(true);
 }
+
+
 void  cMain::initFormPDFPage()
 {
-	m_formPDFPanel = new wxPanel(this);
+	m_formPDFPanel = new wxScrolledWindow(this,wxID_ANY,wxPoint(0,0),wxSize(600,600));
 	m_formPDFPanel->Hide();
 	m_formPDFPanel->SetBackgroundColour(*wxWHITE);
+	m_formPDFPanel->SetFont(wxFontInfo(14).FaceName("Segoe UI").Bold(false));
+	wxDateTime firstDate;
+	firstDate = m_dataBase->getFirstEntryDate();
+	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
+	// _____________POD9_____________
+	wxStaticText* labelPOD9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ПОД 9");
+	labelPOD9->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
+	wxStaticText* txtFirstDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Сформировать с:");
+	m_date1_pod9 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, firstDate,wxPoint(300,200),wxDefaultSize,wxDP_DROPDOWN);
+	wxStaticText* txtSecondDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "По:");
+	m_date2_pod9 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
+	wxBoxSizer* sizerPod9Row1 = new wxBoxSizer(wxHORIZONTAL);
+	sizerPod9Row1->Add(txtFirstDatePod9,0,wxLEFT,20);
+	sizerPod9Row1->Add(m_date1_pod9,0, wxLEFT, 15);
+	sizerPod9Row1->Add(txtSecondDatePod9, 0, wxLEFT, 130);
+	sizerPod9Row1->Add(m_date2_pod9, 0, wxLEFT, 15);
+	wxStaticText* txtDirPod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Путь:");
+	m_dir_pod9 = new myDirPicker(m_formPDFPanel, wxID_ANY, wxGetCwd(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
+	wxBoxSizer* sizerPod9Row2 = new wxBoxSizer(wxHORIZONTAL);
+	sizerPod9Row2->Add(txtDirPod9, 0, wxLEFT, 20);
+	sizerPod9Row2->Add(m_dir_pod9, 0, wxLEFT, 15);
+	MaterialButton* btnFormPOD9 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD9_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
+	btnFormPOD9->SetButtonLineColour(gui_MainColour);
+	btnFormPOD9->SetButtonFillColour(*wxWHITE);
+	btnFormPOD9->SetLabelColour(gui_MainColour);
+
+	//______________POD10_____________
+	wxStaticText* labelPOD10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ПОД 10");
+	labelPOD10->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
+	wxStaticText* txtFirstDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Сформировать с:");
+	m_date1_pod10 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, firstDate, wxPoint(300, 200), wxDefaultSize, wxDP_DROPDOWN);
+	wxStaticText* txtSecondDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "По:");
+	m_date2_pod10 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
+	wxBoxSizer* sizerPod10Row1 = new wxBoxSizer(wxHORIZONTAL);
+	sizerPod10Row1->Add(txtFirstDatePod10, 0, wxLEFT, 20);
+	sizerPod10Row1->Add(m_date1_pod10, 0, wxLEFT, 15);
+	sizerPod10Row1->Add(txtSecondDatePod10, 0, wxLEFT, 130);
+	sizerPod10Row1->Add(m_date2_pod10, 0, wxLEFT, 15);
+	wxStaticText* txtDirPod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Путь:");
+	m_dir_pod10 = new myDirPicker(m_formPDFPanel, wxID_ANY, wxGetCwd(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
+	wxBoxSizer* sizerPod10Row2 = new wxBoxSizer(wxHORIZONTAL);
+	sizerPod10Row2->Add(txtDirPod10, 0, wxLEFT, 20);
+	sizerPod10Row2->Add(m_dir_pod10, 0, wxLEFT, 15);
+	MaterialButton* btnFormPOD10 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD10_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
+	btnFormPOD10->SetButtonLineColour(gui_MainColour);
+	btnFormPOD10->SetButtonFillColour(*wxWHITE);
+	btnFormPOD10->SetLabelColour(gui_MainColour);
+
+	//______________JOURNAL_____________
+	wxStaticText* labelJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "ЖУРНАЛ");
+	labelJournal->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
+	wxStaticText* txtFirstDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Сформировать с:");
+	m_date1_journal = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, firstDate, wxPoint(300, 200), wxDefaultSize, wxDP_DROPDOWN);
+	wxStaticText* txtSecondDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "По:");
+	m_date2_journal = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
+	wxBoxSizer* sizerJournalRow1 = new wxBoxSizer(wxHORIZONTAL);
+	sizerJournalRow1->Add(txtFirstDateJournal, 0, wxLEFT, 20);
+	sizerJournalRow1->Add(m_date1_journal, 0, wxLEFT, 15);
+	sizerJournalRow1->Add(txtSecondDateJournal, 0, wxLEFT, 130);
+	sizerJournalRow1->Add(m_date2_journal, 0, wxLEFT, 15);
+	wxStaticText* txtDirJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Путь:");
+	m_dir_journal = new myDirPicker(m_formPDFPanel, wxID_ANY, wxGetCwd(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
+	wxBoxSizer* sizerJournalRow2 = new wxBoxSizer(wxHORIZONTAL);
+	sizerJournalRow2->Add(txtDirJournal, 0, wxLEFT, 20);
+	sizerJournalRow2->Add(m_dir_journal, 0, wxLEFT, 15);
+	MaterialButton* btnFormJournal = new MaterialButton(m_formPDFPanel, ID_FORMPDF_JOURNAL_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
+	btnFormJournal->SetButtonLineColour(gui_MainColour);
+	btnFormJournal->SetButtonFillColour(*wxWHITE);
+	btnFormJournal->SetLabelColour(gui_MainColour);
+
+	mainSizer->Add(labelPOD9, 0, wxEXPAND | wxLEFT | wxTOP ,20);
+	mainSizer->AddSpacer(5);
+	mainSizer->Add(sizerPod9Row1, 0, wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(10);
+	mainSizer->Add(sizerPod9Row2, 0, wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(30);
+	mainSizer->Add(btnFormPOD9, 0, wxLEFT , 40);
+	mainSizer->AddSpacer(40);
+	mainSizer->Add(labelPOD10, 0, wxEXPAND | wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(5);
+	mainSizer->Add(sizerPod10Row1, 0, wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(10);
+	mainSizer->Add(sizerPod10Row2, 0, wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(30);
+	mainSizer->Add(btnFormPOD10, 0, wxLEFT, 40);
+	mainSizer->AddSpacer(40);
+	mainSizer->Add(labelJournal, 0, wxEXPAND | wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(5);
+	mainSizer->Add(sizerJournalRow1, 0, wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(10);
+	mainSizer->Add(sizerJournalRow2, 0, wxLEFT | wxTOP, 20);
+	mainSizer->AddSpacer(30);
+	mainSizer->Add(btnFormJournal, 0, wxLEFT, 40);
+
+	btnFormPOD9->Bind(wxEVT_COMMAND_LEFT_CLICK, &cMain::OnFromPDFButton, this);
+	btnFormPOD10->Bind(wxEVT_COMMAND_LEFT_CLICK, &cMain::OnFromPDFButton, this);
+	btnFormJournal->Bind(wxEVT_COMMAND_LEFT_CLICK, &cMain::OnFromPDFButton, this);
+	m_formPDFPanel->SetSizerAndFit(mainSizer);
+	m_formPDFPanel->SetScrollRate(5, 5);
+}
+
+void cMain::setAllMenuBtnInactive()
+{
+	if (!m_allMenuButtons.empty())
+	{
+		for (auto it : m_allMenuButtons)
+		{
+			it->setSelected(false);
+		}
+	}
+}
+
+
+void cMain::changeActivePage( wxWindow* newPage)
+{
+	if (!newPage)
+		return;
+	m_mainSizer->Detach(1);
+	m_activePanel->Hide();
+	m_activePanel = newPage;
+	m_mainSizer->Add(newPage, 1, wxEXPAND);
+	newPage->Show();
 }
 
 void cMain::OnSize(wxSizeEvent& evt)
@@ -158,7 +271,19 @@ void cMain::OnSize(wxSizeEvent& evt)
 	evt.Skip();
 }
 
-void cMain::OnTabSwitch(wxMouseEvent& evt)
+void cMain::OnFromPDFButton(wxCommandEvent& evt)
+{
+
+	
+}
+
+
+void cMain::initNewOrgPage()
+{
+
+}
+
+void cMain::OnTabSwitch(wxCommandEvent& evt)
 {
 
 	switch (evt.GetId())
@@ -167,10 +292,9 @@ void cMain::OnTabSwitch(wxMouseEvent& evt)
 	{
 		if (!m_addPanel->IsShown())
 		{
-			m_mainSizer->Detach(1);
-			m_listPanel->Hide();
-			m_mainSizer->Add(m_addPanel, 1, wxEXPAND);
-			m_addPanel->Show();
+			changeActivePage(m_addPanel);
+			setActiveButton(m_menuButtonAdd);
+			this->Refresh();
 		}
 		break;
 	}
@@ -179,16 +303,24 @@ void cMain::OnTabSwitch(wxMouseEvent& evt)
 	{
 		if (!m_listPanel->IsShown())
 		{
-			m_mainSizer->Detach(1);
-			m_addPanel->Hide();
-			m_mainSizer->Add(m_listPanel, 1, wxEXPAND);
-			m_listPanel->Show();
+			changeActivePage(m_listPanel);
+			setActiveButton(m_menuButtonList);
 			m_myList->SetItemCount(m_myList->m_items.size());
 			m_myList->Refresh();
+			this->Refresh();
 		}
 		break;
 	}
-
+	case ID_MAINMENU_FORM_BUTTON:
+	{
+		if (!m_formPDFPanel->IsShown())
+		{
+			changeActivePage(m_formPDFPanel);
+			setActiveButton(m_menuButtonForm);
+			this->Refresh();
+		}
+		break;
+	}
 	default:
 		break;
 	}
@@ -196,7 +328,7 @@ void cMain::OnTabSwitch(wxMouseEvent& evt)
 	evt.Skip();
 }
 
-void cMain::OnListEditButton(wxMouseEvent& evt)
+void cMain::OnListEditButton(wxCommandEvent& evt)
 {
 	if (m_myList->GetSelectedItemRef())
 	{
@@ -206,7 +338,7 @@ void cMain::OnListEditButton(wxMouseEvent& evt)
 
 }
 
-void cMain::OnListDeleteButton(wxMouseEvent& evt)
+void cMain::OnListDeleteButton(wxCommandEvent& evt)
 {
 	if (m_myList->GetSelectedItemRef())
 	{
@@ -224,8 +356,8 @@ void cMain::OnListDeleteButton(wxMouseEvent& evt)
 		m_record.amountReceivedOrg = m_item[8];
 		m_record.amountUsed = m_item[9];
 		m_record.amountDefused = m_item[10];
-		m_record.amountBurial = m_item[11];
-		m_record.amountStorage = m_item[12];
+		m_record.amountStorage = m_item[11];
+		m_record.amountBurial = m_item[12];
 		m_record.tamountUsed = m_item[13];
 		m_record.tamountDefused = m_item[14];
 		m_record.tamountStorage = m_item[15];

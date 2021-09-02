@@ -33,8 +33,9 @@ private:
 protected: 
 	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
 	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm);
-	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm);
+	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
 public:
+	wxString GetLastPassportID();
 	bool insertInitStorageEntry();
 	bool deleteEntry(const addPageInfo& info);
 	bool editEntry(const addPageInfo& info);
@@ -55,7 +56,7 @@ public:
 	void getJournalTableInfo(passportJournalInfo& data, const wxString& startDate);
 	void getJournalCodeInfo(passportJournalInfo& data);
 
-	void getListItemData(std::vector<ItemData>& item);
+	wxDateTime getFirstEntryDate();
 
 	//ID should always be last in array
 	void getListItemData(std::vector<std::vector<wxString>>& item);
