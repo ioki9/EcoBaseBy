@@ -344,17 +344,17 @@ bool DBMain::editEntry(const addPageInfo& info)
 	//substract old diffrance from subsequent storage table entrys
 	this->updateSubsqPOD10Strg(info.oldCode, info.oldDate, wxString::Format("%f", oldDiffrAM * -1),info.id);
 
-	//delete storage table entry if code is changed and entry is empty
-	if (info.oldCode != info.code)
+	//delete storage table entry if code or date is changed and entry is empty
+	if (info.oldCode != info.code || info.oldDate !=info.date)
 	{
 		m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + " WHERE Code = '" + info.oldCode + "' AND Date LIKE '%" + info.oldDate.Mid(0, 7) + "%'"));
 		m_rs.NextRow();
-		if (m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_FORMED]) == 0
-			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS]) == 0
-			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_USED]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_DEFUSED]) == 0
-			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_BURIAL]) == 0
-			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]) == 0
-			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]) == 0)
+		if (m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_FORMED]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]) == 0 
+			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_USED]) == 0 
+			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_DEFUSED]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]) == 0 
+			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_BURIAL]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]) == 0 
+			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]) == 0 && m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]) == 0
+			&& m_rs.GetDouble(m_dbStorageColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]) == 0)
 		{
 			m_rs.Finalize();
 			ExecuteUpdate(wxS("DELETE FROM " + DBStorageTableName + " WHERE Code = '" + info.oldCode + "' AND Date LIKE '%" + info.oldDate.Mid(0, 7) + "%'"));
@@ -420,7 +420,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 		m_rs.Finalize();
 
 		ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET " +
-			m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + amountStorageFull + ", "
+			m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " + " + wxString::Format("%f", newDiffrAm) + ", "
 			+ sAmountColumn + " = " + sAmountColumn + " + " + getAmount(amount) + ", "
 			+ m_dbStorageColumns[DB_COLUMN_AMOUNT_USED] + " = " + m_dbStorageColumns[DB_COLUMN_AMOUNT_USED] + " + " + getAmount(info.amountUsed) + ", "
 			+ m_dbStorageColumns[DB_COLUMN_AMOUNT_DEFUSED] + " = " + m_dbStorageColumns[DB_COLUMN_AMOUNT_DEFUSED] + " + " + getAmount(info.amountDefused) + ", "
@@ -628,6 +628,8 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 	else
 	{
 		m_rs.Finalize();
+		m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName
+			+ " WHERE Code = '" + info.code + "'"));
 		ExecuteUpdate(wxS("INSERT INTO " + DBStorageTableName +
 			" (" + m_dbStorageColumns[DB_COLUMN_DATE] + ", " + m_dbStorageColumns[DB_COLUMN_CODE] +
 			", " + sAmountColumn + ", " + m_dbStorageColumns[DB_COLUMN_AMOUNT_USED] +
