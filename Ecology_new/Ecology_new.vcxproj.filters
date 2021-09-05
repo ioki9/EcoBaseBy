@@ -119,6 +119,15 @@
     <ClInclude Include="myDirPicker.h">
       <Filter>GUI\Controls\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="myGridTableData.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="myGridTable.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="myGridLabelsEnum.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -175,6 +184,12 @@
     <ClCompile Include="myDirPicker.cpp">
       <Filter>GUI\Controls\Soruce</Filter>
     </ClCompile>
+    <ClCompile Include="myGridTableData.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="myGridTable.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
@@ -185,6 +200,7 @@
     <None Include="rcdata1.bin">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="cpp.hint" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="line_green.png">

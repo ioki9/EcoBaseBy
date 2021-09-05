@@ -10,7 +10,6 @@ Add_panel::Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listI
 	m_page2->Hide();
 	this->initPage3();
 	m_page3->Hide();
-	m_amFullStrgCtrl->HideNativeCaret();
 
 	//m_resultPage = new wxPanel(this, wxID_ANY);
 	//m_resultPage->Hide();
@@ -24,7 +23,6 @@ Add_panel::Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listI
 	p2_buttonPrevious->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP2_ButtonPrev, this);
 	p3_buttonNext->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP3_ButtonNext, this);
 	p3_buttonPrevious->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP3_ButtonPrev, this);
-	p3_strgCheck->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnP3_CheckBoxUp, this);
 
 }
 
@@ -282,7 +280,7 @@ void Add_panel::initPage3()
 	wxBoxSizer* p3_midRightMainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* p3_buttonSizerH = new wxBoxSizer(wxHORIZONTAL);
 
-	p3_midRightMainSizer->Add(p3_midRightSizPanel, 1, wxALIGN_CENTER_HORIZONTAL | wxTOP,22);
+	p3_midRightMainSizer->Add(p3_midRightSizPanel, 1, wxALIGN_CENTER_HORIZONTAL | wxTOP);
 
 
 	p3_midRightSizPanel->SetFont(m_textFont);
@@ -292,26 +290,11 @@ void Add_panel::initPage3()
 	wxStaticText* structUnit10 = new wxStaticText(p3_midLeftPanel, wxID_ANY, "Структурное подразделение в которых образовался данный вид отхода (ПОД 10):", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	m_structUnit10Ctrl = new wxTextCtrl(p3_midLeftPanel, ID_PAGE1_REGNUMTXT, wxEmptyString, wxDefaultPosition, txtCtrlSize, 0L);
 	structUnit10->Wrap(400);
-	wxStaticText* structUnit9 = new wxStaticText(p3_midLeftPanel, wxID_ANY, "Передано организации, структурному подразделению (ПОД 9):", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	m_structUnit9Ctrl = new wxTextCtrl(p3_midLeftPanel, ID_PAGE1_REGNUMTXT, wxEmptyString, wxDefaultPosition, txtCtrlSize, 0L);
+	wxStaticText* structUnit9 = new wxStaticText(p3_midRightSizPanel, wxID_ANY, "Передано организации, структурному подразделению (ПОД 9):", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	m_structUnit9Ctrl = new wxTextCtrl(p3_midRightSizPanel, ID_PAGE1_REGNUMTXT, wxEmptyString, wxDefaultPosition, txtCtrlSize, 0L);
 	structUnit9->Wrap(400);
 
 
-	wxStaticText* entryDate = new wxStaticText(p3_midRightSizPanel, wxID_ANY, "Дата внесения уч. записи (ПОД 10):", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	m_entryDate = new wxDatePickerCtrl(p3_midRightSizPanel, ID_PAGE1_CALENDAR_DATE, wxDateTime::Today(),
-		wxPoint(600, 230), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* wasteNorm = new wxStaticText(p3_midRightSizPanel, wxID_ANY, "Норма образования отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	m_wasteNormCtrl = new wxTextCtrl(p3_midRightSizPanel, ID_PAGE1_OWNERTXT, wxEmptyString, wxDefaultPosition, wxSize(250, 30), 0L, floatValidator);
-	wxStaticText* fullStrg = new wxStaticText(p3_midRightSizPanel, wxID_ANY, "*Всего на хранении: ", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	m_amFullStrgCtrl = new wxTextCtrl(p3_midRightSizPanel, ID_PAGE1_CODETXT, wxEmptyString, wxDefaultPosition, wxSize(250, 30), 0L, floatValidator);
-	m_amFullStrgCtrl->SetEditable(0);
-	
-
-	p3_strgCheck = new CustomCheckBox(p3_midRightSizPanel, wxID_ANY, "",wxDefaultPosition);
-	wxBoxSizer *fullStrgSizer = new wxBoxSizer(wxHORIZONTAL);
-	fullStrgSizer->Add(m_amFullStrgCtrl);
-	fullStrgSizer->Add(p3_strgCheck,0,wxALIGN_CENTER_VERTICAL| wxLEFT,10);
-	
 
 
 	p3_buttonNext = new MaterialButton(p3_botPanel, ID_PAGE1_BUTTON_NEXT, wxS("ДАЛЕЕ"),true, wxDefaultPosition, wxSize(200, 55));
@@ -336,17 +319,13 @@ void Add_panel::initPage3()
 	//____________MIDDLE LEFT________________________
 	p3_midLeftSizer->Add(structUnit10, 0, wxBOTTOM, 10);
 	p3_midLeftSizer->Add(m_structUnit10Ctrl, 0, wxFIXED_MINSIZE | wxBOTTOM, 20);
-	p3_midLeftSizer->Add(structUnit9, 0, wxBOTTOM, 10);
-	p3_midLeftSizer->Add(m_structUnit9Ctrl, 0, wxFIXED_MINSIZE | wxBOTTOM, 20);
+
 
 
 	//____________MIDDLE RIGHT________________________
-	p3_midRightSizer->Add(entryDate, 0, wxEXPAND | wxBOTTOM, 10);
-	p3_midRightSizer->Add(m_entryDate, 0, wxFIXED_MINSIZE | wxBOTTOM, 44);
-	p3_midRightSizer->Add(wasteNorm, 0, wxBOTTOM, 10);
-	p3_midRightSizer->Add(m_wasteNormCtrl, 0, wxFIXED_MINSIZE | wxBOTTOM, 20);
-	p3_midRightSizer->Add(fullStrg, 0, wxEXPAND | wxBOTTOM, 10);
-	p3_midRightSizer->Add(fullStrgSizer, 0, wxFIXED_MINSIZE | wxBOTTOM, 20);
+	p3_midRightSizer->Add(structUnit9, 0, wxBOTTOM, 10);
+	p3_midRightSizer->Add(m_structUnit9Ctrl, 0, wxFIXED_MINSIZE | wxBOTTOM, 20);
+
 
 
 
@@ -495,15 +474,7 @@ void Add_panel::initResultPage()
 	wxStaticText* structUnit10 = new wxStaticText(pr_mainPanel, wxID_ANY, "Структурное подразделение в которых\n образовался данный вид отхода (ПОД 10): " );
 	wxStaticText* valStructUnit10 = new wxStaticText(pr_mainPanel, wxID_ANY,"\n" + m_record.structUnit10);
 	valStructUnit10->SetFont(m_textFont.Bold());
-	wxStaticText* wasteNorm = new wxStaticText(pr_mainPanel, wxID_ANY, "Норма образования отхода: ");
-	wxStaticText* valWasteNorm = new wxStaticText(pr_mainPanel, wxID_ANY, m_record.wasteNorm);
-	valWasteNorm->SetFont(m_textFont.Bold());
-	wxStaticText* entryDate = new wxStaticText(pr_mainPanel, wxID_ANY, "Дата внесения уч. записи (ПОД 10): ");
-	wxStaticText* valEntryDate = new wxStaticText(pr_mainPanel, wxID_ANY, utility::convertDate(m_record.entryDate));
-	valEntryDate->SetFont(m_textFont.Bold());
-	wxStaticText* strgFull = new wxStaticText(pr_mainPanel, wxID_ANY, "Всего на хранении: " );
-	wxStaticText* valStrgFull = new wxStaticText(pr_mainPanel, wxID_ANY, m_record.amountStrgFull);
-	valStrgFull->SetFont(m_textFont.Bold());
+
 
 
 
@@ -546,14 +517,8 @@ void Add_panel::initResultPage()
 	lsRow15->Add(valTamBurial, 1, wxLEFT);
 	lsRow16->Add(structUnit10, 0, wxLEFT, 40);
 	lsRow16->Add(valStructUnit10, 1, wxLEFT);
-	lsRow17->Add(entryDate, 0, wxLEFT, 40);
-	lsRow17->Add(valEntryDate, 1, wxLEFT);
 	lsRow18->Add(structUnit9, 0, wxLEFT, 40);
 	lsRow18->Add(valStructUnit9, 1, wxLEFT);
-	lsRow19->Add(wasteNorm, 0, wxLEFT, 40);
-	lsRow19->Add(valWasteNorm, 1, wxLEFT);
-	lsRow20->Add(strgFull, 0, wxLEFT, 40);
-	lsRow20->Add(valStrgFull, 1, wxLEFT);
 	lhMainSizer->Add(lsRow1, 0, wxEXPAND | wxTOP ,20);
 	lhMainSizer->Add(lsRow2, 0, wxEXPAND | wxTOP, 5 );
 	lhMainSizer->Add(lsRow3, 0, wxEXPAND | wxTOP, 5);
@@ -653,11 +618,9 @@ void Add_panel::OnP2_ButtonPrev(wxCommandEvent& evt)
 
 void Add_panel::OnP3_ButtonNext(wxCommandEvent& evt)
 {
-	m_record.wasteNorm = m_wasteNormCtrl->GetValue();
 	m_record.structUnit10 = m_structUnit10Ctrl->GetValue();
 	m_record.structUnit9 = m_structUnit9Ctrl->GetValue();
-	m_record.amountStrgFull = m_amFullStrgCtrl->GetValue();
-	m_record.entryDate = m_entryDate->GetValue().Format((wxS("%Y.%m.%d")));
+
 
 	if(m_resultPage)
 		m_resultPage->Destroy();
@@ -684,24 +647,6 @@ void Add_panel::OnP3_ButtonPrev(wxCommandEvent& evt)
 }
 
 
-void Add_panel::OnP3_CheckBoxUp(wxCommandEvent& evt)
-{
-	if (p3_strgCheck->status & p3_strgCheck->flag_active)
-	{
-		m_amFullStrgCtrl->SetEditable(1);
-		m_amFullStrgCtrl->ShowNativeCaret();
-		Refresh();
-	}
-		
-	else
-	{
-		m_amFullStrgCtrl->Clear();
-		m_amFullStrgCtrl->HideNativeCaret();
-		m_amFullStrgCtrl->SetEditable(0);
-		Refresh();
-	}
-		
-}
 
 
 void Add_panel::OnPR_ButtonApply(wxCommandEvent& evt)
@@ -745,10 +690,8 @@ void Add_panel::OnPR_ButtonApply(wxCommandEvent& evt)
 	m_tamStorageCtrl->Clear();
 	m_tamUsedCtrl->Clear();
 	m_tamDefusedCtrl->Clear();
-	m_wasteNormCtrl->Clear();
 	m_structUnit10Ctrl->Clear();
 	m_structUnit9Ctrl->Clear();
-	m_amFullStrgCtrl->Clear();
 
 
 

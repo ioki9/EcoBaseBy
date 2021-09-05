@@ -170,9 +170,10 @@ void PDF_Journal::drawResultRow(const std::array<std::array<double, 5>, 4>& valu
 
 
 
-void PDF_Journal::createJournal()
+void PDF_Journal::createJournal(const wxString& startDate, const wxString& endDate)
 {
-	m_dataBase->getJournalTableInfo(m_data,m_startDate);
+	m_dataBase = new DBMain();
+	m_dataBase->getJournalTableInfo(m_data, startDate, endDate);
 	drawTable();
 	SaveAsFile(wxGetCwd() + wxS("/Test/11Журнал.pdf"));
 }

@@ -1,14 +1,13 @@
 #pragma once
+#include <wx/wx.h>
 #include <wx/wxsqlite3.h>
 #include <wx/string.h>
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
-#include <wx/hashmap.h>
 #include <map>
 #include <string>
-#include <wx/wx.h>
 #include "Structs.h"
-#include "itemdata.h"
+#include "myGridLabelsEnum.h"
 
 //WX_DECLARE_HASH_MAP(int, wxString, wxIntegerHash, wxIntegerEqual, map_IntWxstring);
 
@@ -28,6 +27,7 @@ private:
 	const wxString DBCodesTableName{ "codes" };
 	const wxString DBStorageTableName{ "storageInfo" };
 	const wxString DBPathPassp{ wxGetCwd() + wxS("/passdat.db") };
+
 	void getStorageColumnNames();
 	void getPassportColumnNames();
 protected: 
@@ -35,6 +35,7 @@ protected:
 	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm);
 	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
 public:
+
 	wxString GetLastPassportID();
 	bool insertInitStorageEntry();
 	bool deleteEntry(const addPageInfo& info);
@@ -44,20 +45,23 @@ public:
 	wxString checkFullStorage(const wxString& code);
 
 	wxString convertDate(const wxString &date);
-	int getUniqueCodes(passportPod9Info &data);
-	void getNextPod9Portion(passportPod9Info &data, const wxString &code);
+	int getUniqueCodes(passportPod9Info &data,const wxString& startDate,const wxString& endDate);
+	void getNextPod9Portion(passportPod9Info &data, const wxString &code, const wxString& startDate, const wxString& endDate);
 
 	void setMonthlyResult(const wxString &code, const wxDateTime &date);
 
-	void getPod10TableCount(pod10Info &data);
+	void getPod10TableCount(pod10Info &data, const wxString& startDate, const wxString& endDate);
 	void getPod10TableInfo(pod10Info &data, const wxString &date);
 	void getPod10TableCodeDngr(pod10Info &data,const wxArrayString &codes);
 
-	void getJournalTableInfo(passportJournalInfo& data, const wxString& startDate);
+	void getJournalTableInfo(passportJournalInfo& data, const wxString& startDate, const wxString& endDate);
 	void getJournalCodeInfo(passportJournalInfo& data);
 
 	wxDateTime getFirstEntryDate();
+	wxDateTime getLastEntryDate();
 
+	int getPasspRowAmount();
+	void getNextRowData(std::vector<wxString>& rowItem, const wxString& id);
 	//ID should always be last in array
 	void getListItemData(std::vector<std::vector<wxString>>& item);
 };

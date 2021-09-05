@@ -69,15 +69,11 @@ private:
     wxPanel* m_page3;
     MaterialButton* p3_buttonNext;
     MaterialButton* p3_buttonPrevious;
-    wxDatePickerCtrl* m_entryDate;
-    wxTextCtrl* m_amFullStrgCtrl;
     wxTextCtrl* m_structUnit10Ctrl;
     wxTextCtrl* m_structUnit9Ctrl;
-    wxTextCtrl* m_wasteNormCtrl;
-    CustomCheckBox* p3_strgCheck;
   
    
-    void OnP3_CheckBoxUp(wxCommandEvent& evt);
+
     void OnP3_ButtonNext(wxCommandEvent& evt);
     void OnP3_ButtonPrev(wxCommandEvent& evt);
     //__________RESULT PAGE________

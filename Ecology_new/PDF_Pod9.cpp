@@ -191,8 +191,8 @@ void PDF_Pod9::drawTable()
 
 
         rowData = { m_data.date[j], getAmountString(m_data.amountFormed[j]), getAmountString(m_data.amountReceivedOrg[j]),
-                    m_data.manufacturer[j], getAmountString(m_data.amountReceivedPhys[j]), getAmountString(m_data.amountUsed[j]),
-                    getAmountString(m_data.amountDefused[j]), getAmountString(m_data.amountTransferStorage[j]),m_data.manufacturer[j],
+                   m_data.owner[j], getAmountString(m_data.amountReceivedPhys[j]), getAmountString(m_data.amountUsed[j]),
+                    getAmountString(m_data.amountDefused[j]), getAmountString(m_data.amountTransferStorage[j]),m_data.stuct_unit9[j],
                        " ", getAmountString(m_data.amountFullStorage[j]) };
 
        if (j != 0 && compareDates(prevDate,m_data.date[j]) != 0)

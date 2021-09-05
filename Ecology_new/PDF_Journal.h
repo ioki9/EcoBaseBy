@@ -10,9 +10,9 @@
 class PDF_Journal : public PDF_Helper
 {
 public:
-	PDF_Journal(DBMain *dataBase,const passportJournalInfo& data, const wxString &startDate, int orientation = wxLANDSCAPE,
+	PDF_Journal(int orientation = wxLANDSCAPE,
 		const wxString& unit = wxString(wxS("mm")), wxPaperSize format = wxPaperSize::wxPAPER_A4)
-		: m_dataBase{ dataBase }, m_data {data}, m_startDate{ startDate }, PDF_Helper{ orientation, unit, format }
+		: PDF_Helper{ orientation, unit, format }
 	{
 		SetMargins(10.0, 5.0, 10.0);
 		SetAutoPageBreak(1, 5.0);
@@ -32,7 +32,7 @@ private:
 	void drawResultRow(const std::array<std::array<double, 5>, 4>& value);
 	void Header() override;
 public:
-	void createJournal();
+	void createJournal(const wxString& startDate, const wxString& endDate);
 	
 };
 

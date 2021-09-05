@@ -10,9 +10,9 @@
 class PDF_Pod10 : public PDF_Helper
 {
 public:
-	PDF_Pod10(DBMain* dataBase, int orientation = wxLANDSCAPE,
+	PDF_Pod10(int orientation = wxLANDSCAPE,
 		const wxString& unit = wxString(wxT("mm")),
-		wxPaperSize format = wxPaperSize::wxPAPER_A4) : PDF_Helper{ orientation, unit, format }, m_dataBase{ dataBase }
+		wxPaperSize format = wxPaperSize::wxPAPER_A4) : PDF_Helper{ orientation, unit, format }
 	{
 		SetMargins(10.0, 5.0, 10.0);
 		SetAutoPageBreak(1,5.0);
@@ -35,7 +35,7 @@ protected:
 public:
 
 
-	void createDoc();
+	void createDoc(const wxString& startDate, const wxString& endDate);
 	
 
 };

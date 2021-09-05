@@ -42,12 +42,10 @@ void PDF_Helper::tableRow(double h, const std::vector<double>& w, std::vector<wx
 void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vector<wxString> &str, int align, int border)
 {
     
-    for (size_t k{ 1 }; k < str.size(); ++k)
-    {
 
-        str[k] = autoCellHyphenation(w[k], str[k]);
-
-    }
+    str[1] = autoCellHyphenation(w[1], str[1]);
+    str[5] = autoCellHyphenation(w[5], str[5]);
+  
     double r_h{ getMulticellRowHeight(h,str,w) };
     double currentX{ GetX() };
     double  currentY{ GetY() };
@@ -360,8 +358,7 @@ wxString PDF_Helper::getAmountString(wxString& amount)
 
 int PDF_Helper::compareDates(const wxString& startDate, const wxString& endDate)
 {
-    if (endDate == "01.04.2018")
-        bool cool{};
+
     wxDateTime sDate{};
     wxDateTime eDate{};
     sDate.ParseFormat(startDate, wxS("%d.%m.%Y"));

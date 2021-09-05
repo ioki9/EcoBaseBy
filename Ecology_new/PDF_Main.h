@@ -9,17 +9,18 @@
 class PDF_Main
 {
 public:
-	PDF_Main(DBMain* dataBase) : m_dataBase{ dataBase }
+	PDF_Main()
 	{
 	}
 	~PDF_Main();
 private:
 	DBMain *m_dataBase;
+	wxString formatToYMD(wxDateTime date);
 protected:
 	
 public:
-	void formJournal(wxDateTime* startDate = nullptr);
-	void formPod9();
-
+	void formJournal(const wxDateTime& startDate, const wxDateTime& endDate);
+	void formPod9(const wxDateTime& startDate, const wxDateTime& endDate);
+	void formPod10(const wxDateTime& startDate, const wxDateTime& endDate);
 };
 

@@ -91,7 +91,7 @@ struct passportPod9Info
 	wxArrayString transporter;
 	wxArrayString date;
 	wxArrayString regnum;
-	
+	wxArrayString stuct_unit9;
 	wxArrayDouble amountFormed;
 	wxArrayDouble amountReceivedOrg;
 	wxArrayDouble amountReceivedPhys;

@@ -3,9 +3,10 @@
 
 
 
-void PDF_Pod10::createDoc()
+void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate)
 {
-    m_dataBase->getPod10TableCount(m_data);
+    m_dataBase = new DBMain();
+    m_dataBase->getPod10TableCount(m_data, startDate, endDate);
     int tableCount{ m_data.tableCount };
     int nextTable{ 0 };
     AddPage();

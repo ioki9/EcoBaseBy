@@ -6,19 +6,21 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <wx/grid.h>
 #include <wx/pdfdoc.h>
 #include <wx/pdffontmanager.h>
 #include <wx/filepicker.h>
 #include "Add_panel.h"
-#include "cMenuAddDialog.h"
 #include "Utility.h"
 #include "VirtualListCtrl.h"
 #include "MaterialButton.h"
 #include "DBMain.h"
 #include "cMainListEditDialog.h"
+#include "myGridTable.h"
 #include "myDirPicker.h"
 #include "GUI_parameters.h"
 #include "MainMenuTabButton.h"
+#include "PDF_Main.h"
 
 
 
@@ -73,15 +75,16 @@ private:
 	wxDatePickerCtrl* m_date2_pod10 = nullptr;
 	wxDatePickerCtrl* m_date1_journal = nullptr;
 	wxDatePickerCtrl* m_date2_journal = nullptr;
-
+	wxDateTime m_firstDate;
+	wxDateTime m_lastDate;
 	//EVENTS
-	void onTestButton(wxCommandEvent& evt);
 	void OnMenuFileAdd(wxCommandEvent& evt);
 	void OnTabSwitch(wxCommandEvent& evt);
 	void OnListEditButton(wxCommandEvent& evt);
 	void OnListDeleteButton(wxCommandEvent& evt);
 	void OnFromPDFButton(wxCommandEvent& evt);
 	void OnSize(wxSizeEvent& evt);
+
 
 
 	
@@ -101,6 +104,8 @@ private:
 		ID_FORMPDF_JOURNAL_BUTTON,
 		ID_MAXIDS
 	};
+
+
 
 	uint_fast8_t m_pageFlags = FLAGS_ACTIVE_LISTPAGE;
 	enum FLAGS_ACTIVE_PAGE : char
