@@ -12,7 +12,6 @@
 #include <wx/filepicker.h>
 #include "Add_panel.h"
 #include "Utility.h"
-#include "VirtualListCtrl.h"
 #include "MaterialButton.h"
 #include "DBMain.h"
 #include "cMainListEditDialog.h"
@@ -21,6 +20,7 @@
 #include "GUI_parameters.h"
 #include "MainMenuTabButton.h"
 #include "PDF_Main.h"
+#include "Structs.h"
 
 
 
@@ -37,10 +37,10 @@ private:
 
 
 	//LIST PANEL
-	VirtualListCtrl* m_myList;
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
 	wxPanel* m_listBottomPanel = nullptr;
+	myGridTable* m_grid = nullptr;
 	void initListPanel();
 
 	//MENU PANEL

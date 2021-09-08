@@ -1,8 +1,8 @@
 #include "Add_panel.h"
 
 
-Add_panel::Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listItems)
-	:wxPanel(parent,wxID_ANY), m_listItems{listItems}
+Add_panel::Add_panel(wxWindow* parent)
+	:wxPanel(parent,wxID_ANY)
 {
 	SetDoubleBuffered(true);
 	this->initPage1();
@@ -33,31 +33,7 @@ Add_panel::~Add_panel()
 
 void Add_panel::addItem(const wxString &id)
 {
-	std::vector<wxString> item;
-	item.push_back(m_record.regnum);
-	item.push_back(m_record.date);
-	item.push_back(m_record.owner);
-	item.push_back(m_record.receiver);
-	item.push_back(m_record.transporter);
-	item.push_back(m_record.code);
-	item.push_back(m_record.amountFormed);
-	item.push_back(m_record.amountReceivedPhys);
-	item.push_back(m_record.amountReceivedOrg);
-	item.push_back(m_record.amountUsed);
-	item.push_back(m_record.amountDefused);
-	item.push_back(m_record.amountStorage);
-	item.push_back(m_record.amountBurial);
-	item.push_back(m_record.tamountUsed);
-	item.push_back(m_record.tamountDefused);
-	item.push_back(m_record.tamountStorage);
-	item.push_back(m_record.tamountBurial);
-	item.push_back(m_record.amountStrgFull);
-	item.push_back(m_record.wasteNorm);
-	item.push_back(m_record.structUnit10);
-	item.push_back("");
-	item.push_back(id);
-	m_listItems->push_back(item);
-	item.clear();
+
 }
 
 
@@ -653,25 +629,8 @@ void Add_panel::OnPR_ButtonApply(wxCommandEvent& evt)
 {
 
 	DBMain* dataBase = new DBMain;
-	wxString storage = "";
-	if (m_record.amountStrgFull != "")
-	{
-		storage = dataBase->checkFullStorage(m_record.code);
 
-		if (storage != "")
-		{
-			wxMessageBox("Значение \"Хранение\" уже существует для данного вида отхода, значение учитываться не будет.\n" + storage);
-			m_record.amountStrgFull = "";
-			dataBase->insertNewEntry(m_record);
-		}
-		/*else*/
-			/*dataBase->insertFirstEntry(m_record);*/
-	}
-	else
-	{
-		dataBase->insertNewEntry(m_record);
-	}
-	this->addItem(dataBase->GetLastPassportID());
+	dataBase->insertNewEntry(m_record);
 	delete dataBase;
 
 	

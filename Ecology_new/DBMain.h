@@ -6,6 +6,7 @@
 #include <wx/datetime.h>
 #include <map>
 #include <string>
+#include <optional>
 #include "Structs.h"
 #include "myGridLabelsEnum.h"
 
@@ -32,8 +33,9 @@ private:
 	void getPassportColumnNames();
 protected: 
 	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
-	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm);
+	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
 	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
+	wxString gridToDBLabel(Grid_label gridLabel);
 public:
 
 	wxString GetLastPassportID();
@@ -61,8 +63,12 @@ public:
 	wxDateTime getLastEntryDate();
 
 	int getPasspRowAmount();
-	void getNextRowData(std::vector<wxString>& rowItem, const wxString& id);
+	void getNextRowData(std::vector<wxString>& rowItem, const wxString& id, bool idIsHigher, const wxString& offset);
+	//returns id of row by offset of last visible row
+	wxString getIdByRowOffset(const wxString& id, bool idIsHigher, const wxString& offset);
 	//ID should always be last in array
 	void getListItemData(std::vector<std::vector<wxString>>& item);
+	wxString getIdOfRow(const wxString& row);
+	void getRowDataByID(addPageInfo& info, const wxString& id);
 };
  

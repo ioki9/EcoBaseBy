@@ -62,16 +62,16 @@ void cMain::initListPanel()
 	buttonSizer->Add(editButton, 0, wxRIGHT, 10);
 	buttonSizer->Add(deleteButton, 0,  wxRIGHT, 20);
 
-	myGridTable* grid = new myGridTable(m_listPanel, wxID_ANY, wxPoint(0, 0),wxSize(m_listPanel->GetSize().GetX(), m_listPanel->GetSize().GetY()));
+	m_grid = new myGridTable(m_listPanel, wxID_ANY, wxPoint(0, 0),wxSize(m_listPanel->GetSize().GetX(), m_listPanel->GetSize().GetY()));
 
 	
 
 
 	mainSizer->AddSpacer(50);
 	mainSizer->Add(buttonSizer,0,wxALIGN_RIGHT);
-	mainSizer->Add(grid,1,wxEXPAND | wxTOP,10);
+	mainSizer->Add(m_grid,1,wxEXPAND | wxTOP,10);
 	m_listPanel->SetSizerAndFit(mainSizer);
-
+	editButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListEditButton, this);
 }
 
 void cMain::initAddPanel()
@@ -79,7 +79,7 @@ void cMain::initAddPanel()
 
 	m_addPanel = new wxPanel(this, ID_LIST_PANEL, wxDefaultPosition, wxSize(800, 600));
 	m_addPanel->SetBackgroundColour(wxColor(255, 255, 255));
-	Add_panel* AddPanel = new Add_panel(m_addPanel, &m_myList->m_items);
+	Add_panel* AddPanel = new Add_panel(m_addPanel);
 	wxBoxSizer* mainAddsizer = new wxBoxSizer(wxVERTICAL);
 	mainAddsizer->Add(AddPanel,1,wxEXPAND);
 	m_addPanel->SetSizerAndFit(mainAddsizer);
@@ -322,8 +322,6 @@ void cMain::OnTabSwitch(wxCommandEvent& evt)
 		{
 			changeActivePage(m_listPanel);
 			setActiveButton(m_menuButtonList);
-			//m_myList->SetItemCount(m_myList->m_items.size());
-			//m_myList->Refresh();
 			this->Refresh();
 		}
 		break;
@@ -355,44 +353,48 @@ void cMain::OnTabSwitch(wxCommandEvent& evt)
 
 void cMain::OnListEditButton(wxCommandEvent& evt)
 {
-	if (m_myList->GetSelectedItemRef())
+	if (m_grid->isRowSelected())
 	{
-		cMainListEditDialog* dialog = new cMainListEditDialog(this, m_myList->GetSelectedItemRef()->get(), m_myList->GetColumnLabels());
+		addPageInfo info;
+		m_grid->getSelectedRowData(info);
+		cMainListEditDialog* dialog = new cMainListEditDialog(this,info,m_grid->getGridLabels());
 		dialog->Destroy();
 	}
+		
+	
 
 }
 
 void cMain::OnListDeleteButton(wxCommandEvent& evt)
 {
-	if (m_myList->GetSelectedItemRef())
-	{
+	//if (m_myList->GetSelectedItemRef())
+	//{
 
-		addPageInfo m_record;
-		std::vector<wxString> m_item = m_myList->GetSelectedItemRef()->get();
-		m_record.regnum = m_item[0];
-		m_record.date = m_item[1];
-		m_record.owner = m_item[2];
-		m_record.receiver = m_item[3];
-		m_record.transporter = m_item[4];
-		m_record.code = m_item[5];
-		m_record.amountFormed = m_item[6];
-		m_record.amountReceivedPhys = m_item[7];
-		m_record.amountReceivedOrg = m_item[8];
-		m_record.amountUsed = m_item[9];
-		m_record.amountDefused = m_item[10];
-		m_record.amountStorage = m_item[11];
-		m_record.amountBurial = m_item[12];
-		m_record.tamountUsed = m_item[13];
-		m_record.tamountDefused = m_item[14];
-		m_record.tamountStorage = m_item[15];
-		m_record.tamountBurial = m_item[16];
-		m_record.amountStrgFull = m_item[17];
-		m_record.wasteNorm = m_item[18];
-		m_record.structUnit10 = m_item[19];
-		m_record.id = m_item.back();
-		m_dataBase->deleteEntry(m_record);
-	}
+	//	addPageInfo m_record;
+	//	std::vector<wxString> m_item = m_myList->GetSelectedItemRef()->get();
+	//	m_record.regnum = m_item[0];
+	//	m_record.date = m_item[1];
+	//	m_record.owner = m_item[2];
+	//	m_record.receiver = m_item[3];
+	//	m_record.transporter = m_item[4];
+	//	m_record.code = m_item[5];
+	//	m_record.amountFormed = m_item[6];
+	//	m_record.amountReceivedPhys = m_item[7];
+	//	m_record.amountReceivedOrg = m_item[8];
+	//	m_record.amountUsed = m_item[9];
+	//	m_record.amountDefused = m_item[10];
+	//	m_record.amountStorage = m_item[11];
+	//	m_record.amountBurial = m_item[12];
+	//	m_record.tamountUsed = m_item[13];
+	//	m_record.tamountDefused = m_item[14];
+	//	m_record.tamountStorage = m_item[15];
+	//	m_record.tamountBurial = m_item[16];
+	//	m_record.amountStrgFull = m_item[17];
+	//	m_record.wasteNorm = m_item[18];
+	//	m_record.structUnit10 = m_item[19];
+	//	m_record.id = m_item.back();
+	//	m_dataBase->deleteEntry(m_record);
+	//}
 }
 
 

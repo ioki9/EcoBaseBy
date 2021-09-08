@@ -19,7 +19,7 @@ class Add_panel :
     public wxPanel
 {
 public:
-    Add_panel(wxWindow* parent, std::vector<std::vector<wxString>>* listItems);
+    Add_panel(wxWindow* parent);
     ~Add_panel();
 
 private:

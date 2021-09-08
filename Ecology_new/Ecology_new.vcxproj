@@ -23,7 +23,6 @@
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cMain.h" />
     <ClInclude Include="cMainListEditDialog.h" />
-    <ClInclude Include="cMenuAddDialog.h" />
     <ClInclude Include="ColSelectDialog.h" />
     <ClInclude Include="CustomCheckBox.h" />
     <ClInclude Include="GUI_parameters.h" />
@@ -51,7 +50,6 @@
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cMain.cpp" />
     <ClCompile Include="cMainListEditDialog.cpp" />
-    <ClCompile Include="cMenuAddDialog.cpp" />
     <ClCompile Include="ColSelectDialog.cpp" />
     <ClCompile Include="CustomCheckBox.cpp" />
     <ClCompile Include="MainMenuTabButton.cpp" />

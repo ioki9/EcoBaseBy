@@ -13,13 +13,19 @@ public:
 	myGridTableData(const std::map< Grid_label, wxString> &gridLables );
 	~myGridTableData();
 
+	void getRowData(addPageInfo& info, const wxString& id);
+	wxString getSelectedRowID(int row);
 private:
 	DBMain m_db;
 	std::map<Grid_label, wxString> m_gridLabels;
-	int x = 20;
 	std::vector<wxString> m_rowItem;
-	int m_currentItemRow = -1;
-	int m_currentItemID = -1;
+	int m_currentItemRow;
+	int m_currentItemRowSub;
+	wxString m_currentItemID;
+	wxString m_lastSortItem;
+	int m_rowOffset;
+	bool m_isOffsetPositive;
+	Grid_label m_sortingCol = static_cast<Grid_label>(-1);
 	int GetNumberRows() wxOVERRIDE;
 	int GetNumberCols() wxOVERRIDE;
 	void SetColLabelValue(int col, const wxString& label)  wxOVERRIDE;
@@ -28,5 +34,9 @@ private:
 	wxString GetValue(int row, int col) wxOVERRIDE;
 	// to set values
 	void SetValue(int row, int col, const wxString& value) wxOVERRIDE;
+
+
+
+	
 };
 

@@ -141,9 +141,6 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
 
     for (size_t word{ 0 }; word < wordsArray.GetCount(); ++word)
     {
-      
-
-
         size_t noHyphOffset{};
         lineWidth += GetStringWidth(wordsArray[word]) + spaceWidth;
         if (lineWidth - spaceWidth > cellWidth) // 2.0 is cell margins
@@ -344,8 +341,8 @@ wxString PDF_Helper::getAmountString(double amount)
 
 wxString PDF_Helper::getAmountString(wxString& amount)
 {
-    if (amount == "")
-        return amount;
+    if (amount == "" || amount[0] == '0')
+        return "";
     else
     {
         amount.Replace(".", ",");
@@ -358,7 +355,6 @@ wxString PDF_Helper::getAmountString(wxString& amount)
 
 int PDF_Helper::compareDates(const wxString& startDate, const wxString& endDate)
 {
-
     wxDateTime sDate{};
     wxDateTime eDate{};
     sDate.ParseFormat(startDate, wxS("%d.%m.%Y"));
@@ -366,6 +362,5 @@ int PDF_Helper::compareDates(const wxString& startDate, const wxString& endDate)
     wxDateSpan dsDate{ wxAtoi(sDate.Format(wxS("%Y"))), wxAtoi(sDate.Format(wxS("%m"))) };
     wxDateSpan deDate{ wxAtoi(eDate.Format(wxS("%Y"))), wxAtoi(eDate.Format(wxS("%m"))) };
     wxDateSpan dfDate = deDate - dsDate;
-    return dfDate.GetTotalMonths();
-                    
+    return dfDate.GetTotalMonths();       
 }

@@ -62,9 +62,6 @@
     <ClInclude Include="DMColumnEnums.h">
       <Filter>Source Files\DataBase</Filter>
     </ClInclude>
-    <ClInclude Include="Structs.h">
-      <Filter>Source Files\DataBase</Filter>
-    </ClInclude>
     <ClInclude Include="GUI_parameters.h">
       <Filter>Source Files\Global variables</Filter>
     </ClInclude>
@@ -81,9 +78,6 @@
       <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
     <ClInclude Include="cMainListEditDialog.h">
-      <Filter>GUI\Frames\Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="cMenuAddDialog.h">
       <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
     <ClInclude Include="VirtualListCtrl.h">
@@ -128,6 +122,9 @@
     <ClInclude Include="myGridLabelsEnum.h">
       <Filter>GUI\Controls\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Source Files\Global variables</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -146,9 +143,6 @@
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="cMainListEditDialog.cpp">
-      <Filter>GUI\Frames\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="cMenuAddDialog.cpp">
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="ColSelectDialog.cpp">
