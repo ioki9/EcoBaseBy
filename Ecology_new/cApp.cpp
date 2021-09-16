@@ -22,6 +22,10 @@ cApp::~cApp()
 
 bool cApp::OnInit()
 {
+	SetVendorName(wxS("EcoDataBase"));
+	SetAppName(wxS("EcoDataBase"));
+	wxConfigBase* pConfig = wxConfigBase::Get();
+
 	m_frame1 = new cMain();
 	m_frame1->Show();
 	return true;

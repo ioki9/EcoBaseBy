@@ -6,6 +6,7 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <wx/config.h>
 #include <wx/grid.h>
 #include <wx/pdfdoc.h>
 #include <wx/pdffontmanager.h>
@@ -14,14 +15,17 @@
 #include "Utility.h"
 #include "MaterialButton.h"
 #include "DBMain.h"
-#include "cMainListEditDialog.h"
+#include "Dialog_cMainListEdit.h"
 #include "myGridTable.h"
 #include "myDirPicker.h"
 #include "GUI_parameters.h"
 #include "MainMenuTabButton.h"
 #include "PDF_Main.h"
 #include "Structs.h"
-
+#include "Dialog_askDeleteEntry.h"
+#include "Settings_page.h"
+#include "Settings.h"
+#include "VirtualCodeList.h"
 
 
 class cMain : public wxFrame
@@ -40,6 +44,7 @@ private:
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
 	wxPanel* m_listBottomPanel = nullptr;
+	MaterialButton* m_deleteButton;
 	myGridTable* m_grid = nullptr;
 	void initListPanel();
 
@@ -49,13 +54,14 @@ private:
 	MainMenuTabButton* m_menuButtonList = nullptr;
 	MainMenuTabButton* m_menuButtonAdd = nullptr;
 	MainMenuTabButton* m_menuButtonForm = nullptr;
+	MainMenuTabButton* m_menuButtonSetting = nullptr;
 	std::vector<MainMenuTabButton*> m_allMenuButtons;
 	wxBoxSizer* m_mainSizer = nullptr;
 	int m_mainMenuWidth = 270;
 	void initMainMenu();
 	//sets all menu buttons inactive, to then activate the one we need
 	void setAllMenuBtnInactive();
-	void setActiveButton(MainMenuTabButton* activeBtn);
+	void setActiveMenuButton(MainMenuTabButton* activeBtn);
 	//changes the active page by hiding, deataching old one and showing,ataching new one
 	void changeActivePage(wxWindow* newPage);
 
@@ -77,15 +83,19 @@ private:
 	wxDatePickerCtrl* m_date2_journal = nullptr;
 	wxDateTime m_firstDate;
 	wxDateTime m_lastDate;
+
+	//SETTING PANEL
+	void initSettingsPage();
+	Settings_page* m_settingsPage = nullptr;
+
+
 	//EVENTS
-	void OnMenuFileAdd(wxCommandEvent& evt);
 	void OnTabSwitch(wxCommandEvent& evt);
 	void OnListEditButton(wxCommandEvent& evt);
 	void OnListDeleteButton(wxCommandEvent& evt);
+
 	void OnFromPDFButton(wxCommandEvent& evt);
 	void OnSize(wxSizeEvent& evt);
-
-
 
 	
 	void initNewOrgPage();
@@ -102,6 +112,7 @@ private:
 		ID_FORMPDF_POD9_BUTTON,
 		ID_FORMPDF_POD10_BUTTON,
 		ID_FORMPDF_JOURNAL_BUTTON,
+		ID_MAINMENU_SETTINGS_BUTTON,
 		ID_MAXIDS
 	};
 

@@ -145,9 +145,9 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
         lineWidth += GetStringWidth(wordsArray[word]) + spaceWidth;
         if (lineWidth - spaceWidth > cellWidth) // 2.0 is cell margins
         {
-            if ((cellWidth -(lineWidth - spaceWidth - GetStringWidth(wordsArray[word]))) < (2.0 + hyphWidth))
+            if ((cellWidth - (lineWidth - spaceWidth - GetStringWidth(wordsArray[word]))) < (2.0 + hyphWidth))
             {
-                lineWidth = GetStringWidth(wordsArray[word])+ spaceWidth;
+                lineWidth = GetStringWidth(wordsArray[word]) + spaceWidth;
                 continue;
             }
             haveHyphens = 0; //reseting variables for next word hyphenation 

@@ -48,6 +48,9 @@
     <Filter Include="Source Files\PDF Creation\Source">
       <UniqueIdentifier>{66aa5362-66c4-442a-923f-760a9f321c5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Settings">
+      <UniqueIdentifier>{11a00807-0de7-429f-a09a-31738586e9d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Utility.h">
@@ -65,7 +68,7 @@
     <ClInclude Include="GUI_parameters.h">
       <Filter>Source Files\Global variables</Filter>
     </ClInclude>
-    <ClInclude Include="ColSelectDialog.h">
+    <ClInclude Include="Dialog_ListColumnSelect.h">
       <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Add_panel.h">
@@ -77,7 +80,7 @@
     <ClInclude Include="cMain.h">
       <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="cMainListEditDialog.h">
+    <ClInclude Include="Dialog_cMainListEdit.h">
       <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
     <ClInclude Include="VirtualListCtrl.h">
@@ -125,6 +128,21 @@
     <ClInclude Include="Structs.h">
       <Filter>Source Files\Global variables</Filter>
     </ClInclude>
+    <ClInclude Include="Dialog_askDeleteEntry.h">
+      <Filter>GUI\Frames\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings_page.h">
+      <Filter>GUI\Frames\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>Source Files\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="Dialog_OrgAddEdit.h">
+      <Filter>GUI\Frames\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualCodeList.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -142,10 +160,10 @@
     <ClCompile Include="cMain.cpp">
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
-    <ClCompile Include="cMainListEditDialog.cpp">
+    <ClCompile Include="Dialog_cMainListEdit.cpp">
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
-    <ClCompile Include="ColSelectDialog.cpp">
+    <ClCompile Include="Dialog_ListColumnSelect.cpp">
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="VirtualListCtrl.cpp">
@@ -184,6 +202,21 @@
     <ClCompile Include="myGridTable.cpp">
       <Filter>GUI\Controls\Soruce</Filter>
     </ClCompile>
+    <ClCompile Include="Dialog_askDeleteEntry.cpp">
+      <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings_page.cpp">
+      <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
+      <Filter>Source Files\Settings</Filter>
+    </ClCompile>
+    <ClCompile Include="Dialog_OrgAddEdit.cpp">
+      <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualCodeList.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
@@ -198,6 +231,21 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="line_green.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="bitmap1.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="SemiTransparentGREY.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="List_line_green 32x32.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Transp32x32.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Menu_line_white_32x11.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

@@ -5,14 +5,15 @@
 #include "Structs.h"
 #include "DBMain.h"
 #include "myGridLabelsEnum.h"
+#include "GUI_parameters.h"
 
-class cMainListEditDialog : public wxDialog
+class Dialog_cMainListEdit : public wxDialog
 {
 public:
-	cMainListEditDialog(wxWindow* parent, addPageInfo& info, const std::map<Grid_label, wxString>& gridLabels, wxWindowID id = -1, const wxString& title = "",
+	Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info, const std::map<Grid_label, wxString>& gridLabels, wxWindowID id = -1, const wxString& title = "",
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(600, 600),
 		long style = wxDEFAULT_DIALOG_STYLE, const wxString& name = wxDialogNameStr);
-	~cMainListEditDialog();
+	~Dialog_cMainListEdit();
 private:
 	wxScrolledWindow *m_mainPanel = nullptr;
 	wxPanel* m_buttonPanel = nullptr;

@@ -2,28 +2,23 @@
 #include "cMain.h"
 
 
-using namespace std::chrono;
-
-
-
-
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wxSize(1024,600))
 {
+	
 	
 	this->SetMinClientSize(wxSize(660, 480));
 	wxPdfFontManager::GetFontManager()->RegisterSystemFonts();
 	wxPdfFontManager::GetFontManager()->RegisterFontDirectory(wxGetCwd() + wxS("/Fonts"));
-
 
 	Center();
 	this->initListPanel();
 	this->initAddPanel();
 	this->initFormPDFPage();
 	this->initMainMenu();
-
+	this->initSettingsPage();
 
 	m_activePanel = m_listPanel;
-	setActiveButton(m_menuButtonList);
+	setActiveMenuButton(m_menuButtonList);
 	m_mainSizer = new wxBoxSizer(wxHORIZONTAL);
 	this->SetSizer(m_mainSizer);
 	m_mainSizer->Add(m_mainMenu, 0, wxEXPAND | wxBOTTOM);
@@ -51,17 +46,18 @@ void cMain::initListPanel()
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
-	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ÈÇÌÅÍÈÒÜ", true,wxDefaultPosition, wxSize(100, 40));
+	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ÈÇÌÅÍÈÒÜ", true,wxDefaultPosition, wxSize(100, 35));
 	editButton->SetButtonLineColour(gui_MainColour);
 	editButton->SetLabelColour(gui_MainColour);
 
-	MaterialButton* deleteButton = new MaterialButton(m_listPanel, wxID_ANY, "ÓÄÀËÈÒÜ", false,wxDefaultPosition,wxSize(100,40));
-	deleteButton->SetButtonColour(wxColour(165, 42, 42));
-	deleteButton->SetLabelColour(*wxWHITE);
+	m_deleteButton = new MaterialButton(m_listPanel, wxID_ANY, "ÓÄÀËÈÒÜ", false,wxDefaultPosition,wxSize(100, 35));
+	m_deleteButton->SetButtonColour(wxColour(165, 42, 42));
+	m_deleteButton->SetLabelColour(*wxWHITE);
 	buttonSizer->AddStretchSpacer(1);
-	buttonSizer->Add(editButton, 0, wxRIGHT, 10);
-	buttonSizer->Add(deleteButton, 0,  wxRIGHT, 20);
+	buttonSizer->Add(editButton, 0, wxRIGHT, 5);
+	buttonSizer->Add(m_deleteButton, 0,  wxRIGHT, 20);
 
+	
 	m_grid = new myGridTable(m_listPanel, wxID_ANY, wxPoint(0, 0),wxSize(m_listPanel->GetSize().GetX(), m_listPanel->GetSize().GetY()));
 
 	
@@ -69,9 +65,10 @@ void cMain::initListPanel()
 
 	mainSizer->AddSpacer(50);
 	mainSizer->Add(buttonSizer,0,wxALIGN_RIGHT);
-	mainSizer->Add(m_grid,1,wxEXPAND | wxTOP,10);
+	mainSizer->Add(m_grid,1,wxEXPAND | wxTOP,3);
 	m_listPanel->SetSizerAndFit(mainSizer);
 	editButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListEditButton, this);
+	m_deleteButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListDeleteButton, this);
 }
 
 void cMain::initAddPanel()
@@ -86,7 +83,12 @@ void cMain::initAddPanel()
 	m_addPanel->Hide();
 }
 
-
+void cMain::initSettingsPage()
+{
+	m_settingsPage = new Settings_page(this);
+	
+	m_settingsPage->Hide();
+}
 
 void cMain::initMainMenu()
 {
@@ -106,9 +108,14 @@ void cMain::initMainMenu()
 	m_menuButtonForm->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonForm);
 
+	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "Íàñòðîéêè", ID_MAINMENU_SETTINGS_BUTTON, true, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
+	m_menuButtonSetting->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
+	m_menuButtonSetting->seDropArrowtSize(wxSize(14, 30));
+	m_allMenuButtons.push_back(m_menuButtonSetting);
+	
 }
 
-void cMain::setActiveButton(MainMenuTabButton* activeBtn)
+void cMain::setActiveMenuButton(MainMenuTabButton* activeBtn)
 {
 	this->setAllMenuBtnInactive();
 	activeBtn->setSelected(true);
@@ -287,13 +294,13 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 			pdf.formJournal(m_date1_journal->GetValue(), m_date2_journal->GetValue());
 			break;
 		}
+
 		default:
 			break;
 	}
 
 	
 }
-
 
 void cMain::initNewOrgPage()
 {
@@ -310,7 +317,7 @@ void cMain::OnTabSwitch(wxCommandEvent& evt)
 		if (!m_addPanel->IsShown())
 		{
 			changeActivePage(m_addPanel);
-			setActiveButton(m_menuButtonAdd);
+			setActiveMenuButton(m_menuButtonAdd);
 			this->Refresh();
 		}
 		break;
@@ -321,7 +328,7 @@ void cMain::OnTabSwitch(wxCommandEvent& evt)
 		if (!m_listPanel->IsShown())
 		{
 			changeActivePage(m_listPanel);
-			setActiveButton(m_menuButtonList);
+			setActiveMenuButton(m_menuButtonList);
 			this->Refresh();
 		}
 		break;
@@ -339,10 +346,20 @@ void cMain::OnTabSwitch(wxCommandEvent& evt)
 			m_date1_journal->SetRange(m_firstDate, m_lastDate);
 			m_date2_journal->SetRange(m_firstDate, m_lastDate);
 			changeActivePage(m_formPDFPanel);
-			setActiveButton(m_menuButtonForm);
+			setActiveMenuButton(m_menuButtonForm);
 			this->Refresh();
 		}
 		break;
+	case ID_MAINMENU_SETTINGS_BUTTON:
+	{
+		if (!m_settingsPage->IsShown())
+		{
+			changeActivePage(m_settingsPage);
+			setActiveMenuButton(m_menuButtonSetting);
+			this->Refresh();
+		}
+		break;
+	}
 	}
 	default:
 		break;
@@ -357,52 +374,23 @@ void cMain::OnListEditButton(wxCommandEvent& evt)
 	{
 		addPageInfo info;
 		m_grid->getSelectedRowData(info);
-		cMainListEditDialog* dialog = new cMainListEditDialog(this,info,m_grid->getGridLabels());
+		Dialog_cMainListEdit* dialog = new Dialog_cMainListEdit(this,info,m_grid->getGridLabels());
 		dialog->Destroy();
 	}
-		
-	
-
 }
 
 void cMain::OnListDeleteButton(wxCommandEvent& evt)
 {
-	//if (m_myList->GetSelectedItemRef())
-	//{
-
-	//	addPageInfo m_record;
-	//	std::vector<wxString> m_item = m_myList->GetSelectedItemRef()->get();
-	//	m_record.regnum = m_item[0];
-	//	m_record.date = m_item[1];
-	//	m_record.owner = m_item[2];
-	//	m_record.receiver = m_item[3];
-	//	m_record.transporter = m_item[4];
-	//	m_record.code = m_item[5];
-	//	m_record.amountFormed = m_item[6];
-	//	m_record.amountReceivedPhys = m_item[7];
-	//	m_record.amountReceivedOrg = m_item[8];
-	//	m_record.amountUsed = m_item[9];
-	//	m_record.amountDefused = m_item[10];
-	//	m_record.amountStorage = m_item[11];
-	//	m_record.amountBurial = m_item[12];
-	//	m_record.tamountUsed = m_item[13];
-	//	m_record.tamountDefused = m_item[14];
-	//	m_record.tamountStorage = m_item[15];
-	//	m_record.tamountBurial = m_item[16];
-	//	m_record.amountStrgFull = m_item[17];
-	//	m_record.wasteNorm = m_item[18];
-	//	m_record.structUnit10 = m_item[19];
-	//	m_record.id = m_item.back();
-	//	m_dataBase->deleteEntry(m_record);
-	//}
+	if (m_grid->isRowSelected())
+	{
+		addPageInfo m_record;
+		m_grid->getSelectedRowData(m_record);
+		wxSafeYield(this, false);
+		Dialog_askDeleteEntry* askDlg = new Dialog_askDeleteEntry(this, m_record);
+		askDlg->Destroy();
+		this->Refresh();
+	}
 }
 
-
-
-void cMain::OnMenuFileAdd(wxCommandEvent & evt)
-{
-	//cMenuAddDialog *newDialog = new cMenuAddDialog(wxT("Add files"));
-
-}
 
 

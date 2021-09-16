@@ -22,10 +22,11 @@ public:
 	};
 
 	void setSelected(bool selected);
-
+	void seDropArrowtSize(const wxSize& size);
 private:
 	wxString m_text;
 	wxSize m_size;
+	wxSize m_dropArrowSize{ 14,30 };
 	void OnPaint(wxPaintEvent& evt);
 	
 	void OnLeftDown(wxMouseEvent& evt);

@@ -8,6 +8,7 @@ MaterialButton::MaterialButton(wxWindow* parent, wxWindowID id, const wxString& 
 	this->SetDoubleBuffered(true);
 	if (isOutlined)
 		status |= flag_outlined;
+	status |= flag_shadowDrawn;
 	this->Bind(wxEVT_LEAVE_WINDOW, &MaterialButton::OnMotionOUT, this);
 	this->Bind(wxEVT_LEFT_DOWN, &MaterialButton::OnLeftDown, this);
 	this->Bind(wxEVT_MOTION, &MaterialButton::OnMotionIN, this);
@@ -54,6 +55,42 @@ void MaterialButton::SetButtonColour(const wxColour& colour)
 	m_colourBtnPen = colour;
 	m_colourBtnBrush = colour;
 	this->Refresh();
+
+}
+
+void MaterialButton::SetButtonShadow(bool isDrawn)
+{
+	if (isDrawn)
+		status |= flag_shadowDrawn;
+	else
+		status &= ~(flag_shadowDrawn);
+}
+
+void MaterialButton::disableButton(bool disable)
+{
+	if (disable)
+	{
+//		if (status & flag_isDisabled)
+//			return;
+//		this->Unbind(wxEVT_LEAVE_WINDOW, &MaterialButton::OnMotionOUT, this);
+//		this->Unbind(wxEVT_LEFT_DOWN, &MaterialButton::OnLeftDown, this);
+//		this->Unbind(wxEVT_MOTION, &MaterialButton::OnMotionIN, this);
+//		this->Unbind(wxEVT_LEFT_UP, &MaterialButton::OnLeftUp, this);
+//		this->Unbind(wxEVT_SIZE, [this](wxSizeEvent& event) { Refresh(); event.Skip(); });
+		status |= flag_isDisabled;
+	}
+	else
+	{
+//		if (!(status & flag_isDisabled))
+//			return;
+//		this->Bind(wxEVT_LEAVE_WINDOW, &MaterialButton::OnMotionOUT, this);
+//		this->Bind(wxEVT_LEFT_DOWN, &MaterialButton::OnLeftDown, this);
+//		this->Bind(wxEVT_MOTION, &MaterialButton::OnMotionIN, this);
+//		this->Bind(wxEVT_LEFT_UP, &MaterialButton::OnLeftUp, this);
+//		this->Bind(wxEVT_SIZE, [this](wxSizeEvent& event) { Refresh(); event.Skip(); });
+		status &= ~(flag_isDisabled);
+	}
+
 }
 
 bool MaterialButton::SetLineWidth(uint8_t width)
@@ -62,6 +99,7 @@ bool MaterialButton::SetLineWidth(uint8_t width)
 		return false;
 	rectInfo.LineWidth = width;
 	this->Refresh();
+	this->Update();
 	return true;
 }
 
@@ -71,6 +109,7 @@ bool MaterialButton::SetButtonRadius(uint8_t radius)
 		return false;
 	rectInfo.Radius = radius;
 	this->Refresh();
+	this->Update();
 	return true;
 }
 
@@ -82,45 +121,53 @@ void MaterialButton::OnPaint(wxPaintEvent& evt)
 	wxColour shadow(wxColour(210, 210, 210));
 
 
-	if ((status & (flag_leftKeyDown|flag_motionIN)) == (flag_leftKeyDown | flag_motionIN))
-	{
-		gcdc.SetBrush(wxBrush(shadow));
-		gcdc.SetPen(wxPen(shadow));
-		gcdc.DrawRoundedRectangle(2, 0, m_size.x - 2, m_size.y, rectInfo.Radius);
-		if (status & flag_outlined)
+		if ((status & (flag_leftKeyDown | flag_motionIN)) == (flag_leftKeyDown | flag_motionIN))
 		{
-			gcdc.SetPen(wxPen(m_colourBtnPen, rectInfo.LineWidth));
-			gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(160)));
+			if (status & flag_shadowDrawn)
+			{
+				gcdc.SetBrush(wxBrush(shadow));
+				gcdc.SetPen(wxPen(shadow));
+				gcdc.DrawRoundedRectangle(2, 0, m_size.x - 2, m_size.y, rectInfo.Radius);
+			}
+
+			if (status & flag_outlined)
+			{
+				gcdc.SetPen(wxPen(m_colourBtnPen, rectInfo.LineWidth));
+				gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(160)));
+			}
+			else
+			{
+				gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(110)));
+				gcdc.SetPen(wxPen(m_colourBtnPen.ChangeLightness(115), rectInfo.LineWidth));
+			}
+
+		}
+		else if (status & flag_motionIN)
+		{
+			if (status & flag_shadowDrawn)
+			{
+				gcdc.SetBrush(wxBrush(shadow));
+				gcdc.SetPen(wxPen(shadow));
+				gcdc.DrawRoundedRectangle(2, 0, m_size.x - 2, m_size.y, rectInfo.Radius);
+			}
+			if (status & flag_outlined)
+			{
+				gcdc.SetPen(wxPen(m_colourBtnPen, rectInfo.LineWidth));
+				gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(190)));
+			}
+			else
+			{
+				gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(107)));
+				gcdc.SetPen(wxPen(m_colourBtnPen.ChangeLightness(107), rectInfo.LineWidth));
+			}
 		}
 		else
 		{
-			gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(110)));
-			gcdc.SetPen(wxPen(m_colourBtnPen.ChangeLightness(115), rectInfo.LineWidth));
-		}
-
-	}
-	else if (status & flag_motionIN)
-	{
-
-		gcdc.SetBrush(wxBrush(shadow));
-		gcdc.SetPen(wxPen(shadow));
-		gcdc.DrawRoundedRectangle(2, 0, m_size.x - 2, m_size.y, rectInfo.Radius);
-		if (status & flag_outlined)
-		{
+			gcdc.SetBrush(wxBrush(m_colourBtnBrush));
 			gcdc.SetPen(wxPen(m_colourBtnPen, rectInfo.LineWidth));
-			gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(190)));
 		}
-		else
-		{
-			gcdc.SetBrush(wxBrush(m_colourBtnPen.ChangeLightness(107)));
-			gcdc.SetPen(wxPen(m_colourBtnPen.ChangeLightness(107), rectInfo.LineWidth));
-		}
-	}
-	else
-	{
-		gcdc.SetBrush(wxBrush(m_colourBtnBrush));
-		gcdc.SetPen(wxPen(m_colourBtnPen, rectInfo.LineWidth));
-	}
+	
+	
 		
 	
 	gcdc.DrawRoundedRectangle(0, 0, m_size.x, m_size.y-3, rectInfo.Radius);
@@ -128,12 +175,15 @@ void MaterialButton::OnPaint(wxPaintEvent& evt)
 	gcdc.SetTextForeground(m_colourText);
 	wxSize txtSize{ gcdc.GetTextExtent(m_text) };
 	gcdc.DrawText(m_text, wxPoint((m_size.x - txtSize.x) / 2, (m_size.y - txtSize.y) / 2));
+
+
 }
 
 void MaterialButton::OnLeftDown(wxMouseEvent& evt)
 {
 	status |= flag_leftKeyDown;
 	this->Refresh();
+	this->Update();
 	evt.Skip();
 }
 
@@ -144,6 +194,7 @@ void MaterialButton::OnLeftUp(wxMouseEvent& evt)
 	evt.SetEventObject(this);
 	HandleWindowEvent(event);
 	this->Refresh();
+	this->Update();
 	evt.Skip();
 }
 
@@ -152,6 +203,7 @@ void MaterialButton::OnMotionIN(wxMouseEvent& evt)
 	status |= flag_motionIN;
 	status &= ~(flag_motionOUT);
 	this->Refresh();
+	this->Update();
 	evt.Skip();
 }
 
@@ -160,5 +212,6 @@ void MaterialButton::OnMotionOUT(wxMouseEvent& evt)
 	status &= ~(flag_motionIN | flag_leftKeyDown);
 	status |= flag_motionOUT;
 	this->Refresh();
+	this->Update();
 	evt.Skip();
 }

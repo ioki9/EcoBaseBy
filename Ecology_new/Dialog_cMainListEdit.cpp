@@ -1,8 +1,8 @@
-#include "cMainListEditDialog.h"
+#include "Dialog_cMainListEdit.h"
 
 
 
-cMainListEditDialog::cMainListEditDialog(wxWindow* parent, addPageInfo& info,const std::map<Grid_label,wxString>& gridLabels, wxWindowID id, const wxString& title,
+Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info,const std::map<Grid_label,wxString>& gridLabels, wxWindowID id, const wxString& title,
 	const wxPoint& pos, const wxSize& size, long style, const wxString& name) : wxDialog(parent, id, title, pos, size, style, name), m_record{info}
 {
 	unsigned int labelSize{ static_cast<int>(Grid_label::grid_max_labels) };
@@ -18,8 +18,8 @@ cMainListEditDialog::cMainListEditDialog(wxWindow* parent, addPageInfo& info,con
 	wxBoxSizer* horzSizer = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* vertLftSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* vertRightSizer = new wxBoxSizer(wxVERTICAL);
-	horzSizer->Add(vertLftSizer,1,wxEXPAND | wxLEFT,10);
-	horzSizer->Add(vertRightSizer,1,wxEXPAND | wxLEFT,10);
+	horzSizer->Add(vertLftSizer,1,wxEXPAND | wxLEFT,20);
+	horzSizer->Add(vertRightSizer,1,wxEXPAND | wxLEFT,20);
 
 	//LEFT COLUMN
 	wxStaticText *staticRegnum = new wxStaticText(m_mainPanel, wxID_ANY, gridLabels.at( Grid_label::grid_regnum ), wxDefaultPosition, wxSize(250, 30));
@@ -120,36 +120,36 @@ cMainListEditDialog::cMainListEditDialog(wxWindow* parent, addPageInfo& info,con
 	MaterialButton* applyBtn = new MaterialButton(m_buttonPanel, wxID_CANCEL, "ÏÐÈÌÅÍÈÒÜ",
 		0, wxDefaultPosition, wxSize(150, 55));
 	wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
-	cancelBtn->SetTextFont(wxFont(wxFontInfo(10).FaceName("Segoe UI").Bold()));
-	cancelBtn->SetButtonLineColour(wxColour(20, 148, 20));
-	cancelBtn->SetLabelColour(wxColour(20, 148, 20));
+	cancelBtn->SetTextFont(wxFontInfo(10).FaceName("Segoe UI").Bold());
+	cancelBtn->SetButtonLineColour(gui_MainColour);
+	cancelBtn->SetLabelColour(gui_MainColour);
 
-	applyBtn->SetTextFont(wxFont(wxFontInfo(10).FaceName("Segoe UI").Bold()));
-	applyBtn->SetButtonColour(wxColour(20, 148, 20));
+	applyBtn->SetTextFont(wxFontInfo(10).FaceName("Segoe UI").Bold());
+	applyBtn->SetButtonColour(gui_MainColour);
 	applyBtn->SetLabelColour(*wxWHITE);
 
-	btnSizer->Add(applyBtn, 0, wxEXPAND | wxLEFT | wxBOTTOM, 20);
+	btnSizer->Add(applyBtn, 0, wxEXPAND | wxLEFT | wxBOTTOM , 20);
 	btnSizer->AddStretchSpacer(1);
-	btnSizer->Add(cancelBtn, 0, wxEXPAND | wxRIGHT | wxBOTTOM, 20);
+	btnSizer->Add(cancelBtn, 0, wxEXPAND | wxRIGHT | wxBOTTOM , 20);
 
 	m_buttonPanel->SetSizer(btnSizer);
 	m_mainPanel->SetSizer(horzSizer);
 	horzSizer->Layout();
 	m_mainPanel->Layout();
 	m_mainPanel->SetScrollRate(5, 5);
-	cancelBtn->Bind(wxEVT_LEFT_UP, &cMainListEditDialog::OnCancel, this);
-	applyBtn->Bind(wxEVT_LEFT_UP, &cMainListEditDialog::OnApply, this);
+	cancelBtn->Bind(wxEVT_LEFT_UP, &Dialog_cMainListEdit::OnCancel, this);
+	applyBtn->Bind(wxEVT_LEFT_UP, &Dialog_cMainListEdit::OnApply, this);
 	this->SetSizer(mainSizer);
 	this->CenterOnParent(wxHORIZONTAL);
 	this->ShowModal();
 
 }
 
-cMainListEditDialog::~cMainListEditDialog()
+Dialog_cMainListEdit::~Dialog_cMainListEdit()
 {
 }
 
-void cMainListEditDialog::OnApply(wxMouseEvent& evt)
+void Dialog_cMainListEdit::OnApply(wxMouseEvent& evt)
 {
 	m_record.regnum = m_valueRegnum->GetValue();
 	m_record.oldDate = m_record.date;
@@ -179,12 +179,12 @@ void cMainListEditDialog::OnApply(wxMouseEvent& evt)
 	this -> Close();
 }
 
-void cMainListEditDialog::OnCancel(wxMouseEvent& evt)
+void Dialog_cMainListEdit::OnCancel(wxMouseEvent& evt)
 {
 	this->Close();
 }
 
-void cMainListEditDialog::setNewItem()
+void Dialog_cMainListEdit::setNewItem()
 {
 	
 }

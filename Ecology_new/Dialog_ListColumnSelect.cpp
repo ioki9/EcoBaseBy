@@ -1,6 +1,6 @@
-#include "ColSelectDialog.h"
+#include "Dialog_ListColumnSelect.h"
 
-ColSelectDialog::ColSelectDialog(wxWindow* parent,uint32_t activeColFlags, wxWindowID id, const wxString& title,
+Dialog_ListColumnSelect::Dialog_ListColumnSelect(wxWindow* parent,uint32_t activeColFlags, wxWindowID id, const wxString& title,
 	const wxPoint& pos, const wxSize& size, long style, const wxString& name)
 	: wxDialog(parent, id, title, pos, size, style, name), dlg_activeColFlags{activeColFlags}
 {
@@ -36,8 +36,8 @@ ColSelectDialog::ColSelectDialog(wxWindow* parent,uint32_t activeColFlags, wxWin
 		checkText[i]->SetForegroundColour(*wxBLACK);
 	}
 
-	cancelBtn->Bind(wxEVT_LEFT_UP, &ColSelectDialog::OnCancel, this);
-	applyBtn->Bind(wxEVT_LEFT_UP, &ColSelectDialog::OnApply, this);
+	cancelBtn->Bind(wxEVT_LEFT_UP, &Dialog_ListColumnSelect::OnCancel, this);
+	applyBtn->Bind(wxEVT_LEFT_UP, &Dialog_ListColumnSelect::OnApply, this);
 	this->CenterOnParent(wxHORIZONTAL);
 	this->ShowModal();
 	
@@ -45,7 +45,7 @@ ColSelectDialog::ColSelectDialog(wxWindow* parent,uint32_t activeColFlags, wxWin
 
 
 
-ColSelectDialog::~ColSelectDialog()
+Dialog_ListColumnSelect::~Dialog_ListColumnSelect()
 {
 	delete[] checkBoxes;
 	delete[] checkText;
@@ -53,7 +53,7 @@ ColSelectDialog::~ColSelectDialog()
 }
 
 
-void ColSelectDialog::initLabels()
+void Dialog_ListColumnSelect::initLabels()
 {
 	m_labels.reserve(20);
 	m_labels.push_back( "Регистрационный номер");
@@ -78,13 +78,13 @@ void ColSelectDialog::initLabels()
 	m_labels.push_back("Структурные подразделения (ПОД 9)");
 }
 
-void ColSelectDialog::OnCancel(wxMouseEvent& evt)
+void Dialog_ListColumnSelect::OnCancel(wxMouseEvent& evt)
 {
 	this->Close();
 }
 
 
-void ColSelectDialog::OnApply(wxMouseEvent& evt)
+void Dialog_ListColumnSelect::OnApply(wxMouseEvent& evt)
 {
 	for (size_t i{ 0 }; i < 20; ++i)
 	{

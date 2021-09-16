@@ -2,6 +2,7 @@
 #include <wx/wx.h>
 #include <wx/grid.h>
 #include <map>
+#include <wx/graphics.h>
 #include "myGridLabelsEnum.h"
 #include "myGridTableData.h"
 #include "Structs.h"

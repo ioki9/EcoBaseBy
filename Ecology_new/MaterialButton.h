@@ -15,7 +15,8 @@ public:
 	void SetButtonLineColour(const wxColour& colour);
 	void SetLabelColour(const wxColour& colour);
 	void SetButtonColour(const wxColour& colour);
-
+	void SetButtonShadow(bool isDrawn);
+	void disableButton(bool disable = true);
 	//if set might end badly
 	bool SetLineWidth(uint8_t width);
 
@@ -50,7 +51,10 @@ private:
 		flag_outlined = 1 << 0,
 		flag_motionIN = 1 << 1,
 		flag_motionOUT = 1 << 2,
-		flag_leftKeyDown = 1 << 3
+		flag_leftKeyDown = 1 << 3,
+		flag_shadowDrawn = 1 << 4,
+		flag_isDisabled = 1 << 5
+
 
 	};
 };

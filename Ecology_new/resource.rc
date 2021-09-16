@@ -13,9 +13,14 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RCDATA
 //
 
-ICON_LIST_LINE               RCDATA                  "List_line_green 32x32.png"
-ICON_HLIST_TRANSP			RCDATA						"Transp32x32.png"
-ICON_MAINMENU_LINE			RCDATA						"Menu_line_white_32x11.png"
+SEMI_TRANSPARENT_BG     RCDATA                  "test.png"
+
+ICON_LIST_LINE          RCDATA                  "List_line_green 32x32.png"
+
+ICON_HLIST_TRANSP       RCDATA                  "Transp32x32.png"
+
+ICON_MAINMENU_LINE      RCDATA                  "Menu_line_white_32x11.png"
+
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -40,6 +45,14 @@ BEGIN
 END
 
 #endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BITMAP1             BITMAP                  "bitmap1.bmp"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

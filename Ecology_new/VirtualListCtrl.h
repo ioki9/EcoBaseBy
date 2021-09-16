@@ -6,7 +6,7 @@
 #include <optional>
 #include <wx/imaglist.h>
 #include <wx/gdicmn.h> 
-#include "ColSelectDialog.h"
+#include "Dialog_ListColumnSelect.h"
 #include "itemdata.h"
 
 class VirtualListCtrl : public wxListCtrl

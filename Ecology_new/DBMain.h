@@ -22,15 +22,18 @@ public:
 private:
 	wxSQLite3ResultSet m_rs;
 	std::map<wxString, std::pair<wxString,wxString>> m_codeNameDiscDng;
-	std::map<int, wxString> m_dbStorageColumns;
-	std::map<int, wxString> m_dbPasspColumns;
-	const wxString DBPasspTableName{ "passport" };
-	const wxString DBCodesTableName{ "codes" };
-	const wxString DBStorageTableName{ "storageInfo" };
+	std::map<int, wxString> m_storageColumns;
+	std::map<int, wxString> m_passpColumns;
+	std::map<int, wxString> m_codeInfoColumns;
+	const wxString DBPasspTableName { "passport" };
+	const wxString DBCodesTableName { "codes" };
+	const wxString DBStorageTableName { "storageInfo" };
+	const wxString DBCodeInfoTableName { "codeInfo" };
 	const wxString DBPathPassp{ wxGetCwd() + wxS("/passdat.db") };
 
 	void getStorageColumnNames();
 	void getPassportColumnNames();
+	void getCodeInfoColumnNames();
 protected: 
 	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
 	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
@@ -70,5 +73,8 @@ public:
 	void getListItemData(std::vector<std::vector<wxString>>& item);
 	wxString getIdOfRow(const wxString& row);
 	void getRowDataByID(addPageInfo& info, const wxString& id);
+
+	void getCodeInfoList(std::vector<std::vector<wxString>>& list);
+	int getCodeInfoRowAmount();
 };
  

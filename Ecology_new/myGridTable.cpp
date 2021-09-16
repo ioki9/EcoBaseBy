@@ -36,6 +36,7 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 	Bind(wxEVT_GRID_RANGE_SELECT, &myGridTable::DisableRangeHandler, this);
 	Bind(wxEVT_GRID_SELECT_CELL, &myGridTable::DisableRangeSelectCellHandler, this);
 	Bind(wxEVT_GRID_CELL_LEFT_CLICK, &myGridTable::DisableCtrlMaiusHandler, this);
+
 	GetGridWindow()->Bind(wxEVT_MOTION, &myGridTable::DisableDraggingHandler, this);
 }
 
@@ -129,3 +130,4 @@ void myGridTable::DisableDraggingHandler(wxMouseEvent& evt)
 		evt.Skip(false);
 	}
 }
+

@@ -22,9 +22,11 @@
     <ClInclude Include="Add_panel.h" />
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cMain.h" />
-    <ClInclude Include="cMainListEditDialog.h" />
-    <ClInclude Include="ColSelectDialog.h" />
+    <ClInclude Include="Dialog_cMainListEdit.h" />
+    <ClInclude Include="Dialog_ListColumnSelect.h" />
     <ClInclude Include="CustomCheckBox.h" />
+    <ClInclude Include="Dialog_askDeleteEntry.h" />
+    <ClInclude Include="Dialog_OrgAddEdit.h" />
     <ClInclude Include="GUI_parameters.h" />
     <ClInclude Include="itemdata.h" />
     <ClInclude Include="MainMenuTabButton.h" />
@@ -35,6 +37,8 @@
     <ClInclude Include="myGridTableData.h" />
     <ClInclude Include="PDF_Journal.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="Settings.h" />
+    <ClInclude Include="Settings_page.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="PDF_Helper.h" />
     <ClInclude Include="PDF_Pod10.h" />
@@ -43,27 +47,33 @@
     <ClInclude Include="DMColumnEnums.h" />
     <ClInclude Include="PDF_Main.h" />
     <ClInclude Include="Structs.h" />
+    <ClInclude Include="VirtualCodeList.h" />
     <ClInclude Include="VirtualListCtrl.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Add_panel.cpp" />
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cMain.cpp" />
-    <ClCompile Include="cMainListEditDialog.cpp" />
-    <ClCompile Include="ColSelectDialog.cpp" />
+    <ClCompile Include="Dialog_cMainListEdit.cpp" />
+    <ClCompile Include="Dialog_ListColumnSelect.cpp" />
     <ClCompile Include="CustomCheckBox.cpp" />
+    <ClCompile Include="Dialog_askDeleteEntry.cpp" />
+    <ClCompile Include="Dialog_OrgAddEdit.cpp" />
     <ClCompile Include="MainMenuTabButton.cpp" />
     <ClCompile Include="MaterialButton.cpp" />
     <ClCompile Include="myDirPicker.cpp" />
     <ClCompile Include="myGridTable.cpp" />
     <ClCompile Include="myGridTableData.cpp" />
     <ClCompile Include="PDF_Journal.cpp" />
+    <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="Settings_page.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="PDF_Helper.cpp" />
     <ClCompile Include="PDF_Pod10.cpp" />
     <ClCompile Include="PDF_Pod9.cpp" />
     <ClCompile Include="DBMain.cpp" />
     <ClCompile Include="PDF_Main.cpp" />
+    <ClCompile Include="VirtualCodeList.cpp" />
     <ClCompile Include="VirtualListCtrl.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -74,7 +84,12 @@
     <None Include="rcdata1.bin" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmap1.bmp" />
     <Image Include="line_green.png" />
+    <Image Include="List_line_green 32x32.png" />
+    <Image Include="Menu_line_white_32x11.png" />
+    <Image Include="SemiTransparentGREY.png" />
+    <Image Include="Transp32x32.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -155,14 +170,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>D:\SDKs\IconFontCppHeaders-main;D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>D:\SDKs\wxsvg;D:\SDKs\IconFontCppHeaders-main;D:\SDKs\wxpdfdoc098\include;D:\SDKs\wxsqlite3\include;D:\SDKs\wxpdfdoc-0.9.8\include</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderFile />
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wxpdfdoc098\lib\vc14x_lib;D:\SDKs\wxpdfdoc098\lib\fonts</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>D:\SDKs\wxsvg;D:\SDKs\wxsqlite3\lib\vc_lib;D:\SDKs\wxpdfdoc098\lib\vc14x_lib;D:\SDKs\wxpdfdoc098\lib\fonts</AdditionalLibraryDirectories>
       <AdditionalDependencies>wxsqlite3d.lib;wxpdfdocd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Manifest />

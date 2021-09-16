@@ -25,7 +25,6 @@ private:
 	wxString m_lastSortItem;
 	int m_rowOffset;
 	bool m_isOffsetPositive;
-	Grid_label m_sortingCol = static_cast<Grid_label>(-1);
 	int GetNumberRows() wxOVERRIDE;
 	int GetNumberCols() wxOVERRIDE;
 	void SetColLabelValue(int col, const wxString& label)  wxOVERRIDE;

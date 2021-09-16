@@ -186,7 +186,7 @@ void VirtualListCtrl::initHeaderList()
 void VirtualListCtrl::OnColRightClick(wxListEvent& evt)
 {
 
-	ColSelectDialog* dialog = new ColSelectDialog(this, currentColFlags);
+	Dialog_ListColumnSelect* dialog = new Dialog_ListColumnSelect(this, currentColFlags);
 	currentColFlags = dialog->dlg_activeColFlags;
 	dialog->Destroy();
 	

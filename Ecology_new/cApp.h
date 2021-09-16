@@ -3,6 +3,7 @@
 #include <wx/wx.h>
 #include <wx/imagpng.h>
 #include <wx/gdicmn.h>
+#include <wx/config.h>
 #include "cMain.h"
 #include "DBMain.h"
 

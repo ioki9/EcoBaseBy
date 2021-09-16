@@ -7,15 +7,15 @@
 #include "CustomCheckBox.h"
 #include "MaterialButton.h"
 
-class ColSelectDialog : public wxDialog
+class Dialog_ListColumnSelect : public wxDialog
 {
 public:
-	ColSelectDialog(wxWindow *parent, uint32_t activeColFlags,wxWindowID id = -1,const wxString& title = "",
+	Dialog_ListColumnSelect(wxWindow *parent, uint32_t activeColFlags,wxWindowID id = -1,const wxString& title = "",
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400,600), 
 		long style = wxDEFAULT_DIALOG_STYLE, const wxString& name = wxDialogNameStr);
 
 	uint32_t dlg_activeColFlags = 0x00000000;
-	~ColSelectDialog();
+	~Dialog_ListColumnSelect();
 private:
 	wxPanel* checkBoxPanel = nullptr;
 	CustomCheckBox** checkBoxes;

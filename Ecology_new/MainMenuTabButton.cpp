@@ -21,12 +21,21 @@ MainMenuTabButton::~MainMenuTabButton()
 {
 
 }
-void MainMenuTabButton::setSelected(bool selected)
+void MainMenuTabButton::setSelected(bool selected )
 {
 	if (selected)
 		status |= flag_isSelected;
 	else
 		status &= ~(flag_isSelected);
+}
+
+void MainMenuTabButton::seDropArrowtSize(const wxSize& size)
+{
+	if (!size.GetX() % 2)
+		m_dropArrowSize = size;
+	else
+		m_dropArrowSize = { size.GetX() - 1,size.GetY() };
+
 }
 
 void MainMenuTabButton::OnPaint(wxPaintEvent& evt)
@@ -63,25 +72,44 @@ void MainMenuTabButton::OnPaint(wxPaintEvent& evt)
 	gcdc.SetTextForeground(*wxWHITE);
 	gcdc.SetFont(gui_MenuFont);
 	wxSize txtSize{ gcdc.GetTextExtent(m_text) };
+	
 	gcdc.DrawText(m_text, wxPoint(30, (m_size.GetHeight() - txtSize.GetHeight()) / 2));
 
 	if (status & flag_isSelected)
 	{
-		gcdc.SetPen(wxPen(*wxWHITE,4));
+		gcdc.SetPen(wxPen(*wxWHITE,3));
 		gcdc.SetBrush(wxBrush(*wxWHITE));
-		gcdc.DrawLine(3, m_size.GetHeight()/5, 3 ,m_size.GetHeight() - m_size.GetHeight() / 5);
+		
+		gcdc.DrawLine(2, m_size.GetHeight()/5, 2 ,m_size.GetHeight() - m_size.GetHeight() / 5);
 
 	}
+
 	if (status & flag_isDroppable)
 	{
-		gcdc.SetPen(wxPen(*wxWHITE, 2));
-		gcdc.SetBrush(wxBrush(*wxWHITE));
-		//gcdc.SetFont(wxFontInfo(12).FaceName(FONT_ICON_FILE_NAME_MD));
-		//gcdc.DrawText(ICON_MD_EXPAND_MORE, wxPoint(150, 10));
-		gcdc.DrawLine(m_size.GetWidth() - m_size.GetWidth() / 10, m_size.GetHeight() / 2.3, 
-			m_size.GetWidth() - m_size.GetWidth() / 9, m_size.GetHeight() - m_size.GetHeight() / 2.3);
-		gcdc.DrawLine(m_size.GetWidth() - m_size.GetWidth() / 8, m_size.GetHeight() / 2.3,
-			m_size.GetWidth() - m_size.GetWidth() / 9, m_size.GetHeight() - m_size.GetHeight() / 2.3);
+		int startPos{ (m_size.GetWidth() - 22) };
+		int halfLength{ m_dropArrowSize.GetWidth() / 2 };
+		if (status & flag_isSelected)
+		{
+			gcdc.SetPen(wxPen(*wxWHITE, 2));
+			gcdc.SetBrush(wxBrush(*wxWHITE));
+
+			gcdc.DrawLine(startPos, m_size.GetHeight() - m_size.GetHeight() / 2.3,
+				startPos - halfLength, m_size.GetHeight() / 2.3);
+
+			gcdc.DrawLine(startPos - 2 * halfLength, m_size.GetHeight() - m_size.GetHeight() / 2.3,
+				startPos - halfLength, m_size.GetHeight() / 2.3);
+		}
+		else
+		{
+			gcdc.SetPen(wxPen(*wxWHITE, 2));
+			gcdc.SetBrush(wxBrush(*wxWHITE));
+
+			gcdc.DrawLine(startPos, m_size.GetHeight() / 2.3,
+				startPos - halfLength, m_size.GetHeight() - m_size.GetHeight() / 2.3);
+
+			gcdc.DrawLine(startPos - 2 * halfLength, m_size.GetHeight() / 2.3,
+				startPos - halfLength, m_size.GetHeight() - m_size.GetHeight() / 2.3);
+		}
 	}
 
 }

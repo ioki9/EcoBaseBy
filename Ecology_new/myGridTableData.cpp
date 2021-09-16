@@ -43,6 +43,11 @@ wxString myGridTableData::GetValue(int row, int col)
 	{
 		m_currentItemID = m_db.getIdOfRow(wxString::Format("%i",row));
 		m_currentItemRow = row;
+		m_rowOffset = row - m_currentItemRow;
+		m_isOffsetPositive = m_rowOffset > 0 ? true : false;
+		m_rowOffset = m_isOffsetPositive ? m_rowOffset : m_rowOffset * -1;
+		m_db.getNextRowData(m_rowItem, m_currentItemID, m_isOffsetPositive, wxString::Format("%i", m_rowOffset));
+		m_currentItemID = m_rowItem.back();
 	}
 	if (m_currentItemRow != row)
 	{
