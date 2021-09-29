@@ -6,6 +6,7 @@
 #include "DBMain.h"
 #include "myGridLabelsEnum.h"
 #include "GUI_parameters.h"
+#include <wx/datectrl.h>
 
 class Dialog_cMainListEdit : public wxDialog
 {

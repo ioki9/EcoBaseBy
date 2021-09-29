@@ -2,15 +2,11 @@
 #include <wx/wx.h>
 #include <wx/wxsqlite3.h>
 #include <wx/string.h>
-#include <wx/datectrl.h>
-#include <wx/datetime.h>
 #include <map>
 #include <string>
-#include <optional>
-#include "Structs.h"
 #include "myGridLabelsEnum.h"
+#include "Structs.h"
 
-//WX_DECLARE_HASH_MAP(int, wxString, wxIntegerHash, wxIntegerEqual, map_IntWxstring);
 
 
 
@@ -21,16 +17,23 @@ public:
 	virtual ~DBMain();
 private:
 	wxSQLite3ResultSet m_rs;
+	int m_activeOrg{ -1 };
 	std::map<wxString, std::pair<wxString,wxString>> m_codeNameDiscDng;
 	std::map<int, wxString> m_storageColumns;
 	std::map<int, wxString> m_passpColumns;
 	std::map<int, wxString> m_codeInfoColumns;
-	const wxString DBPasspTableName { "passport" };
-	const wxString DBCodesTableName { "codes" };
-	const wxString DBStorageTableName { "storageInfo" };
-	const wxString DBCodeInfoTableName { "codeInfo" };
-	const wxString DBPathPassp{ wxGetCwd() + wxS("/passdat.db") };
+	wxString DBPasspTableName { "passport" };
+	wxString DBCodesTableName { "codes" };
+	wxString DBStorageTableName { "storageInfo" };
+	wxString DBCodeInfoTableName { "codeInfo" };
+	wxString DBPathPassp{ wxGetCwd() + wxS("/passdat.db") };
 
+	
+	
+
+	wxString GetActivePasspTable();
+	wxString GetActiveStrgTable();
+	wxString GetActiveCodeInfoTable();
 	void getStorageColumnNames();
 	void getPassportColumnNames();
 	void getCodeInfoColumnNames();
@@ -40,9 +43,14 @@ protected:
 	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
 	wxString gridToDBLabel(Grid_label gridLabel);
 public:
+	bool CreateOrgTables(const wxString& orgId);
+	void SetOrg(int orgId);
+	void SetActiveOrg();
 
 	wxString GetLastPassportID();
-	bool insertInitStorageEntry();
+	bool insertInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount);
+	bool editInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount, const wxString& oldCode);
+	bool deleteInitStorageEntry(const wxString& code, const wxString& storage);
 	bool deleteEntry(const addPageInfo& info);
 	bool editEntry(const addPageInfo& info);
 	bool insertNewEntry(const addPageInfo& info);
@@ -74,7 +82,16 @@ public:
 	wxString getIdOfRow(const wxString& row);
 	void getRowDataByID(addPageInfo& info, const wxString& id);
 
+
+	void getInitStorageList(std::vector<std::vector<wxString>>& list);
 	void getCodeInfoList(std::vector<std::vector<wxString>>& list);
 	int getCodeInfoRowAmount();
+
+	short AddCodeInfoEntry(const wxString& code, const wxString& wasteNorm);
+	bool DeleteCodeInfoEntry(const wxString& code);
+	bool EditCodeInfoEntry(const wxString& oldCode, const wxString& code, const wxString& wasteNorm);
+	bool isInitStorageViable(const wxString& code, const wxString& date);
+	bool DeleteAllUnitEntrys(int unitID);
+	bool DeleteOrgTables(int orgID);
 };
  

@@ -4,6 +4,10 @@
 #include <stdlib.h>
 #include <time.h>
 #include <chrono>
+#include <wx/datectrl.h>
+#include <wx/datetime.h>
+#include "Settings.h"
+
 
 using namespace std::chrono;
 
@@ -12,11 +16,16 @@ using namespace std::chrono;
 DBMain::DBMain()
 {
 	Open(DBPathPassp);
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + ""));
+	if (Settings::getLastAddedOrgID() == -1)
+	{
+		CreateOrgTables("0");
+	}
+		
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + ""));
 	getStorageColumnNames();
 	m_rs.Finalize();
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + ""));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + ""));
 	getPassportColumnNames();
 	m_rs.Finalize();
 
@@ -27,7 +36,7 @@ DBMain::DBMain()
 	}
 	m_rs.Finalize();
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBCodeInfoTableName + ""));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveCodeInfoTable() + ""));
 	getCodeInfoColumnNames();
 	m_rs.Finalize();
 }
@@ -70,7 +79,8 @@ void DBMain::getPassportColumnNames()
 	m_passpColumns[DB_COLUMN_STRUCTURAL_POD10] = m_rs.GetColumnName(20);
 	m_passpColumns[DB_COLUMN_ENTRYDATE] = m_rs.GetColumnName(21);
 	m_passpColumns[DB_COLUMN_STRUCTURAL_POD9] = m_rs.GetColumnName(22);
-
+	m_passpColumns[DB_COLUMN_INITIAL] = m_rs.GetColumnName(23);
+	m_passpColumns[DB_COLUMN_UNIT_ID] = m_rs.GetColumnName(24);
 }
 
 void DBMain::getCodeInfoColumnNames()
@@ -101,15 +111,124 @@ void DBMain::getStorageColumnNames()
 	m_storageColumns[DB_COLUMN_STRUCTURAL_POD10] = m_rs.GetColumnName(15);
 	m_storageColumns[DB_COLUMN_ENTRYDATE] = m_rs.GetColumnName(16);
 	m_storageColumns[DB_COLUMN_ID] = m_rs.GetColumnName(17);
+	m_storageColumns[DB_COLUMN_INITIAL] = m_rs.GetColumnName(18);
 }
 
 wxString DBMain::GetLastPassportID()
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " ORDER BY " + m_passpColumns[DB_COLUMN_ID] + " DESC"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " ORDER BY " + m_passpColumns[DB_COLUMN_ID] + " DESC"));
 	m_rs.NextRow();
 	wxString id = m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]);
 	m_rs.Finalize();
 	return id;
+}
+
+bool DBMain::CreateOrgTables(const wxString& orgId )
+{
+	if(!TableExists(DBPasspTableName + orgId))
+		ExecuteUpdate(wxS("CREATE TABLE " + DBPasspTableName + orgId +
+			" (id	INTEGER," 
+			"Owner	WXSTRING," 
+			"Receiver	WXSTRING," 
+			"Transporter	WXSTRING," 
+			"Date	WXSTRING," 
+			"Code	INTEGER," 
+			"Regnumber	WXSTRING," 
+			"Amount_formed	REAL," 
+			"Amount_received_org	REAL," 
+			"Amount_received_phys	REAL," 
+			"Amount_used	REAL," 
+			"Amount_defused	REAL," 
+			"Amount_selfstorage	REAL," 
+			"Amount_burial	REAL," 
+			"Amount_transfer_used	REAL," 
+			"Amount_transfer_defused	REAL," 
+			"Amount_transfer_storage	REAL," 
+			"Amount_transfer_burial	REAL," 
+			"Amount_selfstorage_full	REAL," 
+			"Waste_norm	REAL," 
+			"Structural_unit_formed	TEXT," 
+			"Entry_date	TEXT," 
+			"Structural_unit_transfered	TEXT," 
+			"Initial	INTEGER," 
+			"Unit_id	INTEGER,"
+			"PRIMARY KEY('id'))"));
+
+	if (!TableExists(DBStorageTableName + orgId))
+		ExecuteUpdate(wxS("CREATE TABLE " + DBStorageTableName + orgId + " ("
+			"Date	TEXT,"
+			"Code	INTEGER,"
+			"Amount_formed	REAL,"
+			"Amount_received_org	REAL,"
+			"Amount_received_phys	REAL,"
+			"Amount_used	REAL,"
+			"Amount_defused	REAL,"
+			"Amount_seflstorage	REAL,"
+			"Amount_burial	REAL,"
+			"Amount_transfer_used	REAL,"
+			"Amount_transfer_defused	REAL,"
+			"Amount_transfer_storage	REAL,"
+			"Amount_transfer_burial	REAL,"
+			"Amount_selfstorage_full	REAL,"
+			"Waste_norm	REAL,"
+			"Structural_unit	TEXT,"
+			"Entry_date	TEXT,"
+			"id	INTEGER,"
+			"Initial	INTEGER,"
+			"PRIMARY KEY('id'))"));
+
+	if (!TableExists(DBCodeInfoTableName + orgId))
+		ExecuteUpdate(wxS("CREATE TABLE " + DBCodeInfoTableName + orgId + " ("
+			"code	INTEGER UNIQUE,"
+			"Waste_norm	REAL,"
+			"symbols_after_coma	INTEGER)"));
+
+	return true;
+}
+
+void DBMain::SetOrg(int orgId)
+{
+	m_activeOrg = orgId;
+}
+
+void  DBMain::SetActiveOrg()
+{
+	m_activeOrg = -1;
+}
+
+wxString DBMain::GetActivePasspTable()
+{
+
+	if (m_activeOrg > -1 && TableExists(DBPasspTableName + wxString::Format("%i", m_activeOrg)))
+		return DBPasspTableName + wxString::Format("%i", m_activeOrg);
+
+	else if (m_activeOrg == -1 && Settings::getActiveOrg() != -1)
+		return DBPasspTableName + wxString::Format("%i", Settings::getActiveOrg());
+
+	else
+		return DBPasspTableName + "0";
+}
+wxString DBMain::GetActiveStrgTable()
+{
+	if (m_activeOrg > -1 && TableExists(DBStorageTableName + wxString::Format("%i", m_activeOrg)))
+		return DBStorageTableName + wxString::Format("%i", m_activeOrg);
+
+	 else if (m_activeOrg == -1 && Settings::getActiveOrg() != -1)
+		return DBStorageTableName + wxString::Format("%i", Settings::getActiveOrg());
+
+	else
+		return DBStorageTableName + "0";
+}
+wxString DBMain::GetActiveCodeInfoTable()
+{
+	if (m_activeOrg > -1 && TableExists(DBCodeInfoTableName + wxString::Format("%i", m_activeOrg)))
+		return DBCodeInfoTableName + wxString::Format("%i", m_activeOrg);
+
+	else if (m_activeOrg == -1 && Settings::getActiveOrg() != -1)
+		return DBCodeInfoTableName + wxString::Format("%i", Settings::getActiveOrg());
+
+	else
+		return DBCodeInfoTableName + "0";
 }
 
 wxString DBMain::convertDate(const wxString &date)
@@ -121,7 +240,7 @@ wxString DBMain::convertDate(const wxString &date)
 
 int DBMain::getUniqueCodes(passportPod9Info &data, const wxString& startDate, const wxString& endDate)
 {
-		m_rs = ExecuteQuery(wxS("SELECT DISTINCT Code FROM " + DBPasspTableName + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + 
+		m_rs = ExecuteQuery(wxS("SELECT DISTINCT Code FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " +
 m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
 
 		while (m_rs.NextRow())
@@ -129,14 +248,14 @@ m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
 			data.uniqueCodes.Add(m_rs.GetString(0));
 		}
 		m_rs.Finalize();
-	return ExecuteScalar(wxS("SELECT COUNT(DISTINCT Code) FROM " + DBPasspTableName + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " +
+	return ExecuteScalar(wxS("SELECT COUNT(DISTINCT Code) FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " +
 		m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
 }
 
 
 void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code, const wxString& startDate, const wxString& endDate)
 {
-		m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Code = '" + code + "' AND " + 
+		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code + "' AND " + 
 			m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' ORDER BY Date"));
 		int count{0};
 		if (!data.id.IsEmpty())
@@ -183,7 +302,7 @@ void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code, con
 //returns code/date string if fullstorage value already exists, empty string otherwise
 wxString DBMain::checkFullStorage(const wxString& code)
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + " WHERE Code = '" + code + "' ORDER BY Date DESC"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Code = '" + code + "' ORDER BY Date DESC"));
 	if (!m_rs.NextRow())
 	{
 		m_rs.Finalize();
@@ -237,10 +356,10 @@ bool DBMain::deleteEntry(const addPageInfo& info)
 
 
 
-	ExecuteUpdate(wxS("DELETE FROM " + DBPasspTableName + " WHERE id = " + info.id));
+	ExecuteUpdate(wxS("DELETE FROM " + GetActivePasspTable() + " WHERE id = " + info.id));
 	updateSubsqPasspStrg(info.code, info.date, strDiffrAm, info.id);
 
-	ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET " +
+	ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
 		m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " + " + strDiffrAm + ", "
 		+ sAmountColumn + " = " + sAmountColumn + " - " + getAmount(amount) + ", "
 		+ m_storageColumns[DB_COLUMN_AMOUNT_USED] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_USED] + " - " + getAmount(info.amountUsed) + ", "
@@ -253,7 +372,7 @@ bool DBMain::deleteEntry(const addPageInfo& info)
 		+ m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE] + " - " + getAmount(info.tamountStorage)
 		+ " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'"));
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + 
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + 
 		" WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'"));
 	m_rs.NextRow();
 	if (m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) == 0 && m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_FORMED]) == 0 
@@ -264,7 +383,7 @@ bool DBMain::deleteEntry(const addPageInfo& info)
 		&& m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]) == 0 && m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]) == 0)
 	{
 		m_rs.Finalize();
-		ExecuteUpdate(wxS("DELETE FROM " + DBStorageTableName + " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'"));
+		ExecuteUpdate(wxS("DELETE FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'"));
 	}
 
 	this->updateSubsqPOD10Strg(info.code, info.date, getAmount(wxString::Format("%f", diffrAm)),info.id);
@@ -307,7 +426,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 
 
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE id = '" + info.id + "'"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE id = '" + info.id + "'"));
 	m_rs.NextRow();
 
 	newDiffrAm = wxAtof(info.amountStorage) + (wxAtof(amount) - wxAtof(info.amountStorage) - wxAtof(info.amountBurial) - wxAtof(info.amountUsed)
@@ -327,7 +446,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 	this->updateSubsqPasspStrg(info.oldCode, info.oldDate, wxString::Format("%f", oldDiffrAM * -1), info.id);
 
 	//substract old diffrance from old/current entry in storage table
-	ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET " +
+	ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
 		m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " + " + wxString::Format("%f", oldDiffrAM * -1) + ", "
 		+ sAmountColumn + " = " + sAmountColumn + " - " + getAmount(amount) + ", "
 		+ m_storageColumns[DB_COLUMN_AMOUNT_USED] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_USED] + " - " + getAmount(info.amountUsed) + ", "
@@ -346,7 +465,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 	//delete storage table entry if code or date is changed and entry is empty
 	if (info.oldCode != info.code || info.oldDate !=info.date)
 	{
-		m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + " WHERE Code = '" + info.oldCode + "' AND Date LIKE '%" + info.oldDate.Mid(0, 7) + "%'"));
+		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.oldCode + "' AND Date LIKE '%" + info.oldDate.Mid(0, 7) + "%'"));
 		m_rs.NextRow();
 		if (m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_FORMED]) == 0 && m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]) == 0 
 			&& m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS]) == 0 && m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_USED]) == 0 
@@ -356,11 +475,12 @@ bool DBMain::editEntry(const addPageInfo& info)
 			&& m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]) == 0)
 		{
 			m_rs.Finalize();
-			ExecuteUpdate(wxS("DELETE FROM " + DBStorageTableName + " WHERE Code = '" + info.oldCode + "' AND Date LIKE '%" + info.oldDate.Mid(0, 7) + "%'"));
+			ExecuteUpdate(wxS("DELETE FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.oldCode + "' AND Date LIKE '%" + info.oldDate.Mid(0, 7) + "%'"));
 		}
 	}
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Code = '" + info.code + "' AND Date <= '" + info.date + "' ORDER BY Date DESC, id DESC"));
+	//get current full storage amount
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + info.code + "' AND Date <= '" + info.date + "' ORDER BY Date DESC, id DESC"));
 	while (m_rs.NextRow())
 	{
 		if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]) != info.id)
@@ -377,7 +497,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 
 
 	//set new entry info
-	ExecuteUpdate(wxS("UPDATE " + DBPasspTableName + " SET "
+	ExecuteUpdate(wxS("UPDATE " + GetActivePasspTable() + " SET "
 		+ m_passpColumns[DB_COLUMN_OWNER] + " = '" + info.owner + "', "
 		+ m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] + " = '" + info.amountReceivedPhys + "', "
 		+ m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG] + " = '" + info.amountReceivedOrg + "', "
@@ -406,14 +526,14 @@ bool DBMain::editEntry(const addPageInfo& info)
 
 
 	//if entry in storage table with such code and date exists - update this entry, if not - insert new entry
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable()
 		+ " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'"));
 
 	if (m_rs.NextRow())
 	{
 		m_rs.Finalize();
 
-		ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET " +
+		ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
 			m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " + " + wxString::Format("%f", newDiffrAm) + ", "
 			+ sAmountColumn + " = " + sAmountColumn + " + " + getAmount(amount) + ", "
 			+ m_storageColumns[DB_COLUMN_AMOUNT_USED] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_USED] + " + " + getAmount(info.amountUsed) + ", "
@@ -430,7 +550,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 	else
 	{
 		m_rs.Finalize();
-		ExecuteUpdate(wxS("INSERT INTO " + DBStorageTableName +
+		ExecuteUpdate(wxS("INSERT INTO " + GetActiveStrgTable() +
 			" (" + m_storageColumns[DB_COLUMN_DATE] + ", " + m_storageColumns[DB_COLUMN_CODE] +
 			", " + sAmountColumn + ", " + m_storageColumns[DB_COLUMN_AMOUNT_USED] +
 			", " + m_storageColumns[DB_COLUMN_AMOUNT_DEFUSED] + ", " + m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE] +
@@ -486,7 +606,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 //	}
 //
 //
-//	ExecuteUpdate(wxS("INSERT INTO " + DBPasspTableName +
+//	ExecuteUpdate(wxS("INSERT INTO " + GetActivePasspTable() +
 //		"(" + m_dbPasspColumns[DB_COLUMN_REGNUM]+", " + m_dbPasspColumns[DB_COLUMN_DATE] +
 //		", " + m_dbPasspColumns[DB_COLUMN_OWNER] + ", " + m_dbPasspColumns[DB_COLUMN_TRANSPORT] +
 //		", " + m_dbPasspColumns[DB_COLUMN_RECEIVER] +", " + m_dbPasspColumns[DB_COLUMN_CODE] +
@@ -506,7 +626,7 @@ bool DBMain::editEntry(const addPageInfo& info)
 //		+ "', '" + info.structUnit9 + "', '" + info.entryDate
 //		+ "', '" + info.wasteNorm + "', '" + amountStorageFull + "')"));
 //
-//	ExecuteUpdate(wxS("INSERT INTO " + DBStorageTableName +
+//	ExecuteUpdate(wxS("INSERT INTO " + GetActiveStrgTable() +
 //		"(" + m_dbStorageColumns[DB_COLUMN_DATE] + ", " + m_dbStorageColumns[DB_COLUMN_CODE] +
 //		", " + sAmountColumn + ", " + m_dbStorageColumns[DB_COLUMN_AMOUNT_USED] +
 //		", " + m_dbStorageColumns[DB_COLUMN_AMOUNT_DEFUSED] + ", " + m_dbStorageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE] +
@@ -556,7 +676,7 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 			- wxAtof(info.amountDefused) - wxAtof(info.tamountBurial) - wxAtof(info.tamountStorage) - wxAtof(info.tamountUsed) - wxAtof(info.tamountDefused) );
 	
 	//check if we already have entrys, if yes, get storage from them, otherwise get storage from custom user value or 0
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Code = '" + info.code + "' AND Date <= '" + info.date + "' ORDER BY Date DESC, id DESC"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + info.code + "' AND Date <= '" + info.date + "' ORDER BY Date DESC, id DESC"));
 	if (m_rs.NextRow())
 		amountStorageFull = wxString::Format("%f", m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) + diffrAm);
 
@@ -572,7 +692,7 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 											else
 												return " - " + amount; };
 
-	ExecuteUpdate(wxS("INSERT INTO " + DBPasspTableName + " (" 
+	ExecuteUpdate(wxS("INSERT INTO " + GetActivePasspTable() + " (" 
 		+ m_passpColumns[DB_COLUMN_REGNUM] + ", " + m_passpColumns[DB_COLUMN_DATE] +
 		", " + m_passpColumns[DB_COLUMN_OWNER] + ", " + m_passpColumns[DB_COLUMN_TRANSPORT] +
 		", " + m_passpColumns[DB_COLUMN_RECEIVER] + ", " + m_passpColumns[DB_COLUMN_CODE] +
@@ -598,14 +718,14 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 
 
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName 
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() 
 		+ " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%' ORDER BY Date DESC"));
 
 	if (m_rs.NextRow())
 	{
 		m_rs.Finalize();
 
-		ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET " +
+		ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
 			m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " + " + wxString::Format("%f", diffrAm) + ", "
 			+ m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + getAmount(info.amountFormed) + ", "
 			+ m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] + getAmount(info.amountReceivedPhys) + ", "
@@ -626,10 +746,10 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 	else
 	{
 		m_rs.Finalize();
-		//m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName
+		//m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable()
 		//	+ " WHERE Code = '" + info.code + "'"));
 
-		ExecuteUpdate(wxS("INSERT INTO " + DBStorageTableName +
+		ExecuteUpdate(wxS("INSERT INTO " + GetActiveStrgTable() +
 			" (" + m_storageColumns[DB_COLUMN_DATE] + ", " + m_storageColumns[DB_COLUMN_CODE] +
 			", " + m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + ", " + m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] +
 			", " + m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG] + + ", " + m_storageColumns[DB_COLUMN_AMOUNT_USED] +
@@ -649,38 +769,156 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 
 }
 
-bool DBMain::insertInitStorageEntry()
+bool DBMain::isInitStorageViable(const wxString& code, const wxString& date)
 {
-	return false;
+	m_rs = ExecuteQuery("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_storageColumns[DB_COLUMN_DATE] + " <= '" + date.Mid(0, 7) + "'");
+	if (m_rs.NextRow())
+	{
+		m_rs.Finalize();
+		return false;
+	}
+	return true;
 }
 
+bool DBMain::DeleteOrgTables(int orgID)
+{
+	ExecuteUpdate(wxS("DROP TABLE IF EXISTS " + DBPasspTableName + wxString::Format("%i", orgID)));
+	ExecuteUpdate(wxS("DROP TABLE IF EXISTS " + DBStorageTableName + wxString::Format("%i", orgID)));
+	ExecuteUpdate(wxS("DROP TABLE IF EXISTS " + DBCodeInfoTableName + wxString::Format("%i", orgID)));
+	return true;
+}
 
+bool DBMain::insertInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount)
+{
+
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	if (m_rs.NextRow())
+	{
+		m_rs.Finalize();
+		return false;
+	}
+	m_rs.Finalize();
+	wxString dateS = date.Format(wxS("%Y.%m.%d"));
+	ExecuteUpdate(wxS("INSERT INTO " + GetActiveStrgTable() + " (" + m_storageColumns[DB_COLUMN_DATE] + ", " + m_storageColumns[DB_COLUMN_CODE] + ", "
+		+ m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + ", " + m_storageColumns[DB_COLUMN_INITIAL] + ") VALUES ('"
+		+ dateS.Mid(0, 7) + "', '" + code + "', '" + amount + "', '1')"));
+
+	ExecuteUpdate(wxS("INSERT INTO " + GetActivePasspTable() + " (" + m_passpColumns[DB_COLUMN_DATE] + ", " + m_passpColumns[DB_COLUMN_CODE] + ", "
+		+ m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + ", " + m_passpColumns[DB_COLUMN_INITIAL] + ") VALUES ('"
+		+ dateS + "', '" + code + "', '" + amount + "', '1')"));
+
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	wxString idPod10 = m_rs.GetAsString(m_storageColumns[DB_COLUMN_ID]);
+	m_rs.Finalize();
+
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_passpColumns[DB_COLUMN_DATE] + " = '" + dateS + "'"));
+	wxString idPod9 = m_rs.GetAsString(m_storageColumns[DB_COLUMN_ID]);
+	m_rs.Finalize();
+
+	updateSubsqPasspStrg(code, dateS, amount, idPod9);
+	updateSubsqPOD10Strg(code, dateS, amount, idPod10);
+	return true;
+
+}
+
+bool DBMain::editInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount,const wxString& oldCode)
+{
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + oldCode + "' AND " +
+		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	if (!m_rs.NextRow())
+	{
+		m_rs.Finalize();
+		return false;
+	}
+	double diff = wxAtof(amount) - m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]);
+	wxString diffS{ std::to_string(diff) };
+	wxString oldStorage = wxString::Format("%f", -1 * m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
+	wxString dateS = date.Format(wxS("%Y.%m.%d"));
+	wxString idPOD10= m_rs.GetAsString(m_storageColumns[DB_COLUMN_ID]);
+	m_rs.Finalize();
+
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_passpColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	wxString idPassp = m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]);
+
+	ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
+		m_storageColumns[DB_COLUMN_CODE] + "= '" + code + "', " +
+		m_storageColumns[DB_COLUMN_DATE] + "= '" + dateS.Mid(0, 7) + "', " +
+		m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + "= '" + amount +
+		"' WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + oldCode + "' AND " +
+		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
+
+	ExecuteUpdate(wxS("UPDATE " + GetActivePasspTable() + " SET " +
+		m_passpColumns[DB_COLUMN_CODE] + "= '" + code + "', " +
+		m_passpColumns[DB_COLUMN_DATE] + "= '" + dateS + "', " +
+		m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + "= '" + amount +
+		"' WHERE " + m_passpColumns[DB_COLUMN_CODE] + " = '" + oldCode + "' AND " +
+		m_passpColumns[DB_COLUMN_INITIAL] + " = '1'"));
+
+	if (oldCode == code)
+	{
+
+		updateSubsqPasspStrg(code, dateS, diffS, idPassp);
+		updateSubsqPOD10Strg(code, dateS, diffS, idPOD10);
+	}
+	else
+	{
+		
+		updateSubsqPasspStrg(oldCode, dateS, oldStorage, idPassp);
+		updateSubsqPOD10Strg(oldCode, dateS, oldStorage, idPOD10);
+		updateSubsqPasspStrg(code, dateS, amount, idPassp);
+		updateSubsqPOD10Strg(code, dateS, amount, idPOD10);
+	}
+	m_rs.Finalize();
+	return true;
+}
+
+bool DBMain::deleteInitStorageEntry(const wxString& code,const wxString& storage)
+{
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	if (!m_rs.NextRow())
+	{
+		m_rs.Finalize();
+		return false;
+	}
+	wxString date = m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]);
+	wxString idPOD10 = m_rs.GetAsString(m_storageColumns[DB_COLUMN_ID]);
+	m_rs.Finalize();
+
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
+		m_passpColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	wxString idPassp = m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]);
+	m_rs.Finalize();
+
+	ExecuteUpdate(wxS("DELETE FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + "= '" + code + "' AND " +
+		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
+	ExecuteUpdate(wxS("DELETE FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_CODE] + "= '" + code + "' AND " +
+		m_passpColumns[DB_COLUMN_INITIAL] + " = '1'"));
+
+	updateSubsqPOD10Strg(code, date, '-' + storage, idPOD10);
+	updateSubsqPasspStrg(code, date, '-' + storage, idPassp);
+	return true;
+}
 
 //Updates subsequent full storage amount in passport table
 void  DBMain::updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm,const wxString& id)
 {
-
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Code = '" + code
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code
 		+ "' AND Date >= '%" + date.Mid(0, 7) + "%'"));
-
 
 	while (m_rs.NextRow())
 	{
-
-
-		if (id == m_rs.GetAsString(DB_COLUMN_ID))
+		if (id == m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]))
 			continue;
-	
-		try {
-			ExecuteUpdate(wxS("UPDATE " + DBPasspTableName + " SET " +
-				m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]
-				+ " + " + diffAm + " WHERE id = '" + m_rs.GetAsString(DB_COLUMN_ID) + "'"));
-		}
-		catch (wxSQLite3Exception& e)
-		{
-			wxMessageBox(e.GetMessage() + "\n" + e.ErrorCodeAsString(e.GetErrorCode()));
-		}
 
+		ExecuteUpdate(wxS("UPDATE " + GetActivePasspTable() + " SET " +
+			m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]
+			+ " + " + diffAm + " WHERE id = '" + m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]) + "'"));
 	}
 	m_rs.Finalize();
 }
@@ -688,20 +926,18 @@ void  DBMain::updateSubsqPasspStrg(const wxString& code, const wxString& date, c
 //Updates subsequent full storage amount in storage table
 void  DBMain::updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm,const wxString& id)
 {
-
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + " WHERE Code = '" + code
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Code = '" + code
 		+ "' AND Date >= '%" + date.Mid(0, 7) + "%'"));
-
 
 	while (m_rs.NextRow())
 	{
 
-
-		if (id == m_rs.GetAsString(DB_COLUMN_ID))
+		if (id == m_rs.GetAsString(m_storageColumns[DB_COLUMN_ID]))
 			continue;
-		ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET " +
+
+		ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
 			m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = " + m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]
-			+ " + " + diffAm + " WHERE id = '" + m_rs.GetAsString(DB_COLUMN_ID) + "'"));
+			+ " + " + diffAm + " WHERE id = '" + m_rs.GetAsString(m_storageColumns[DB_COLUMN_ID]) + "'"));
 	}
 	m_rs.Finalize();
 
@@ -717,7 +953,7 @@ void DBMain::setMonthlyResult(const wxString &code,const wxDateTime &date)
 	wxString fullStorageAmount = calculateFullStorageResult(code, myDate);
 	passportStorageInfo values;
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Code = '" + code 
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code 
 							+ "' AND Date LIKE '%" + myDate + "%'"));
 
 	while (m_rs.NextRow())
@@ -738,12 +974,12 @@ void DBMain::setMonthlyResult(const wxString &code,const wxDateTime &date)
 	values.wasteNorm = m_rs.GetAsString(DB_COLUMN_WASTE_NORM);
 	m_rs.Finalize();
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + " WHERE Code = '" 
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Code = '" 
 							+ code + "' AND Date LIKE '%" + myDate + "%'"));
 
 	if (!m_rs.NextRow())
 	{
-		ExecuteUpdate(wxS("INSERT INTO " + DBStorageTableName + " (" + m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + "," 
+		ExecuteUpdate(wxS("INSERT INTO " + GetActiveStrgTable() + " (" + m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + "," 
 			+ m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] + "," + m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG] + ","
 			+ m_storageColumns[DB_COLUMN_AMOUNT_USED] + "," + m_storageColumns[DB_COLUMN_AMOUNT_DEFUSED] + ","
 			+ m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE] + "," + m_storageColumns[DB_COLUMN_AMOUNT_BURIAL] + ","
@@ -762,23 +998,8 @@ void DBMain::setMonthlyResult(const wxString &code,const wxDateTime &date)
 	}
 	else
 	{
-		wxString string = "UPDATE " + DBStorageTableName + " SET "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + " = '" + wxString::Format(wxS("%f"), values.amountFormed) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] + " = '" + wxString::Format(wxS("%f"), values.amountReceivedPhys) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG] + " = '" + wxString::Format(wxS("%f"), values.amountReceivedOrg) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_USED] + " = '" + wxString::Format(wxS("%f"), values.amountUsed) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_DEFUSED] + " = '" + wxString::Format(wxS("%f"), values.amountDefused) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE] + " = '" + wxString::Format(wxS("%f"), values.amountSelfstorage) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_BURIAL] + " = '" + wxString::Format(wxS("%f"), values.amountBurial) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_USED] + " = '" + wxString::Format(wxS("%f"), values.amountTransferUsed) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED] + " = '" + wxString::Format(wxS("%f"), values.amountTransferDefused) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE] + " = '" + wxString::Format(wxS("%f"), values.amountTransferStorage) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL] + " = '" + wxString::Format(wxS("%f"), values.amountTransferBurial) + "', "
-			+ m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + " = '" + fullStorageAmount + "', "
-			+ m_storageColumns[DB_COLUMN_WASTE_NORM] + " = '" + values.wasteNorm + "', "
-			+ m_storageColumns[DB_COLUMN_STRUCTURAL_POD10] + " = '" + values.structuralUnit
-			+ "' WHERE Code = '" + code + "' AND Date LIKE '%" + myDate + "%'";
-		ExecuteUpdate(wxS("UPDATE " + DBStorageTableName + " SET "
+
+		ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET "
 			+ m_storageColumns[DB_COLUMN_AMOUNT_FORMED] + " = '" + wxString::Format(wxS("%f"), values.amountFormed) + "', " 
 			+ m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS] + " = '" + wxString::Format(wxS("%f"), values.amountReceivedPhys) + "', " 
 			+ m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG] + " = '" + wxString::Format(wxS("%f"), values.amountReceivedOrg) + "', " 
@@ -803,7 +1024,7 @@ wxString DBMain::calculateFullStorageResult(const wxString& code, const wxString
 {
 	double fullStorageAmount{};
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE Code = '" + code + "' AND Date >= '" + date + "'"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code + "' AND Date >= '" + date + "'"));
 	while (m_rs.NextRow())
 	{
 		fullStorageAmount += m_rs.GetDouble(DB_COLUMN_AMOUNT_FORMED) + m_rs.GetDouble(DB_COLUMN_AMOUNT_RECEIVED_PHYS)
@@ -819,13 +1040,13 @@ wxString DBMain::calculateFullStorageResult(const wxString& code, const wxString
 void DBMain::getPod10TableCount(pod10Info &data, const wxString& startDate, const wxString& endDate)
 {
 
-	wxString test = wxS("SELECT COUNT(DISTINCT Date) FROM " + DBStorageTableName + " WHERE " +
+	wxString test = wxS("SELECT COUNT(DISTINCT Date) FROM " + GetActiveStrgTable() + " WHERE " +
 		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'");
 
-	data.tableCount = ExecuteScalar(wxS("SELECT COUNT(DISTINCT Date) FROM " + DBStorageTableName + " WHERE " + 
+	data.tableCount = ExecuteScalar(wxS("SELECT COUNT(DISTINCT Date) FROM " + GetActiveStrgTable() + " WHERE " + 
 		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
 
-	m_rs = ExecuteQuery(wxS("SELECT DISTINCT Date FROM " + DBStorageTableName + " WHERE " + 
+	m_rs = ExecuteQuery(wxS("SELECT DISTINCT Date FROM " + GetActiveStrgTable() + " WHERE " + 
 		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
 
 	while (m_rs.NextRow())
@@ -843,7 +1064,7 @@ void DBMain::getPod10TableInfo(pod10Info &data, const wxString &date)
 	{
 		data.emptyPod10StructInfo();
 	}
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBStorageTableName + " WHERE Date LIKE '%" + date + "%' ORDER BY Date"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Date LIKE '%" + date + "%' ORDER BY Date"));
 	while (m_rs.NextRow())
 	{
 		data.date = m_rs.GetAsString(0);
@@ -903,7 +1124,7 @@ void DBMain::getPod10TableCodeDngr(pod10Info &data, const wxArrayString &codes)
 void DBMain::getJournalTableInfo(passportJournalInfo& data, const wxString& startDate, const wxString& endDate)
 {
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + 
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + 
 		"' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' ORDER BY Date"));
 	while (m_rs.NextRow())
 	{
@@ -939,7 +1160,7 @@ void DBMain::getJournalCodeInfo(passportJournalInfo& data)
 //ID should always be last in array
 void DBMain::getListItemData(std::vector<std::vector<wxString>>& item)
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + ""));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + ""));
 	int count{ 0 };
 	while (m_rs.NextRow())
 	{
@@ -977,12 +1198,12 @@ void DBMain::getListItemData(std::vector<std::vector<wxString>>& item)
 
 int DBMain::getCodeInfoRowAmount()
 {
-	return ExecuteScalar(wxS("SELECT COUNT(*) FROM " + DBCodeInfoTableName));
+	return ExecuteScalar(wxS("SELECT COUNT(*) FROM " + GetActiveCodeInfoTable()));
 }
 
 void DBMain::getCodeInfoList(std::vector<std::vector<wxString>>& list)
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBCodeInfoTableName + ""));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveCodeInfoTable() + ""));
 	int count{ 0 };
 	while (m_rs.NextRow())
 	{
@@ -993,10 +1214,24 @@ void DBMain::getCodeInfoList(std::vector<std::vector<wxString>>& list)
 	}
 }
 
+void DBMain::getInitStorageList(std::vector<std::vector<wxString>>& list)
+{
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_INITIAL] + " = 1"));
+	int count{ 0 };
+	while (m_rs.NextRow())
+	{
+		list.push_back(std::vector<wxString>());
+		list[count].push_back(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]));
+		list[count].push_back(m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]));
+		list[count].push_back(m_rs.GetAsString(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
+		count++;
+	}
+}
+
 //returns Y.m.d format
 wxDateTime DBMain::getFirstEntryDate()
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " ORDER BY " + m_passpColumns[DB_COLUMN_DATE] + " ASC"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " ORDER BY " + m_passpColumns[DB_COLUMN_DATE] + " ASC"));
 	wxDateTime date = m_rs.GetDate(m_passpColumns[DB_COLUMN_DATE]);
 	m_rs.Finalize();
 	return date;
@@ -1005,7 +1240,7 @@ wxDateTime DBMain::getFirstEntryDate()
 
 wxDateTime DBMain::getLastEntryDate()
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " ORDER BY " + m_passpColumns[DB_COLUMN_DATE] + " DESC"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " ORDER BY " + m_passpColumns[DB_COLUMN_DATE] + " DESC"));
 	wxDateTime date = m_rs.GetDate(m_passpColumns[DB_COLUMN_DATE]);
 	m_rs.Finalize();
 	return date;
@@ -1013,7 +1248,7 @@ wxDateTime DBMain::getLastEntryDate()
 
 int DBMain::getPasspRowAmount()
 {
-	return ExecuteScalar(wxS("SELECT COUNT(*) FROM " + DBPasspTableName));
+	return ExecuteScalar(wxS("SELECT COUNT(*) FROM " + GetActivePasspTable()));
 }
 
 void DBMain::getNextRowData(std::vector<wxString> &rowItem,const wxString& id, bool idIsHigher,const wxString& offset)
@@ -1030,7 +1265,7 @@ void DBMain::getNextRowData(std::vector<wxString> &rowItem,const wxString& id, b
 		idSortOrder = "DESC";
 	}
 
-		m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE rowid " + idOp + " " + id
+		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE rowid " + idOp + " " + id
 			+ " ORDER BY rowid " + idSortOrder + " LIMIT 1 OFFSET " + offset));
 
 	if (m_rs.NextRow())
@@ -1064,7 +1299,7 @@ void DBMain::getNextRowData(std::vector<wxString> &rowItem,const wxString& id, b
 
 wxString DBMain::getIdOfRow(const wxString& row)
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE rowid LIMIT 1 OFFSET " + row));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE rowid LIMIT 1 OFFSET " + row));
 	m_rs.NextRow();
 	wxString newRow = m_rs.GetAsString(0);
 	m_rs.Finalize();
@@ -1136,7 +1371,7 @@ wxString DBMain::getIdByRowOffset(const wxString& id, bool idIsHigher, const wxS
 		idSortOrder = "DESC";
 	}
 
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE rowid " + idOp + " " + id
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE rowid " + idOp + " " + id
 		+ " ORDER BY rowid " + idSortOrder + " LIMIT 1 OFFSET " + offset));
 	wxString rowID = m_rs.GetAsString(0);
 	m_rs.Finalize();
@@ -1146,32 +1381,124 @@ wxString DBMain::getIdByRowOffset(const wxString& id, bool idIsHigher, const wxS
 
 void DBMain::getRowDataByID(addPageInfo& info, const wxString& id)
 {
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBPasspTableName + " WHERE rowid = " + id));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE rowid = " + id));
 	m_rs.NextRow();
 
 	info.regnum = m_rs.GetAsString(DB_COLUMN_REGNUM);
-	info.code = m_rs.GetAsString(DB_COLUMN_CODE);
-	info.date = m_rs.GetDate(DB_COLUMN_DATE).Format(wxS("%Y.%m.%d"));
-	info.owner = m_rs.GetAsString(DB_COLUMN_OWNER);
-	info.receiver = m_rs.GetAsString(DB_COLUMN_RECEIVER);
-	info.transporter = m_rs.GetAsString(DB_COLUMN_TRANSPORT);
-	info.amountFormed = m_rs.GetAsString(DB_COLUMN_AMOUNT_FORMED);
-	info.amountReceivedPhys = m_rs.GetAsString(DB_COLUMN_AMOUNT_RECEIVED_PHYS);
-	info.amountReceivedOrg = m_rs.GetAsString(DB_COLUMN_AMOUNT_RECEIVED_ORG);
-	info.amountUsed = m_rs.GetAsString(DB_COLUMN_AMOUNT_USED);
-	info.amountDefused = m_rs.GetAsString(DB_COLUMN_AMOUNT_DEFUSED);
-	info.amountBurial = m_rs.GetAsString(DB_COLUMN_AMOUNT_BURIAL);
-	info.amountStorage = m_rs.GetAsString(DB_COLUMN_AMOUNT_SELFSTORAGE);
-	info.tamountUsed= m_rs.GetAsString(DB_COLUMN_AMOUNT_TRANSFER_USED);
-	info.tamountDefused = m_rs.GetAsString(DB_COLUMN_AMOUNT_TRANSFER_DEFUSED);
-	info.tamountBurial = m_rs.GetAsString(DB_COLUMN_AMOUNT_TRANSFER_BURIAL);
-	info.tamountStorage = m_rs.GetAsString(DB_COLUMN_AMOUNT_TRANSFER_STORAGE);
-	info.amountStrgFull = m_rs.GetAsString(DB_COLUMN_AMOUNT_SELFSTORAGE_FULL);
-	info.structUnit9 = m_rs.GetAsString(DB_COLUMN_STRUCTURAL_POD9);
-	info.structUnit10 = m_rs.GetAsString(DB_COLUMN_STRUCTURAL_POD10);
-	info.wasteNorm = m_rs.GetAsString(DB_COLUMN_WASTE_NORM);
-	info.id = m_rs.GetAsString(DB_COLUMN_ID);
+	info.code = m_rs.GetAsString(m_passpColumns[DB_COLUMN_CODE]);
+	info.date = m_rs.GetDate(m_passpColumns[DB_COLUMN_DATE]).Format(wxS("%Y.%m.%d"));
+	info.owner = m_rs.GetAsString(m_passpColumns[DB_COLUMN_OWNER]);
+	info.receiver = m_rs.GetAsString(m_passpColumns[DB_COLUMN_RECEIVER]);
+	info.transporter = m_rs.GetAsString(m_passpColumns[DB_COLUMN_TRANSPORT]);
+	info.amountFormed = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_FORMED]);
+	info.amountReceivedPhys = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS]);
+	info.amountReceivedOrg = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]);
+	info.amountUsed = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_USED]);
+	info.amountDefused = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_DEFUSED]);
+	info.amountBurial = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_BURIAL]);
+	info.amountStorage = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]);
+	info.tamountUsed= m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]);
+	info.tamountDefused = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]);
+	info.tamountBurial = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]);
+	info.tamountStorage = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]);
+	info.amountStrgFull = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]);
+	info.structUnit9 = m_rs.GetAsString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD9]);
+	info.structUnit10 = m_rs.GetAsString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD10]);
+	info.wasteNorm = m_rs.GetAsString(m_passpColumns[DB_COLUMN_WASTE_NORM]);
+	info.id = m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]);
 
 	m_rs.Finalize();
+}
+
+short DBMain::AddCodeInfoEntry(const wxString& code, const wxString& wasteNorm)
+{
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveCodeInfoTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + code + "'"));
+	if (m_rs.NextRow())
+	{
+		if (m_rs.GetAsString(m_codeInfoColumns[DB_COLUMN_WASTE_NORM]) == "")
+		{
+			m_rs.Finalize();
+			ExecuteUpdate(wxS("UPDATE " + GetActiveCodeInfoTable() +
+				" SET " + m_codeInfoColumns[DB_COLUMN_WASTE_NORM] + " = '" + wasteNorm +
+				"' WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + " = '" + code + "'"));
+			return 2;
+		}
+		else
+		{
+			m_rs.Finalize();
+			return 0;
+		}
+	}
+	else
+	{
+		m_rs.Finalize();
+
+		ExecuteUpdate(wxS("INSERT INTO " + GetActiveCodeInfoTable() +
+			" (" + m_codeInfoColumns[DB_COLUMN_CODE] + ", " + m_codeInfoColumns[DB_COLUMN_WASTE_NORM] 
+			+ ") VALUES ('" + code + "', '" + wasteNorm + "')"));
+		return 1;
+	}
+}
+
+bool DBMain::DeleteCodeInfoEntry(const wxString& code)
+{
+	m_rs = ExecuteQuery(wxS(" SELECT * FROM " + GetActiveCodeInfoTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + code + "'"));
+	if (m_rs.NextRow())
+	{
+		m_rs.Finalize();
+		ExecuteUpdate(wxS("DELETE FROM " + GetActiveCodeInfoTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + code + "'"));
+		return true;
+	}
+	return false;
+}
+
+bool DBMain::EditCodeInfoEntry(const wxString& oldCode,const wxString& code, const wxString& wasteNorm)
+{
+	m_rs = ExecuteQuery(wxS(" SELECT * FROM " + GetActiveCodeInfoTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + oldCode + "'"));
+	if (m_rs.NextRow())
+	{
+		m_rs.Finalize();
+		ExecuteUpdate(wxS("UPDATE " + GetActiveCodeInfoTable() + " SET " +
+			m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + code + "', " + 
+			m_codeInfoColumns[DB_COLUMN_WASTE_NORM] + "= '" + wasteNorm + 
+			"' WHERE "+ m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + oldCode + "'"));
+		return true;
+	}
+	
+	return false;
+}
+
+bool DBMain::DeleteAllUnitEntrys(int unitID)
+{
+	m_rs = ExecuteQuery(wxS(" SELECT * FROM " + GetActivePasspTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_UNIT_ID] + "= '" + wxString::Format("%i",unitID) + "'"));
+	addPageInfo info{};
+	while (m_rs.NextRow())
+	{
+		info.regnum = m_rs.GetAsString(DB_COLUMN_REGNUM);
+		info.code = m_rs.GetAsString(m_passpColumns[DB_COLUMN_CODE]);
+		info.date = m_rs.GetDate(m_passpColumns[DB_COLUMN_DATE]).Format(wxS("%Y.%m.%d"));
+		info.owner = m_rs.GetAsString(m_passpColumns[DB_COLUMN_OWNER]);
+		info.receiver = m_rs.GetAsString(m_passpColumns[DB_COLUMN_RECEIVER]);
+		info.transporter = m_rs.GetAsString(m_passpColumns[DB_COLUMN_TRANSPORT]);
+		info.amountFormed = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_FORMED]);
+		info.amountReceivedPhys = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS]);
+		info.amountReceivedOrg = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]);
+		info.amountUsed = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_USED]);
+		info.amountDefused = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_DEFUSED]);
+		info.amountBurial = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_BURIAL]);
+		info.amountStorage = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]);
+		info.tamountUsed = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]);
+		info.tamountDefused = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]);
+		info.tamountBurial = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]);
+		info.tamountStorage = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]);
+		info.amountStrgFull = m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]);
+		info.structUnit9 = m_rs.GetAsString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD9]);
+		info.structUnit10 = m_rs.GetAsString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD10]);
+		info.wasteNorm = m_rs.GetAsString(m_passpColumns[DB_COLUMN_WASTE_NORM]);
+		info.id = m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]);
+		deleteEntry(info);
+	}
+	m_rs.Finalize();
+	return true;
 }
 

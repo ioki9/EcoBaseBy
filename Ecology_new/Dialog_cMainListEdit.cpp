@@ -115,9 +115,9 @@ Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info,c
 
 	
 
-	MaterialButton* cancelBtn = new MaterialButton(m_buttonPanel, wxID_CANCEL, "ÎÒÌÅÍÀ",
+	MaterialButton* cancelBtn = new MaterialButton(m_buttonPanel, -1, "ÎÒÌÅÍÀ",
 		1, wxDefaultPosition, wxSize(150, 55));
-	MaterialButton* applyBtn = new MaterialButton(m_buttonPanel, wxID_CANCEL, "ÏÐÈÌÅÍÈÒÜ",
+	MaterialButton* applyBtn = new MaterialButton(m_buttonPanel, -1, "ÏÐÈÌÅÍÈÒÜ",
 		0, wxDefaultPosition, wxSize(150, 55));
 	wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
 	cancelBtn->SetTextFont(wxFontInfo(10).FaceName("Segoe UI").Bold());

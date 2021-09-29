@@ -176,7 +176,6 @@ void MaterialButton::OnPaint(wxPaintEvent& evt)
 	wxSize txtSize{ gcdc.GetTextExtent(m_text) };
 	gcdc.DrawText(m_text, wxPoint((m_size.x - txtSize.x) / 2, (m_size.y - txtSize.y) / 2));
 
-
 }
 
 void MaterialButton::OnLeftDown(wxMouseEvent& evt)

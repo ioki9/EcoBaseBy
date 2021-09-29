@@ -1,18 +1,12 @@
 #pragma once
 #include <wx/wx.h>
-#include <wx/graphics.h>
+
 #include <wx/datectrl.h>
-#include <wx/valnum.h>
-#include <wx/radiobut.h>
 #include "MaterialButton.h"
-#include "CustomCheckBox.h"
-#include "Utility.h"
-#include "cMain.h"
 #include "Structs.h"
-#include "VirtualListCtrl.h"
 
 
-class cMain;
+
 
 
 class Add_panel :
@@ -71,11 +65,9 @@ private:
     MaterialButton* p3_buttonPrevious;
     wxTextCtrl* m_structUnit10Ctrl;
     wxTextCtrl* m_structUnit9Ctrl;
-  
-   
-
     void OnP3_ButtonNext(wxCommandEvent& evt);
     void OnP3_ButtonPrev(wxCommandEvent& evt);
+
     //__________RESULT PAGE________
     void initResultPage();
     wxPanel* m_resultPage;

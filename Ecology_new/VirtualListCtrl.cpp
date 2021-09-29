@@ -95,7 +95,7 @@ void VirtualListCtrl::sortByColumn(int column)
 
 	bool ascending = this->sortAscending;
 
-	std::sort(m_items.begin(), m_items.end(), [column, ascending](std::vector<wxString> i1, std::vector<wxString> i2) {
+	std::sort(m_items.begin(), m_items.end(), [&column, &ascending](std::vector<wxString> i1, std::vector<wxString> i2) {
 		switch (column) {
 		case 0:
 			return genericCompare(i1[0], i2[0], ascending);

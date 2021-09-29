@@ -128,7 +128,7 @@
     <ClInclude Include="Structs.h">
       <Filter>Source Files\Global variables</Filter>
     </ClInclude>
-    <ClInclude Include="Dialog_askDeleteEntry.h">
+    <ClInclude Include="Dialog_ask.h">
       <Filter>GUI\Frames\Headers</Filter>
     </ClInclude>
     <ClInclude Include="Settings_page.h">
@@ -143,6 +143,12 @@
     <ClInclude Include="VirtualCodeList.h">
       <Filter>GUI\Controls\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="VirtualStrgInitList.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="VirtualOrgList.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -155,9 +161,6 @@
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="cApp.cpp">
-      <Filter>GUI\Frames\Source</Filter>
-    </ClCompile>
-    <ClCompile Include="cMain.cpp">
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="Dialog_cMainListEdit.cpp">
@@ -202,7 +205,7 @@
     <ClCompile Include="myGridTable.cpp">
       <Filter>GUI\Controls\Soruce</Filter>
     </ClCompile>
-    <ClCompile Include="Dialog_askDeleteEntry.cpp">
+    <ClCompile Include="Dialog_ask.cpp">
       <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
     <ClCompile Include="Settings_page.cpp">
@@ -216,6 +219,15 @@
     </ClCompile>
     <ClCompile Include="VirtualCodeList.cpp">
       <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualStrgInitList.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="VirtualOrgList.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="cMain.cpp">
+      <Filter>GUI\Frames\Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

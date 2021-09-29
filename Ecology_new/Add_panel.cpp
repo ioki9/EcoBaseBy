@@ -1,4 +1,13 @@
 #include "Add_panel.h"
+#include <wx/pdfdoc.h>
+#include <wx/valnum.h>
+#include <wx/radiobut.h>
+#include <wx/graphics.h>
+#include "DBMain.h"
+#include "GUI_parameters.h"
+#include "VirtualListCtrl.h"
+#include "CustomCheckBox.h"
+#include "Utility.h"
 
 
 Add_panel::Add_panel(wxWindow* parent)
@@ -450,14 +459,6 @@ void Add_panel::initResultPage()
 	wxStaticText* structUnit10 = new wxStaticText(pr_mainPanel, wxID_ANY, "Структурное подразделение в которых\n образовался данный вид отхода (ПОД 10): " );
 	wxStaticText* valStructUnit10 = new wxStaticText(pr_mainPanel, wxID_ANY,"\n" + m_record.structUnit10);
 	valStructUnit10->SetFont(m_textFont.Bold());
-
-
-
-
-	
-	
-	
-
 
 	lhMainSizer->Add(label, 0, wxLEFT | wxTOP | wxALIGN_LEFT, 20);
 

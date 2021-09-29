@@ -1,25 +1,21 @@
 #pragma once
 #include <wx/wx.h>
-#include <wx/dialog.h>
-#include <wx/graphics.h>
-#include <wx/toplevel.h>
-#include <wx/dcclient.h>
-#include "Structs.h"
 #include "MaterialButton.h"
 #include "GUI_parameters.h"
-#include "DBMain.h"
+#include "Utility.h"
 
-class Dialog_askDeleteEntry : public wxDialog
+
+class Dialog_ask : public wxDialog
 {
 public:
-	Dialog_askDeleteEntry(wxWindow* parent, const addPageInfo& info, wxWindowID id = -1, const wxString& title = "",
+	Dialog_ask(wxWindow* parent, const wxString& title, const wxString& text, const wxString& acptBtnLabel = "Удалить",
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400,220),
 		long style = wxDEFAULT_DIALOG_STYLE & ~(wxDEFAULT_DIALOG_STYLE), const wxString& name = wxDialogNameStr);
-	~Dialog_askDeleteEntry();
+	~Dialog_ask();
 
-	
 private:
-	addPageInfo m_record;
+	bool m_isYesPressed{ false };
+	wxWindow* m_parent = nullptr;
 	wxPanel *m_mainPanel = nullptr;
 	MaterialButton* m_btnYES = nullptr;
 	MaterialButton* m_btnNO = nullptr;

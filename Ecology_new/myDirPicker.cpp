@@ -43,6 +43,7 @@ void myDirPicker::onBrowseBtn(wxMouseEvent& evt)
 		wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 	dlg->ShowModal();
 	m_pathTxt->SetValue(dlg->GetPath());
+	m_initPath = dlg->GetPath();
 	dlg->Destroy();
 	
 }

@@ -25,7 +25,7 @@
     <ClInclude Include="Dialog_cMainListEdit.h" />
     <ClInclude Include="Dialog_ListColumnSelect.h" />
     <ClInclude Include="CustomCheckBox.h" />
-    <ClInclude Include="Dialog_askDeleteEntry.h" />
+    <ClInclude Include="Dialog_ask.h" />
     <ClInclude Include="Dialog_OrgAddEdit.h" />
     <ClInclude Include="GUI_parameters.h" />
     <ClInclude Include="itemdata.h" />
@@ -49,6 +49,8 @@
     <ClInclude Include="Structs.h" />
     <ClInclude Include="VirtualCodeList.h" />
     <ClInclude Include="VirtualListCtrl.h" />
+    <ClInclude Include="VirtualOrgList.h" />
+    <ClInclude Include="VirtualStrgInitList.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Add_panel.cpp" />
@@ -57,7 +59,7 @@
     <ClCompile Include="Dialog_cMainListEdit.cpp" />
     <ClCompile Include="Dialog_ListColumnSelect.cpp" />
     <ClCompile Include="CustomCheckBox.cpp" />
-    <ClCompile Include="Dialog_askDeleteEntry.cpp" />
+    <ClCompile Include="Dialog_ask.cpp" />
     <ClCompile Include="Dialog_OrgAddEdit.cpp" />
     <ClCompile Include="MainMenuTabButton.cpp" />
     <ClCompile Include="MaterialButton.cpp" />
@@ -75,6 +77,8 @@
     <ClCompile Include="PDF_Main.cpp" />
     <ClCompile Include="VirtualCodeList.cpp" />
     <ClCompile Include="VirtualListCtrl.cpp" />
+    <ClCompile Include="VirtualOrgList.cpp" />
+    <ClCompile Include="VirtualStrgInitList.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

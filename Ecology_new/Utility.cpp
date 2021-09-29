@@ -3,8 +3,6 @@
 
 using namespace utility;
 
-
-
 namespace {
 
 	const wxString patternsFileName{ "/hyph-ru.pat.txt" };
@@ -157,5 +155,29 @@ wxString utility::convertDate(const wxString& date)
 
 void utility::draw()
 {
+
+}
+
+
+
+void utility::paintDarkBackground(wxWindowDC* dc,wxWindow* parent)
+{
+
+	wxImage image(parent->GetSize());
+	image.InitAlpha();
+
+	unsigned char* alpha = image.GetAlpha();
+	memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, image.GetWidth() * image.GetHeight());
+
+	wxGraphicsContext* gc = wxGraphicsContext::Create(image);
+	gc->SetBrush(wxBrush(wxColour(0, 0, 0, 176)));
+	gc->SetPen(*wxTRANSPARENT_PEN);
+	gc->DrawRectangle(0, 0, parent->GetSize().GetX(), parent->GetSize().GetY());
+	delete gc;
+
+	wxBitmap bmp(image);
+
+	dc->DrawBitmap(bmp, 0, 0);
+
 
 }

@@ -1,19 +1,23 @@
 #pragma once
 #include <wx/wx.h>
-#include <wx/graphics.h>
-#include "Settings.h"
+#include <vector>
 #include "VirtualCodeList.h"
-#include "GUI_parameters.h"
+#include "VirtualStrgInitList.h"
+#include "DBMain.h"
+#include "Settings.h"
+
 
 class Dialog_OrgAddEdit : public wxDialog
 {
 public:
-	Dialog_OrgAddEdit(wxWindow* parent,bool isAddDialog, wxWindowID id = -1, const wxString& title = "",
+	Dialog_OrgAddEdit(wxWindow* parent,organization* org, wxWindowID id = -1, const wxString& title = "",
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400, 220),
 		long style = wxDEFAULT_DIALOG_STYLE & ~(wxDEFAULT_DIALOG_STYLE), const wxString& name = wxDialogNameStr);
 	~Dialog_OrgAddEdit();
 private:
-	bool m_isAddDialog;
+	wxWindow* m_parent = nullptr;
+
+	organization m_org;
 	wxPanel* m_mainPanel = nullptr;
 	wxPanel* m_buttonPanel;
 	wxPanel* headerPanel;
@@ -23,19 +27,29 @@ private:
 	wxScrolledWindow* m_1stPage;
 	wxScrolledWindow* m_2ndPage = nullptr;
 	VirtualCodeList* m_wasteNormList;
+	VirtualStrgInitList* m_strgList;
+	wxListCtrl* m_unitList;
 	wxBoxSizer* m_mainSizer;
+	DBMain m_db;
 
-	wxPoint mLastPt;
-	bool dragging{ false };
-	int x, y;
-
+	bool m_denyChanges{ false };
 	bool m_isDrawn{ false };
-	void OnMouseMove(wxMouseEvent& event);
-	void OnMouseLeave(wxMouseEvent& event);
-	void OnMouseLDown(wxMouseEvent& event);
-	void OnMouseLUp(wxMouseEvent& event);
-	void OnMouseCaptureLost(wxMouseCaptureLostEvent& event);
-	void paintDarkBackground(wxWindowDC* dc);
+	bool m_openedAsEdit{};
+	void OnCancel(wxCommandEvent& evt);
+	void OnApply(wxCommandEvent& evt);
 	void onPaint(wxPaintEvent& evt);
+
+	void OnWasteListEdit(wxCommandEvent& evt);
+	void OnWasteListDelete(wxCommandEvent& evt);
+	void OnWasteListAdd(wxCommandEvent& evt);
+
+	void OnStorageListEdit(wxCommandEvent& evt);
+	void OnStorageListDelete(wxCommandEvent& evt);
+	void OnStorageListAdd(wxCommandEvent& evt);
+
+	void OnUnitListEdit(wxCommandEvent& evt);
+	void OnUnitListDelete(wxCommandEvent& evt);
+	void OnUnitListAdd(wxCommandEvent& evt);
+
 };
 

@@ -1,6 +1,8 @@
 #pragma once
 #include "cApp.h"
+#include <wx/pdfdoc.h>
 #include <wx/pdffontmanager.h>
+#include "Settings.h"
 #ifdef __WXMSW__
 #include <wx/msw/msvcrt.h>      // redefines the new() operator 
 #endif
@@ -11,21 +13,18 @@ cApp::cApp()
 {
 	wxInitAllImageHandlers();
 	wxLocale(wxLANGUAGE_RUSSIAN);
-	
+	Settings::LoadState();
 }
 
 
 cApp::~cApp()
 {
-	
 }
 
 bool cApp::OnInit()
 {
 	SetVendorName(wxS("EcoDataBase"));
 	SetAppName(wxS("EcoDataBase"));
-	wxConfigBase* pConfig = wxConfigBase::Get();
-
 	m_frame1 = new cMain();
 	m_frame1->Show();
 	return true;

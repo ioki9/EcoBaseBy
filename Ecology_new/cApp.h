@@ -1,11 +1,8 @@
 #pragma once
-
 #include <wx/wx.h>
-#include <wx/imagpng.h>
-#include <wx/gdicmn.h>
-#include <wx/config.h>
+#include <wx/pdfdoc.h>
 #include "cMain.h"
-#include "DBMain.h"
+
 
 
 class cApp : public wxApp

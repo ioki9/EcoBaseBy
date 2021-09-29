@@ -1,31 +1,20 @@
 #pragma once
 #include <wx/wx.h>
-#include <wx/stattext.h>
-#include <wx/listctrl.h>
-#include <chrono>
+#include <wx/config.h>
+#include <wx/filepicker.h>
 #include <string>
 #include <cstdint>
 #include <vector>
-#include <wx/config.h>
-#include <wx/grid.h>
-#include <wx/pdfdoc.h>
-#include <wx/pdffontmanager.h>
-#include <wx/filepicker.h>
-#include "Add_panel.h"
-#include "Utility.h"
-#include "MaterialButton.h"
-#include "DBMain.h"
-#include "Dialog_cMainListEdit.h"
-#include "myGridTable.h"
-#include "myDirPicker.h"
-#include "GUI_parameters.h"
 #include "MainMenuTabButton.h"
-#include "PDF_Main.h"
-#include "Structs.h"
-#include "Dialog_askDeleteEntry.h"
+#include "myDirPicker.h"
+#include "MaterialButton.h"
+#include "myGridTable.h"
 #include "Settings_page.h"
-#include "Settings.h"
-#include "VirtualCodeList.h"
+#include "Add_panel.h"
+#include "DBMain.h"
+
+
+
 
 
 class cMain : public wxFrame
@@ -45,6 +34,7 @@ private:
 	wxPanel* m_listTopPanel = nullptr;
 	wxPanel* m_listBottomPanel = nullptr;
 	MaterialButton* m_deleteButton;
+	wxChoice* m_orgChoice;
 	myGridTable* m_grid = nullptr;
 	void initListPanel();
 

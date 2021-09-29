@@ -1,15 +1,30 @@
 #pragma once
 #include "cMain.h"
+#include <chrono>
+#include <wx/pdfdoc.h>
+#include <wx/pdffontmanager.h>
+#include "PDF_Main.h"
+#include "Dialog_cMainListEdit.h"
+#include "Dialog_ask.h"
+#include "Dialog_OrgAddEdit.h"
+#include "VirtualCodeList.h"
+#include "Settings.h"
+#include "GUI_parameters.h"
+#include "Structs.h"
 
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wxSize(1024,600))
 {
 	
-	
+	if (Settings::getLastAddedOrgID() == -1)
+	{
+		Dialog_OrgAddEdit* dlg = new Dialog_OrgAddEdit(this, nullptr, wxID_ANY, "", wxDefaultPosition, wxSize(600, 600));
+		Refresh();
+		dlg->Destroy();
+	}
 	this->SetMinClientSize(wxSize(660, 480));
 	wxPdfFontManager::GetFontManager()->RegisterSystemFonts();
 	wxPdfFontManager::GetFontManager()->RegisterFontDirectory(wxGetCwd() + wxS("/Fonts"));
-
 	Center();
 	this->initListPanel();
 	this->initAddPanel();
@@ -24,7 +39,8 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 	m_mainSizer->Add(m_mainMenu, 0, wxEXPAND | wxBOTTOM);
 	m_mainSizer->Add(m_listPanel, 1, wxEXPAND);
 
-	
+
+
 
 	this->Bind(wxEVT_SIZE, &cMain::OnSize, this);
 }
@@ -32,10 +48,7 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 cMain::~cMain()
 {
 	delete m_dataBase;
-	//delete myList;
-	//delete menuAbout;
-	//delete menuFile;
-	//delete mainPanel;
+	Settings::SaveState();
 
 }
 
@@ -45,7 +58,16 @@ void cMain::initListPanel()
 	m_listPanel->SetBackgroundColour(wxColor(255, 255, 255));
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-
+	wxBoxSizer* orgListSizer = new wxBoxSizer(wxHORIZONTAL);
+	wxArrayString orgNames;
+	for (const auto& it : *Settings::GetOrgArrayPtr())
+	{
+		orgNames.Add(it.name);
+	}
+	m_orgChoice = new wxChoice(m_listPanel, -1, wxPoint(30, 50), wxSize(100, 50), orgNames);
+	wxStaticText* orgText = new wxStaticText(m_listPanel, -1, "Организация:");
+	wxArrayString unitNames;
+	
 	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ИЗМЕНИТЬ", true,wxDefaultPosition, wxSize(100, 35));
 	editButton->SetButtonLineColour(gui_MainColour);
 	editButton->SetLabelColour(gui_MainColour);
@@ -85,14 +107,14 @@ void cMain::initAddPanel()
 
 void cMain::initSettingsPage()
 {
-	m_settingsPage = new Settings_page(this);
+	m_settingsPage = new Settings_page(this,m_orgChoice);
 	
 	m_settingsPage->Hide();
 }
 
 void cMain::initMainMenu()
 {
-
+	
 	m_mainMenu = new wxPanel(this, ID_MAINMENU_PANEL, wxDefaultPosition, wxSize(m_mainMenuWidth, 200));
 	m_mainMenu->SetBackgroundColour(gui_MainColour);
 
@@ -383,10 +405,14 @@ void cMain::OnListDeleteButton(wxCommandEvent& evt)
 {
 	if (m_grid->isRowSelected())
 	{
-		addPageInfo m_record;
-		m_grid->getSelectedRowData(m_record);
 		wxSafeYield(this, false);
-		Dialog_askDeleteEntry* askDlg = new Dialog_askDeleteEntry(this, m_record);
+		Dialog_ask* askDlg = new Dialog_ask(this, "Удаление записи", "Вы уверены, что хотите удалить выбранную запись? Это действие нельзя отменить.");
+		if (askDlg->GetReturnCode())
+		{
+			addPageInfo m_record;
+			m_grid->getSelectedRowData(m_record);
+			m_dataBase->deleteEntry(m_record);
+		}
 		askDlg->Destroy();
 		this->Refresh();
 	}
