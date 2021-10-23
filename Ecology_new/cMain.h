@@ -22,22 +22,31 @@ class cMain : public wxFrame
 public:
 	cMain();
 	~cMain();
+	void tryEvent(wxCommandEvent& evt);
 
-public:
-	DBMain *m_dataBase = new DBMain();
 
 private:
 
 
+	DBMain* m_dataBase = new DBMain();
+
 	//LIST PANEL
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
+	wxChoice* m_orgChoice;
+	wxChoice* m_unitChoice;
 	wxPanel* m_listBottomPanel = nullptr;
 	MaterialButton* m_deleteButton;
-	wxChoice* m_orgChoice;
+	wxStaticText* m_unitText;
+	wxStaticText* m_orgText;
+	wxFlexGridSizer* m_orgListSizer;
+	wxBoxSizer* m_listMainSizer;
 	myGridTable* m_grid = nullptr;
 	void initListPanel();
-
+	void OnOrgChanged(wxCommandEvent& evt);
+	void OnOrgSelect(wxCommandEvent& evt);
+	void OnUnitSelect(wxCommandEvent& evt);
+	void UpdateOrgChoices();
 	//MENU PANEL
 	wxPanel* m_mainMenu = nullptr;
 	wxWindow* m_activePanel = nullptr;
@@ -56,15 +65,12 @@ private:
 	void changeActivePage(wxWindow* newPage);
 
 	//ADD PANEL
-	wxPanel* m_addPanel = nullptr;
+	Add_panel* m_addPanel = nullptr;
 	void initAddPanel();
 
 	//FORM PDF PANEL
 	void initFormPDFPage();
 	wxScrolledWindow* m_formPDFPanel = nullptr;
-	myDirPicker* m_dir_pod10 = nullptr;
-	myDirPicker* m_dir_journal = nullptr;
-	myDirPicker* m_dir_pod9 = nullptr;
 	wxDatePickerCtrl* m_date1_pod9 = nullptr;
 	wxDatePickerCtrl* m_date2_pod9 = nullptr;
 	wxDatePickerCtrl* m_date1_pod10 = nullptr;
@@ -83,7 +89,8 @@ private:
 	void OnTabSwitch(wxCommandEvent& evt);
 	void OnListEditButton(wxCommandEvent& evt);
 	void OnListDeleteButton(wxCommandEvent& evt);
-
+	void PostOrgEvents(wxCommandEvent& evt);
+	void OnDbChange(wxCommandEvent& evt);
 	void OnFromPDFButton(wxCommandEvent& evt);
 	void OnSize(wxSizeEvent& evt);
 

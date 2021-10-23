@@ -22,6 +22,9 @@
     <ClInclude Include="Add_panel.h" />
     <ClInclude Include="cApp.h" />
     <ClInclude Include="cMain.h" />
+    <ClInclude Include="CustomAutoComplete.h" />
+    <ClInclude Include="CustomEvents.h" />
+    <ClInclude Include="CustomCodeValidator.h" />
     <ClInclude Include="Dialog_cMainListEdit.h" />
     <ClInclude Include="Dialog_ListColumnSelect.h" />
     <ClInclude Include="CustomCheckBox.h" />
@@ -35,6 +38,7 @@
     <ClInclude Include="myGridLabelsEnum.h" />
     <ClInclude Include="myGridTable.h" />
     <ClInclude Include="myGridTableData.h" />
+    <ClInclude Include="MyScrolledWindow.h" />
     <ClInclude Include="PDF_Journal.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="Settings.h" />
@@ -56,6 +60,9 @@
     <ClCompile Include="Add_panel.cpp" />
     <ClCompile Include="cApp.cpp" />
     <ClCompile Include="cMain.cpp" />
+    <ClCompile Include="CustomAutoComplete.cpp" />
+    <ClCompile Include="CustomEvents.cpp" />
+    <ClCompile Include="CustomCodeValidator.cpp" />
     <ClCompile Include="Dialog_cMainListEdit.cpp" />
     <ClCompile Include="Dialog_ListColumnSelect.cpp" />
     <ClCompile Include="CustomCheckBox.cpp" />
@@ -66,6 +73,7 @@
     <ClCompile Include="myDirPicker.cpp" />
     <ClCompile Include="myGridTable.cpp" />
     <ClCompile Include="myGridTableData.cpp" />
+    <ClCompile Include="MyScrolledWindow.cpp" />
     <ClCompile Include="PDF_Journal.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Settings_page.cpp" />

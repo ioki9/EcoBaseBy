@@ -69,27 +69,9 @@ void MaterialButton::SetButtonShadow(bool isDrawn)
 void MaterialButton::disableButton(bool disable)
 {
 	if (disable)
-	{
-//		if (status & flag_isDisabled)
-//			return;
-//		this->Unbind(wxEVT_LEAVE_WINDOW, &MaterialButton::OnMotionOUT, this);
-//		this->Unbind(wxEVT_LEFT_DOWN, &MaterialButton::OnLeftDown, this);
-//		this->Unbind(wxEVT_MOTION, &MaterialButton::OnMotionIN, this);
-//		this->Unbind(wxEVT_LEFT_UP, &MaterialButton::OnLeftUp, this);
-//		this->Unbind(wxEVT_SIZE, [this](wxSizeEvent& event) { Refresh(); event.Skip(); });
 		status |= flag_isDisabled;
-	}
 	else
-	{
-//		if (!(status & flag_isDisabled))
-//			return;
-//		this->Bind(wxEVT_LEAVE_WINDOW, &MaterialButton::OnMotionOUT, this);
-//		this->Bind(wxEVT_LEFT_DOWN, &MaterialButton::OnLeftDown, this);
-//		this->Bind(wxEVT_MOTION, &MaterialButton::OnMotionIN, this);
-//		this->Bind(wxEVT_LEFT_UP, &MaterialButton::OnLeftUp, this);
-//		this->Bind(wxEVT_SIZE, [this](wxSizeEvent& event) { Refresh(); event.Skip(); });
 		status &= ~(flag_isDisabled);
-	}
 
 }
 

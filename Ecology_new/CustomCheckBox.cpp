@@ -74,6 +74,7 @@ void CustomCheckBox::OnMotion(wxMouseEvent& evt)
 	status |= flag_motionIN;
 	status &= ~(flag_motionOUT);
 	this->Refresh();
+	evt.Skip();
 }
 
 void CustomCheckBox::OnClick(wxMouseEvent& evt)
@@ -84,6 +85,7 @@ void CustomCheckBox::OnClick(wxMouseEvent& evt)
 	evt.SetEventObject(this);
 	HandleWindowEvent(event);
 	this->Refresh();
+	evt.Skip();
 }
 
 void CustomCheckBox::OnLeave(wxMouseEvent& evt)
@@ -91,10 +93,12 @@ void CustomCheckBox::OnLeave(wxMouseEvent& evt)
 	status &= ~(flag_motionIN | flag_leftKeyDown);
 	status |= flag_motionOUT;
 	this->Refresh();
+	evt.Skip();
 }
 
 void CustomCheckBox::OnKeyDown(wxMouseEvent& evt)
 {
 	status |= flag_leftKeyDown;
 	this->Refresh();
+	evt.Skip();
 }

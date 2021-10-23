@@ -31,7 +31,6 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 		nameStr = "";
 		m_db.CreateOrgTables(wxString::Format("%i", Settings::getLastAddedOrgID() + 1));
 		m_db.SetOrg(Settings::getLastAddedOrgID() + 1);
-		wxMessageBox(std::to_string(Settings::getLastAddedOrgID() + 1));
 	}
 
 	else
@@ -257,11 +256,11 @@ void Dialog_OrgAddEdit::OnApply(wxCommandEvent& evt)
 		m_org.id = Settings::getLastAddedOrgID() + 1;
 		m_org.name = m_orgName->GetValue();
 		m_org.address = m_orgAddress->GetValue();
-		Settings::addNewOrg(m_org);
+		Settings::addNewOrgAndNotify(m_org, m_parent);
 
 		if (Settings::getActiveOrg() == -1)
 		{
-			Settings::setActiveOrg(m_org.id);
+			Settings::setActiveOrg(m_org.id,m_parent);
 		}
 		m_db.SetActiveOrg();
 		this->Close();
@@ -273,7 +272,7 @@ void Dialog_OrgAddEdit::OnApply(wxCommandEvent& evt)
 		m_org.unp = m_orgUnp->GetValue();
 		m_org.name = m_orgName->GetValue();
 		m_org.address = m_orgAddress->GetValue();
-		Settings::editOrg(m_org);
+		Settings::editOrgAndNotify(m_org, m_parent);
 		this->Close();
 	}
 
@@ -386,11 +385,14 @@ void Dialog_OrgAddEdit::OnWasteListAdd(wxCommandEvent& evt)
 	btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 		[&dlg, this, codeCtrl, wasteCtrl](wxCommandEvent& evt) {
 			if (codeCtrl->GetValue().IsEmpty())
-				wxMessageBox("Код отхода не может быть пустым");
+				wxMessageBox("Ошибка:код отхода не может быть пустым");
+			else if (!m_db.IsCodeExists(codeCtrl->GetValue()))
+				wxMessageBox("Ошибка:введенного кода отхода не существует.");
 			else
 			{
 				if (m_wasteNormList->AddNewEntry(codeCtrl->GetValue(), wasteCtrl->GetValue()))
 					dlg.Close();
+
 				else
 					wxMessageBox("Значение для данного вида отхода уже существует.");
 			}});
@@ -418,20 +420,11 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 		
 		wxDateTime firstDate;
 		firstDate.ParseFormat(wxS("2000.01.01"), wxS("%Y.%m.%d"), wxDefaultDateTime);
-		wxDateTime lastDate = m_db.getFirstEntryDate();
-		if (lastDate > firstDate)
-		{
-			wxDateSpan month = wxDateSpan::Month();
-			month.Neg();
-			lastDate.Add(month);
-		}
-		else
-			lastDate = wxDateTime::Today();
+		wxDateTime lastDate = m_db.getFirstEntryByCodeNoInit(m_strgList->GetSelectedItemRef()->get()[1]);
 		dateCtrl->SetRange(firstDate, lastDate);
 		wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "Хранение:");
-		wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, m_strgList->GetSelectedItemRef()->get()[2]);
-
-
+		wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
+			wxDefaultPosition,wxDefaultSize,0L,utility::GetDoubleValidator(3,wxAtof(m_strgList->GetSelectedItemRef()->get()[2])));
 		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
 		btnNO->SetButtonLineColour(*wxWHITE);
 		btnNO->SetLabelColour(wxColour(90, 90, 90));
@@ -460,8 +453,10 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 		btnYES->Bind(wxEVT_MOTION, [](wxMouseEvent& evt) { wxSetCursor(wxCURSOR_HAND); });
 		btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 			[&dlg, this, codeCtrl, dateCtrl, storageCtrl](wxCommandEvent& evt) {
-				if (codeCtrl->GetValue().IsEmpty() || storageCtrl->GetValue().IsEmpty())
-					wxMessageBox("Все строки должны быть заполнены.");
+				if (codeCtrl->GetValue().IsEmpty() || storageCtrl->GetValue().IsEmpty() )
+					wxMessageBox("Ошибка:все строки должны быть заполнены.");
+				else if(!m_db.IsCodeExists(codeCtrl->GetValue()))
+					wxMessageBox("Ошибка:введенного кода отхода не существует.");
 				else
 				{
 					if (m_strgList->EditSelectedEntry(codeCtrl->GetValue(), dateCtrl->GetValue(), storageCtrl->GetValue()))

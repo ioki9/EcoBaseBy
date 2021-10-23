@@ -18,7 +18,7 @@ public:
 private:
 	wxSQLite3ResultSet m_rs;
 	int m_activeOrg{ -1 };
-	std::map<wxString, std::pair<wxString,wxString>> m_codeNameDiscDng;
+	std::map<int,wxString> m_codesColumns;
 	std::map<int, wxString> m_storageColumns;
 	std::map<int, wxString> m_passpColumns;
 	std::map<int, wxString> m_codeInfoColumns;
@@ -31,18 +31,28 @@ private:
 	
 	
 
-	wxString GetActivePasspTable();
-	wxString GetActiveStrgTable();
-	wxString GetActiveCodeInfoTable();
+
 	void getStorageColumnNames();
 	void getPassportColumnNames();
 	void getCodeInfoColumnNames();
 protected: 
 	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
-	void updateSubsqPasspStrg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
+	void updateSubsqPasspStrg(const wxString& code, const wxString& date);
 	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
 	wxString gridToDBLabel(Grid_label gridLabel);
 public:
+	wxString GetMovmStringFromDepend(const wxString& dependency);
+	bool IsCodeExists(const wxString& code);
+	wxString GetDngFromCode(const wxString& code);
+	wxArrayString GetAllPossibleCodes();
+	wxString GetActiveCodeTable();
+	wxString GetActivePasspTable();
+	wxString GetActiveStrgTable();
+	wxString GetActiveCodeInfoTable();
+	std::map<int, wxString> GetCodesColumns();
+	std::map<int, wxString> GetStorageColumns();
+	std::map<int, wxString> GetPassportColumns();
+	std::map<int, wxString> GetCodeInfoColumns();
 	bool CreateOrgTables(const wxString& orgId);
 	void SetOrg(int orgId);
 	void SetActiveOrg();
@@ -52,8 +62,9 @@ public:
 	bool editInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount, const wxString& oldCode);
 	bool deleteInitStorageEntry(const wxString& code, const wxString& storage);
 	bool deleteEntry(const addPageInfo& info);
-	bool editEntry(const addPageInfo& info);
+	bool editEntry(const addPageInfo& info, bool willHaveDepend);
 	bool insertNewEntry(const addPageInfo& info);
+	bool insertNewDoubleEntry(const addPageInfo& info);
 	void insertFirstEntry(const addPageInfo& info);
 	wxString checkFullStorage(const wxString& code);
 
@@ -71,6 +82,7 @@ public:
 	void getJournalCodeInfo(passportJournalInfo& data);
 
 	wxDateTime getFirstEntryDate();
+	wxDateTime getFirstEntryByCodeNoInit(const wxString& code);
 	wxDateTime getLastEntryDate();
 
 	int getPasspRowAmount();
@@ -86,6 +98,7 @@ public:
 	void getInitStorageList(std::vector<std::vector<wxString>>& list);
 	void getCodeInfoList(std::vector<std::vector<wxString>>& list);
 	int getCodeInfoRowAmount();
+	wxString GetWasteNormByCode(const wxString& code);
 
 	short AddCodeInfoEntry(const wxString& code, const wxString& wasteNorm);
 	bool DeleteCodeInfoEntry(const wxString& code);
@@ -93,5 +106,6 @@ public:
 	bool isInitStorageViable(const wxString& code, const wxString& date);
 	bool DeleteAllUnitEntrys(int unitID);
 	bool DeleteOrgTables(int orgID);
+	
 };
  

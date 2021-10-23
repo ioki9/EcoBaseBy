@@ -1,4 +1,5 @@
 #include "myDirPicker.h"
+#include "CustomEvents.h"
 
 myDirPicker::myDirPicker(wxWindow* parent, wxWindowID id , const wxString& initPath , const wxString& dialogName , 
 	const wxPoint& pos , const wxSize& size) : wxPanel(parent,id,pos,size), m_dlgName{dialogName},m_initPath{initPath}
@@ -7,6 +8,7 @@ myDirPicker::myDirPicker(wxWindow* parent, wxWindowID id , const wxString& initP
 
 	m_pathTxt = new wxTextCtrl(this, wxID_ANY, initPath, wxDefaultPosition,wxSize(size.GetX(),size.GetY()-3));
 	m_pathTxt->SetFont(m_fontTxtCtrl);
+	m_pathTxt->SetEditable(false);
 	MaterialButton* browseBtn = new MaterialButton(this, wxID_ANY, wxS("Îבחמנ..."), false,wxDefaultPosition,wxSize(75, size.GetY()));
 	browseBtn->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
 	browseBtn->SetButtonColour(gui_MainColour);
@@ -44,6 +46,8 @@ void myDirPicker::onBrowseBtn(wxMouseEvent& evt)
 	dlg->ShowModal();
 	m_pathTxt->SetValue(dlg->GetPath());
 	m_initPath = dlg->GetPath();
+	wxCommandEvent cmdEvt(EVT_DIR_CHANGED);
+	wxPostEvent(GetParent(), cmdEvt);
 	dlg->Destroy();
-	
+	evt.Skip();
 }

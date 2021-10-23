@@ -219,7 +219,7 @@ std::optional < std::reference_wrapper<std::vector<wxString>>> VirtualListCtrl::
 	if (GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED) == -1)
 		return std::nullopt;
 	
-	return  std::optional < std::reference_wrapper <std::vector<wxString>> > {m_items[GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)]};
+	return  std::optional < std::reference_wrapper <std::vector<wxString>> > { m_items[GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)]};
 }
 
 std::vector<wxString> VirtualListCtrl::GetColumnLabels()

@@ -15,6 +15,7 @@ public:
 	bool isRowSelected();
 	void getSelectedRowData(addPageInfo& info);
 	std::map<Grid_label, wxString> getGridLabels();
+	void updateGrid();
 private:
 
 	void AutoSizeAllColLabelSize();
@@ -28,5 +29,6 @@ private:
 	void DisableCtrlMaiusHandler(wxGridEvent& evt);
 	void DisableDraggingHandler(wxMouseEvent& evt);
 	void initGridLabels();
+
 };
 

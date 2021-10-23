@@ -149,6 +149,18 @@
     <ClInclude Include="VirtualOrgList.h">
       <Filter>GUI\Controls\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="MyScrolledWindow.h">
+      <Filter>GUI\Controls\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomEvents.h">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomAutoComplete.h">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomCodeValidator.h">
+      <Filter>Source Files\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -228,6 +240,18 @@
     </ClCompile>
     <ClCompile Include="cMain.cpp">
       <Filter>GUI\Frames\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="MyScrolledWindow.cpp">
+      <Filter>GUI\Controls\Soruce</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomEvents.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomAutoComplete.cpp">
+      <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomCodeValidator.cpp">
+      <Filter>Source Files\Utility</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

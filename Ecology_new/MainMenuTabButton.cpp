@@ -29,7 +29,7 @@ void MainMenuTabButton::setSelected(bool selected )
 		status &= ~(flag_isSelected);
 }
 
-void MainMenuTabButton::seDropArrowtSize(const wxSize& size)
+void MainMenuTabButton::setDropArrowtSize(const wxSize& size)
 {
 	if (!size.GetX() % 2)
 		m_dropArrowSize = size;

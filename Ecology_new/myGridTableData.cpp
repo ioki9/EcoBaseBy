@@ -11,8 +11,7 @@ myGridTableData::myGridTableData(const std::map<Grid_label, wxString> &gridLable
 	{
 		this->SetColLabelValue(i, m_gridLabels[static_cast<Grid_label>(i)]);
 	}
-	//m_db.fuck(hash);
-	//wxMessageBox(wxString::Format("%i", hash.size()));
+
 }
 
 myGridTableData::~myGridTableData()
@@ -56,9 +55,7 @@ wxString myGridTableData::GetValue(int row, int col)
 		m_rowOffset = m_isOffsetPositive ? m_rowOffset : m_rowOffset * -1;
 		m_db.getNextRowData(m_rowItem, m_currentItemID, m_isOffsetPositive, wxString::Format("%i", m_rowOffset));
 		m_currentItemID = m_rowItem.back();
-	
 		m_currentItemRow = row;
-
 	}
 	return m_rowItem[col];
 }

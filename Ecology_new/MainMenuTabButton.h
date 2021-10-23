@@ -22,7 +22,7 @@ public:
 	};
 
 	void setSelected(bool selected);
-	void seDropArrowtSize(const wxSize& size);
+	void setDropArrowtSize(const wxSize& size);
 private:
 	wxString m_text;
 	wxSize m_size;

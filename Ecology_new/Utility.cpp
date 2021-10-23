@@ -1,11 +1,18 @@
 #pragma once
 #include "Utility.h"
+#include <vector>
+#include <wx/textfile.h>
+#include <wx/graphics.h>
+#include <string>
+#include "DMColumnEnums.h"
+
 
 using namespace utility;
 
 namespace {
-
-	const wxString patternsFileName{ "/hyph-ru.pat.txt" };
+	double validDoubleVal{};
+	
+	
 
 	struct u_pattern
 	{
@@ -26,8 +33,11 @@ namespace {
 		}
 		return first;
 	}
+
 	struct u_pattern_list
 	{
+		const wxString patternsFileName{ "/hyph-ru.pat.txt" };
+
 		std::vector<u_pattern*> list;
 
 		u_pattern_list()
@@ -153,11 +163,12 @@ wxString utility::convertDate(const wxString& date)
 	return newDate.Format(wxS("%d.%m.%Y"));
 }
 
-void utility::draw()
+wxFloatingPointValidator<double> utility::GetDoubleValidator(int precision, double initValue)
 {
-
+	validDoubleVal = initValue;
+	wxFloatingPointValidator<double> validDouble(precision, &validDoubleVal, wxNUM_VAL_ZERO_AS_BLANK | wxNUM_VAL_NO_TRAILING_ZEROES);
+	return validDouble;
 }
-
 
 
 void utility::paintDarkBackground(wxWindowDC* dc,wxWindow* parent)

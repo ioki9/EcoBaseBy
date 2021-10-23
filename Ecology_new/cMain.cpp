@@ -11,11 +11,13 @@
 #include "Settings.h"
 #include "GUI_parameters.h"
 #include "Structs.h"
+#include "CustomEvents.h"
+#include "CustomAutoComplete.h"
 
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wxSize(1024,600))
 {
-	
+	Settings::LoadState();
 	if (Settings::getLastAddedOrgID() == -1)
 	{
 		Dialog_OrgAddEdit* dlg = new Dialog_OrgAddEdit(this, nullptr, wxID_ANY, "", wxDefaultPosition, wxSize(600, 600));
@@ -31,7 +33,6 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 	this->initFormPDFPage();
 	this->initMainMenu();
 	this->initSettingsPage();
-
 	m_activePanel = m_listPanel;
 	setActiveMenuButton(m_menuButtonList);
 	m_mainSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -39,10 +40,13 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 	m_mainSizer->Add(m_mainMenu, 0, wxEXPAND | wxBOTTOM);
 	m_mainSizer->Add(m_listPanel, 1, wxEXPAND);
 
-
-
-
+	this->Bind(EVT_ACTIVE_ORG_CHANGED, &cMain::PostOrgEvents, this);
+	this->Bind(EVT_ACTIVE_UNIT_CHANGED, &cMain::PostOrgEvents, this);
+	this->Bind(EVT_ORGANIZATION_CHANGED, &cMain::PostOrgEvents, this);
+	this->Bind(EVT_ORGANIZATION_CHANGED, &cMain::OnOrgChanged,this);
 	this->Bind(wxEVT_SIZE, &cMain::OnSize, this);
+	this->Bind(EVT_DATABASE_CHANGED, &cMain::OnDbChange, this);
+	
 }
 
 cMain::~cMain()
@@ -56,18 +60,43 @@ void cMain::initListPanel()
 {
 	m_listPanel = new wxPanel(this, ID_LIST_PANEL, wxDefaultPosition, wxSize(800, 600));
 	m_listPanel->SetBackgroundColour(wxColor(255, 255, 255));
-	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+	m_listPanel->SetFont(gui_MainFont);
+	m_listMainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-	wxBoxSizer* orgListSizer = new wxBoxSizer(wxHORIZONTAL);
+	m_orgListSizer = new wxFlexGridSizer(2, 2, wxSize(5, 5));
 	wxArrayString orgNames;
+	wxString activeOrg;
+	wxArrayString unitNames;
 	for (const auto& it : *Settings::GetOrgArrayPtr())
 	{
 		orgNames.Add(it.name);
+		if (it.id == Settings::getActiveOrg())
+		{
+			activeOrg = it.name;
+			for (const auto& unit : it.units)
+				unitNames.Add(unit.name);
+		}
+			
 	}
-	m_orgChoice = new wxChoice(m_listPanel, -1, wxPoint(30, 50), wxSize(100, 50), orgNames);
-	wxStaticText* orgText = new wxStaticText(m_listPanel, -1, "Организация:");
-	wxArrayString unitNames;
-	
+	m_orgChoice = new wxChoice(m_listPanel, -1, wxPoint(30, 50), wxSize(250, 30), orgNames);
+	m_orgChoice->SetStringSelection(activeOrg);
+	m_orgChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
+	m_orgText = new wxStaticText(m_listPanel, -1, "Организация:");
+	m_unitText = new wxStaticText(m_listPanel, -1, "Подразделение:");
+	m_unitChoice = new wxChoice(m_listPanel, -1, wxPoint(30, 50), wxSize(250, 30), unitNames);
+	int activeUnit;
+	if (Settings::getActiveUnit() > -1)
+		activeUnit = Settings::getActiveUnit();
+	else
+		activeUnit = 0;
+	m_unitChoice->SetStringSelection(unitNames[activeUnit]);
+	m_unitChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
+
+	m_orgListSizer->Add(m_orgText, 0,wxLEFT,5 );
+	m_orgListSizer->Add(m_orgChoice, 0, wxLEFT,5);
+	m_orgListSizer->Add(m_unitText, 0, wxLEFT, 5);
+	m_orgListSizer->Add(m_unitChoice, 0, wxLEFT, 5);
+
 	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ИЗМЕНИТЬ", true,wxDefaultPosition, wxSize(100, 35));
 	editButton->SetButtonLineColour(gui_MainColour);
 	editButton->SetLabelColour(gui_MainColour);
@@ -84,24 +113,21 @@ void cMain::initListPanel()
 
 	
 
-
-	mainSizer->AddSpacer(50);
-	mainSizer->Add(buttonSizer,0,wxALIGN_RIGHT);
-	mainSizer->Add(m_grid,1,wxEXPAND | wxTOP,3);
-	m_listPanel->SetSizerAndFit(mainSizer);
+	m_listMainSizer->Add(m_orgListSizer);
+	m_listMainSizer->AddSpacer(50);
+	m_listMainSizer->Add(buttonSizer,0,wxALIGN_RIGHT);
+	m_listMainSizer->Add(m_grid,1,wxEXPAND | wxTOP,3);
+	m_listPanel->SetSizerAndFit(m_listMainSizer);
 	editButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListEditButton, this);
 	m_deleteButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListDeleteButton, this);
+	m_orgChoice->Bind(wxEVT_CHOICE, &cMain::OnOrgSelect, this);
+	m_unitChoice->Bind(wxEVT_CHOICE, &cMain::OnUnitSelect, this);
 }
 
 void cMain::initAddPanel()
 {
-
-	m_addPanel = new wxPanel(this, ID_LIST_PANEL, wxDefaultPosition, wxSize(800, 600));
+	m_addPanel = new Add_panel(this);
 	m_addPanel->SetBackgroundColour(wxColor(255, 255, 255));
-	Add_panel* AddPanel = new Add_panel(m_addPanel);
-	wxBoxSizer* mainAddsizer = new wxBoxSizer(wxVERTICAL);
-	mainAddsizer->Add(AddPanel,1,wxEXPAND);
-	m_addPanel->SetSizerAndFit(mainAddsizer);
 	m_addPanel->Hide();
 }
 
@@ -132,7 +158,7 @@ void cMain::initMainMenu()
 
 	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "Настройки", ID_MAINMENU_SETTINGS_BUTTON, true, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
 	m_menuButtonSetting->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
-	m_menuButtonSetting->seDropArrowtSize(wxSize(14, 30));
+	m_menuButtonSetting->setDropArrowtSize(wxSize(14, 30));
 	m_allMenuButtons.push_back(m_menuButtonSetting);
 	
 }
@@ -142,7 +168,6 @@ void cMain::setActiveMenuButton(MainMenuTabButton* activeBtn)
 	this->setAllMenuBtnInactive();
 	activeBtn->setSelected(true);
 }
-
 
 void  cMain::initFormPDFPage()
 {
@@ -165,13 +190,8 @@ void  cMain::initFormPDFPage()
 	wxBoxSizer* sizerPod9Row1 = new wxBoxSizer(wxHORIZONTAL);
 	sizerPod9Row1->Add(txtFirstDatePod9,0,wxLEFT,20);
 	sizerPod9Row1->Add(m_date1_pod9,0, wxLEFT, 15);
-	sizerPod9Row1->Add(txtSecondDatePod9, 0, wxLEFT, 130);
+	sizerPod9Row1->Add(txtSecondDatePod9, 0, wxLEFT, 50);
 	sizerPod9Row1->Add(m_date2_pod9, 0, wxLEFT, 15);
-	wxStaticText* txtDirPod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Путь:");
-	m_dir_pod9 = new myDirPicker(m_formPDFPanel, wxID_ANY, wxGetCwd(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
-	wxBoxSizer* sizerPod9Row2 = new wxBoxSizer(wxHORIZONTAL);
-	sizerPod9Row2->Add(txtDirPod9, 0, wxLEFT, 20);
-	sizerPod9Row2->Add(m_dir_pod9, 0, wxLEFT, 15);
 	MaterialButton* btnFormPOD9 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD9_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
 	btnFormPOD9->SetButtonLineColour(gui_MainColour);
 	btnFormPOD9->SetButtonFillColour(*wxWHITE);
@@ -189,13 +209,9 @@ void  cMain::initFormPDFPage()
 	wxBoxSizer* sizerPod10Row1 = new wxBoxSizer(wxHORIZONTAL);
 	sizerPod10Row1->Add(txtFirstDatePod10, 0, wxLEFT, 20);
 	sizerPod10Row1->Add(m_date1_pod10, 0, wxLEFT, 15);
-	sizerPod10Row1->Add(txtSecondDatePod10, 0, wxLEFT, 130);
+	sizerPod10Row1->Add(txtSecondDatePod10, 0, wxLEFT, 50);
 	sizerPod10Row1->Add(m_date2_pod10, 0, wxLEFT, 15);
-	wxStaticText* txtDirPod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Путь:");
-	m_dir_pod10 = new myDirPicker(m_formPDFPanel, wxID_ANY, wxGetCwd(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
-	wxBoxSizer* sizerPod10Row2 = new wxBoxSizer(wxHORIZONTAL);
-	sizerPod10Row2->Add(txtDirPod10, 0, wxLEFT, 20);
-	sizerPod10Row2->Add(m_dir_pod10, 0, wxLEFT, 15);
+
 	MaterialButton* btnFormPOD10 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD10_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
 	btnFormPOD10->SetButtonLineColour(gui_MainColour);
 	btnFormPOD10->SetButtonFillColour(*wxWHITE);
@@ -214,13 +230,8 @@ void  cMain::initFormPDFPage()
 
 	sizerJournalRow1->Add(txtFirstDateJournal, 0, wxLEFT, 20);
 	sizerJournalRow1->Add(m_date1_journal, 0, wxLEFT, 15);
-	sizerJournalRow1->Add(txtSecondDateJournal, 0, wxLEFT, 130);
+	sizerJournalRow1->Add(txtSecondDateJournal, 0, wxLEFT, 50);
 	sizerJournalRow1->Add(m_date2_journal, 0, wxLEFT, 15);
-	wxStaticText* txtDirJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Путь:");
-	m_dir_journal = new myDirPicker(m_formPDFPanel, wxID_ANY, wxGetCwd(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
-	wxBoxSizer* sizerJournalRow2 = new wxBoxSizer(wxHORIZONTAL);
-	sizerJournalRow2->Add(txtDirJournal, 0, wxLEFT, 20);
-	sizerJournalRow2->Add(m_dir_journal, 0, wxLEFT, 15);
 	MaterialButton* btnFormJournal = new MaterialButton(m_formPDFPanel, ID_FORMPDF_JOURNAL_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
 	btnFormJournal->SetButtonLineColour(gui_MainColour);
 	btnFormJournal->SetButtonFillColour(*wxWHITE);
@@ -228,28 +239,19 @@ void  cMain::initFormPDFPage()
 	m_date2_journal->SetRange(m_firstDate, m_lastDate);
 	m_date1_journal->SetRange(m_firstDate, m_lastDate);
 
-	mainSizer->Add(labelPOD9, 0, wxEXPAND | wxLEFT | wxTOP ,20);
-	mainSizer->AddSpacer(5);
+	mainSizer->Add(labelPOD9, 0, wxEXPAND | wxLEFT | wxTOP, 20);
 	mainSizer->Add(sizerPod9Row1, 0, wxLEFT | wxTOP, 20);
 	mainSizer->AddSpacer(10);
-	mainSizer->Add(sizerPod9Row2, 0, wxLEFT | wxTOP, 20);
-	mainSizer->AddSpacer(30);
 	mainSizer->Add(btnFormPOD9, 0, wxLEFT , 40);
-	mainSizer->AddSpacer(40);
+	mainSizer->AddSpacer(30);
 	mainSizer->Add(labelPOD10, 0, wxEXPAND | wxLEFT | wxTOP, 20);
-	mainSizer->AddSpacer(5);
 	mainSizer->Add(sizerPod10Row1, 0, wxLEFT | wxTOP, 20);
 	mainSizer->AddSpacer(10);
-	mainSizer->Add(sizerPod10Row2, 0, wxLEFT | wxTOP, 20);
-	mainSizer->AddSpacer(30);
 	mainSizer->Add(btnFormPOD10, 0, wxLEFT, 40);
-	mainSizer->AddSpacer(40);
+	mainSizer->AddSpacer(30);
 	mainSizer->Add(labelJournal, 0, wxEXPAND | wxLEFT | wxTOP, 20);
-	mainSizer->AddSpacer(5);
 	mainSizer->Add(sizerJournalRow1, 0, wxLEFT | wxTOP, 20);
 	mainSizer->AddSpacer(10);
-	mainSizer->Add(sizerJournalRow2, 0, wxLEFT | wxTOP, 20);
-	mainSizer->AddSpacer(30);
 	mainSizer->Add(btnFormJournal, 0, wxLEFT, 40);
 
 	btnFormPOD9->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFromPDFButton, this);
@@ -269,7 +271,6 @@ void cMain::setAllMenuBtnInactive()
 		}
 	}
 }
-
 
 void cMain::changeActivePage( wxWindow* newPage)
 {
@@ -396,8 +397,9 @@ void cMain::OnListEditButton(wxCommandEvent& evt)
 	{
 		addPageInfo info;
 		m_grid->getSelectedRowData(info);
-		Dialog_cMainListEdit* dialog = new Dialog_cMainListEdit(this,info,m_grid->getGridLabels());
+		Dialog_cMainListEdit* dialog = new Dialog_cMainListEdit(this,info);
 		dialog->Destroy();
+		m_grid->updateGrid();
 	}
 }
 
@@ -414,9 +416,87 @@ void cMain::OnListDeleteButton(wxCommandEvent& evt)
 			m_dataBase->deleteEntry(m_record);
 		}
 		askDlg->Destroy();
-		this->Refresh();
+		m_grid->updateGrid();
+		Refresh();
 	}
 }
 
+void cMain::OnOrgChanged(wxCommandEvent& evt)
+{
+	this->UpdateOrgChoices();
+	evt.Skip();
+}
 
+void cMain::UpdateOrgChoices()
+{
+	wxArrayString orgNames;
+	wxString activeOrg;
+	wxArrayString unitNames;
+	for (const auto& it : *Settings::GetOrgArrayPtr())
+	{
+		orgNames.Add(it.name);
+		if (it.id == Settings::getActiveOrg())
+		{
+			activeOrg = it.name;
+			for (const auto& unit : it.units)
+				unitNames.Add(unit.name);
+			break;
+		}
+	}
+	m_orgChoice->Set(orgNames);
+	m_unitChoice->Set(unitNames);
+	m_orgChoice->SetStringSelection(activeOrg);
+	m_unitChoice->SetStringSelection(unitNames[0]);
+}
 
+void cMain::OnOrgSelect(wxCommandEvent& evt)
+{
+	wxArrayString unitNames;
+	for (const auto& it : *Settings::GetOrgArrayPtr())
+	{
+		if (it.name == evt.GetString())
+		{
+		
+			Settings::setActiveOrg(it.id, this);
+			Settings::setActiveUnit(it.units[0].id, this);
+			for (const auto& unit : it.units)
+				unitNames.Add(unit.name);
+			break;
+		}
+	}
+	m_unitChoice->Set(unitNames);
+	m_unitChoice->SetStringSelection(unitNames[0]);
+	m_grid->updateGrid();
+}
+
+void cMain::OnUnitSelect(wxCommandEvent& evt)
+{
+	for (const auto& it : *Settings::GetOrgArrayPtr())
+	{
+		if (it.id == Settings::getActiveOrg())
+		{
+			for (const auto& unit : it.units)
+				if (unit.name == evt.GetString())
+				{
+					Settings::setActiveUnit(unit.id, this);
+					return;
+				}	
+		}
+	}
+	m_grid->updateGrid();
+}
+
+void cMain::PostOrgEvents(wxCommandEvent& evt)
+{
+	m_grid->updateGrid();
+	m_grid->Refresh();
+	wxPostEvent(m_addPanel, evt);
+	evt.Skip();
+}
+
+void cMain::OnDbChange(wxCommandEvent& evt)
+{
+	m_grid->updateGrid();
+	m_firstDate = m_dataBase->getFirstEntryDate();
+	m_lastDate = m_dataBase->getLastEntryDate();
+}

@@ -8,6 +8,7 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 
 	this->SetTable(m_tableData, true, wxGrid::wxGridSelectRows);
 
+
 	
 	this->HideRowLabels();
 	this->DisableDragGridSize();
@@ -38,6 +39,7 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 	Bind(wxEVT_GRID_CELL_LEFT_CLICK, &myGridTable::DisableCtrlMaiusHandler, this);
 
 	GetGridWindow()->Bind(wxEVT_MOTION, &myGridTable::DisableDraggingHandler, this);
+
 }
 
 myGridTable::~myGridTable()
@@ -112,6 +114,15 @@ void myGridTable::DisableRangeHandler(wxGridRangeSelectEvent& evt)
 void myGridTable::DisableRangeSelectCellHandler(wxGridEvent& evt)
 {
 	SelectRow(evt.GetRow());
+}
+
+void myGridTable::updateGrid()
+{
+	myGridTableData* tableNew = new myGridTableData(m_gridLabels);
+	m_tableData = tableNew;
+	this->SetTable(tableNew, true, wxGrid::wxGridSelectRows);
+	this->AutoSizeAllColLabelSize();
+	this->SetColSize(static_cast<int>(Grid_label::grid_date), 85);
 }
 
 void myGridTable::DisableCtrlMaiusHandler(wxGridEvent& evt)
