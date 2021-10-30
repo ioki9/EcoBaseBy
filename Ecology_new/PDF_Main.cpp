@@ -1,10 +1,8 @@
 #pragma once
 #include "PDF_Main.h"
+#include "Settings.h"
 #include <chrono>
 
-
-
-using namespace std::chrono;
 PDF_Main::~PDF_Main()
 {
 	delete m_dataBase;
@@ -15,39 +13,40 @@ wxString PDF_Main::formatToYMD(wxDateTime date)
 	return date.Format(wxS("%Y.%m.%d"));
 }
 
-
-void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate)
+void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName, const wxString& unitName)
 {
-	m_dataBase = new DBMain();
+	wxString BSunitName{ '\\'+ unitName  };
+	if (unitName.IsEmpty())
+		BSunitName = "";
+	if (!wxDirExists(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName))
+		wxFileName::Mkdir(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	passportPod9Info passData;
 	wxString codename;
 	int unique{ m_dataBase->getUniqueCodes(passData,formatToYMD(startDate),formatToYMD(endDate)) };
 	int i{};
-	int time{ 0 };
 	for (i = 0; i < unique; i++)
 	{
 		m_dataBase->getNextPod9Portion(passData, passData.uniqueCodes[i], formatToYMD(startDate), formatToYMD(endDate));
 		PDF_Pod9 pdf(passData, passData.uniqueCodes[i]);
-
 		pdf.AddPage();
 		pdf.drawTable();
-		pdf.SaveAsFile(wxGetCwd() + wxS("/Test/" + passData.uniqueCodes[i] + ".pdf"));
+
+		pdf.SaveAsFile(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName + '\\' + passData.uniqueCodes[i] + ".pdf");
 	}
-	wxMessageBox(std::to_string(time));
 
 }
 
-void PDF_Main::formPod10(const wxDateTime& startDate, const wxDateTime& endDate)
+void PDF_Main::formPod10(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName)
 {
 	PDF_Pod10* pod10 = new PDF_Pod10();
-	pod10->createDoc(formatToYMD(startDate), formatToYMD(endDate));
+	pod10->createDoc(formatToYMD(startDate).Mid(0, 7), formatToYMD(endDate).Mid(0, 7),orgName);
 	delete pod10;
 }
 
 
-void PDF_Main::formJournal(const wxDateTime& startDate, const wxDateTime& endDate)
+void PDF_Main::formJournal(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName)
 {
 	PDF_Journal *journal = new PDF_Journal();
-	journal->createJournal(formatToYMD(startDate), formatToYMD(endDate));
+	journal->createJournal(formatToYMD(startDate), formatToYMD(endDate), orgName);
 	delete journal;
 }

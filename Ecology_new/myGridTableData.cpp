@@ -6,7 +6,6 @@ myGridTableData::myGridTableData(const std::map<Grid_label, wxString> &gridLable
 {
 	m_rowItem.reserve(static_cast<int>(Grid_label::grid_max_labels)+1);
 	m_rowItem.resize(static_cast<int>(Grid_label::grid_max_labels)+1);
-	m_rowItem[static_cast<int>(Grid_label::grid_max_labels)] = "18";
 	for (size_t i{ 0 }; i < static_cast<int>(Grid_label::grid_max_labels); ++i)
 	{
 		this->SetColLabelValue(i, m_gridLabels[static_cast<Grid_label>(i)]);

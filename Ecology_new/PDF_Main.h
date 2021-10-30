@@ -14,13 +14,13 @@ public:
 	}
 	~PDF_Main();
 private:
-	DBMain *m_dataBase;
+	DBMain *m_dataBase = new DBMain;
 	wxString formatToYMD(wxDateTime date);
 protected:
 	
 public:
-	void formJournal(const wxDateTime& startDate, const wxDateTime& endDate);
-	void formPod9(const wxDateTime& startDate, const wxDateTime& endDate);
-	void formPod10(const wxDateTime& startDate, const wxDateTime& endDate);
+	void formJournal(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName);
+	void formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName,const wxString& unitName);
+	void formPod10(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName);
 };
 

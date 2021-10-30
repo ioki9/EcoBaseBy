@@ -39,7 +39,7 @@ void PDF_Helper::tableRow(double h, const std::vector<double>& w, std::vector<wx
 
 
 // h - height of one line cell(reak height will be h*linecount)
-void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vector<wxString> &str, int align, int border)
+void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vector<wxString> &str, int align, int border, double rowStartY)
 {
     
 
@@ -52,6 +52,8 @@ void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vect
     if ((currentY + r_h) > (GetPageHeight() - 10.0))
     {
         Line(currentX, currentY, currentX + w[0], currentY);
+        SetXY(currentX, rowStartY);
+        Cell(w[0], currentY - rowStartY,str[0],wxPDF_BORDER_NONE,0,wxPDF_ALIGN_MIDDLE);
         AddPage();
         currentX = GetX();
         currentY = GetY();
@@ -79,8 +81,6 @@ void PDF_Helper::POD10TableRow(double h, const std::vector<double> &w, std::vect
             else
                 SetXY(GetX(), currentY + r_h);
         }
-
-
     }
 }
 
@@ -325,13 +325,13 @@ double PDF_Helper::getMulticellRowHeight(double h, const std::vector<wxString>& 
     return static_cast<double>(maxLineCount) * h;
 }
 
-wxString PDF_Helper::getAmountString(double amount)
+wxString PDF_Helper::getAmountString(double amount,int precision)
 {
     if (amount == 0) 
         return wxString("");
     else
     {
-        wxString string = wxNumberFormatter::ToString(amount, 3, 3);
+        wxString string = wxNumberFormatter::ToString(amount, precision, 0);
         string.Replace(".", ",");
         if (!string.Contains(","))
             string.insert(string.Len(), wxS(",0"));
@@ -348,6 +348,7 @@ wxString PDF_Helper::getAmountString(wxString& amount)
         amount.Replace(".", ",");
         if (!amount.Contains(","))
             amount.insert(amount.Len(), wxS(",0"));
+        
         return amount;
     }
 }

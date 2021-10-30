@@ -52,6 +52,7 @@ private:
     void OnRadioButton(wxCommandEvent& evt);
     void OnEnteredCodeExists(wxCommandEvent& evt);
     void SetValues();
+    bool VerifyValues();
     wxString GetMovementStringAndSetAmount();
 };
 

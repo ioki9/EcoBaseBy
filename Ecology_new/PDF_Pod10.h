@@ -21,6 +21,7 @@ public:
 private:
 	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString, wxFONTENCODING_CP1251 };
 	pod10Info m_data;
+	int m_precision{ };
 	bool m_tableLast{ 0 };
 	DBMain *m_dataBase;
 protected:
@@ -35,7 +36,7 @@ protected:
 public:
 
 
-	void createDoc(const wxString& startDate, const wxString& endDate);
+	void createDoc(const wxString& startDate, const wxString& endDate, const wxString& orgName);
 	
 
 };

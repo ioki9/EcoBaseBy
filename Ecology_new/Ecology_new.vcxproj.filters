@@ -161,6 +161,7 @@
     <ClInclude Include="CustomCodeValidator.h">
       <Filter>Source Files\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="MyBusyInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DBMain.cpp">
@@ -252,6 +253,9 @@
     </ClCompile>
     <ClCompile Include="CustomCodeValidator.cpp">
       <Filter>Source Files\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="MyBusyInfo.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

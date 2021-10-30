@@ -186,11 +186,11 @@ void VirtualListCtrl::initHeaderList()
 void VirtualListCtrl::OnColRightClick(wxListEvent& evt)
 {
 
-	Dialog_ListColumnSelect* dialog = new Dialog_ListColumnSelect(this, currentColFlags);
-	currentColFlags = dialog->dlg_activeColFlags;
-	dialog->Destroy();
-	
-	SetActiveColumns(currentColFlags);
+	//Dialog_ListColumnSelect* dialog = new Dialog_ListColumnSelect(this, currentColFlags);
+	//currentColFlags = dialog->dlg_activeColFlags;
+	//dialog->Destroy();
+	//
+	//SetActiveColumns(currentColFlags);
 }
 
 void  VirtualListCtrl::SetActiveColumns(std::uint32_t activeCol)

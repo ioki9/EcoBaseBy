@@ -256,6 +256,8 @@ void Dialog_OrgAddEdit::OnApply(wxCommandEvent& evt)
 		m_org.id = Settings::getLastAddedOrgID() + 1;
 		m_org.name = m_orgName->GetValue();
 		m_org.address = m_orgAddress->GetValue();
+		if (m_org.units.empty())
+			m_org.units.push_back({ 0,"" });
 		Settings::addNewOrgAndNotify(m_org, m_parent);
 
 		if (Settings::getActiveOrg() == -1)
@@ -272,6 +274,8 @@ void Dialog_OrgAddEdit::OnApply(wxCommandEvent& evt)
 		m_org.unp = m_orgUnp->GetValue();
 		m_org.name = m_orgName->GetValue();
 		m_org.address = m_orgAddress->GetValue();
+		if (m_org.units.empty())
+			m_org.units.push_back({ 0,"" });
 		Settings::editOrgAndNotify(m_org, m_parent);
 		this->Close();
 	}

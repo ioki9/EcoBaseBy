@@ -32,11 +32,11 @@ private:
 protected:
 	double getMulticellRowHeight(double h, const std::vector<wxString> &arr, const std::vector<double> &w) ;
 	void tableRow(double h, const std::vector<double> &w, std::vector<wxString> &str, int border, int align);
-	void POD10TableRow(double h,const std::vector<double> &w, std::vector<wxString> &str, int align, int border);
+	void POD10TableRow(double h,const std::vector<double> &w, std::vector<wxString> &str, int align, int border,double rowStartY);
 	void centerRotatedText(double w, double h, const wxString &string1, const wxString &string2 = "", const wxString &string3 = "");
 	void tableMultiCell(double w, double h, const wxString &text, int border = 0,int ln = 0, int align = 0);
 	wxString autoCellHyphenation(double w, const wxString &text);
-	wxString getAmountString(double amount);
+	wxString getAmountString(double amount,int precision);
 	wxString getAmountString(wxString& amount);
 	int compareDates(const wxString& startDate, const wxString& endDate);
 	void tableHeaderCell(double w, double h, const wxString& text, int border, int ln, int align);

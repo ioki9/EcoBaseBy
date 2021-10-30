@@ -295,6 +295,19 @@ void Add_panel::initPage1()
 	});
 	m_amMovmCtrl->Bind(wxEVT_CHOICE, &Add_panel::OnAmMovmSelect, this);
 	m_orgTransRadio->Bind(wxEVT_RADIOBUTTON, &Add_panel::OnRadioButton, this);
+	m_dngLvlCtrl->Bind(wxEVT_CHOICE, [&](wxCommandEvent& evt) 
+	{
+		if (m_dngLvlCtrl->GetSelection() > 2)
+			m_amountReceivedCtrl->SetValidator(utility::GetDoubleValidator(3, wxAtof(m_amountReceivedCtrl->GetValue())));
+		else
+		{
+			wxString temp = m_amountReceivedCtrl->GetValue();
+			if (temp.After('.').size() > 2)
+				temp.RemoveLast();
+			m_amountReceivedCtrl->SetValue(temp);
+			m_amountReceivedCtrl->SetValidator(utility::GetDoubleValidator(2, wxAtof(temp)));
+		}
+	});
 	m_selfTransRadio->Bind(wxEVT_RADIOBUTTON, &Add_panel::OnRadioButton, this);
 	m_applyButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &Add_panel::OnButtonApply, this);
 }
@@ -346,7 +359,9 @@ void Add_panel::OnRadioButton(wxCommandEvent& evt)
 	{
 		m_structUnit9Ctrl->Clear();
 		m_structUnit9Ctrl->Enable(0);
+		m_amMovmStructCtrl->SetSelection(-1);
 		m_amMovmStructCtrl->Enable(0);
+		m_structUnitChoice->SetSelection(-1);
 		m_structUnitChoice->Enable(0);
 		return;
 	}
@@ -391,7 +406,7 @@ bool Add_panel::VerifyValues()
 	}
 	if (m_amRecCtrl->GetSelection() == -1)
 	{
-		wxMessageBox("Ошибка: поле \"ПРИДУМАТЬ НАЗВАНИЕ СТРОКИ\" должно быть заполнено");
+		wxMessageBox("Ошибка: поле \"Поступло от/образовалось\" должно быть заполнено");
 		return false;
 	}
 	if (m_amRecCtrl->GetSelection() == 1 && m_structUnit10Ctrl->GetSelection() == -1)
@@ -401,23 +416,27 @@ bool Add_panel::VerifyValues()
 	}
 	if (m_amMovmCtrl->GetSelection() == -1)
 	{
-		wxMessageBox("Ошибка: поле \"ПРИДУМАТЬ НАЗВАНИЕ СТРОКИ2\" должно быть заполнено");
+		wxMessageBox("Ошибка: поле \"Движение отхода\" должно быть заполнено");
 		return false;
 	}
 	if (m_amMovmCtrl->GetSelection() > 3 && m_selfTransRadio->GetValue())
 	{
 		if (m_amMovmStructCtrl->GetSelection() == -1)
 		{
-			wxMessageBox("Ошибка: поле \"ПРИДУМАТЬ НАЗВАНИЕ СТРОКИ3\" должно быть заполнено");
+			wxMessageBox("Ошибка: поле \"Цель\" должно быть заполнено");
 			return false;
 		}
 		if (m_structUnitChoice->GetSelection() == -1)
 		{
-			wxMessageBox("Ошибка: поле \"Передано своему подразделению\" должно быть заполнено");
+			wxMessageBox("Ошибка: поле \"Подразделение\" должно быть заполнено");
 			return false;
 		}
 	}
-
+	if (m_amRecCtrl->GetSelection() == 0 && m_amMovmCtrl->GetSelection() == 2)
+	{
+		wxMessageBox("Ошибка: выбранная комбинация полей \"Поступило от/образовалось\" и \"Движение отхода\" невозможна.");
+		return false;
+	}
 	return true;
 }
 
@@ -599,12 +618,12 @@ void Add_panel::OnEnteredCodeExists(wxCommandEvent& evt)
 	{
 		m_dngLvlCtrl->SetSelection(wxNOT_FOUND);
 		m_dngLvlCtrl->Enable();
-	}
-		
+		wxPostEvent(m_dngLvlCtrl, wxCommandEvent(wxEVT_CHOICE));
+	}	
 	else
 	{
 		m_dngLvlCtrl->SetStringSelection(evt.GetString());
 		m_dngLvlCtrl->Enable(false);
+		wxPostEvent(m_dngLvlCtrl,wxCommandEvent(wxEVT_CHOICE));
 	}
-		
 }

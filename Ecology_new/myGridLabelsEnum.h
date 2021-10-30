@@ -21,7 +21,6 @@ enum class Grid_label
 	grid_amount_tStorage,
 	grid_amount_storageFull,
 	grid_struct_unitPOD9,
-	grid_struct_unitPOD10,
 	grid_waste_norm,
 	grid_max_labels
 };

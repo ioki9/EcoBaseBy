@@ -1,19 +1,19 @@
 #pragma once
 #include "PDF_Pod10.h"
+#include "Settings.h"
 
 
-
-void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate)
+void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate, const wxString& orgName)
 {
+    if (!wxDirExists(Settings::GetPdfSavePath() + "\\" + orgName))
+        wxFileName::Mkdir(Settings::GetPdfSavePath() + "\\" + orgName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
     m_dataBase = new DBMain();
     m_dataBase->getPod10TableCount(m_data, startDate, endDate);
     int tableCount{ m_data.tableCount };
     int nextTable{ 0 };
     AddPage();
-    wxPdfDocument pdft;
     for (int t = 0; t < tableCount; t++)
     {
-       
             nextTable++;
 
             m_dataBase->getPod10TableInfo(m_data, m_data.allDates[t]);
@@ -25,11 +25,9 @@ void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate)
                 m_tableLast = false;
         
             drawTable();
-           
-
-        
     }
-    SaveAsFile(wxGetCwd() + wxS("/Test/1testPOD10.pdf"));
+
+    SaveAsFile(Settings::GetPdfSavePath() + "\\" + orgName + wxS("\\онд10.pdf"));
 }
 
 void PDF_Pod10::Footer()
@@ -128,30 +126,48 @@ void PDF_Pod10::drawMulticellRows(const std::vector<double> &w)
     rowData.reserve(18);
 
     SetAutoPageBreak(0);
-
+    int page{ PageNo() };
+    double startRowY{GetY()};
     for (int row{ 0 }, nextRow{ 1 }; row < m_data.rowCount; ++row,++nextRow)
     {
+        if (page != PageNo())
+        {
+            page = PageNo();
+            startRowY = GetTopMargin();
+        }
+        if (m_data.codeDangerLVL[row].empty())
+            m_precision = 3;
+        else if (m_data.codeDangerLVL[row][0] == '4' || m_data.codeDangerLVL[row][0] == 'М')
+            m_precision = 2;
+        else
+            m_precision = 3;
+    
+        rowData.clear();
+        rowData = {m_data.entryDate, m_data.codeDescription[row], m_data.code[row], m_data.codeDangerLVL[row],
+            getAmountString(m_data.wasteNorm[row], m_precision), m_data.structuralUnit[row],  getAmountString(m_data.amountFormed[row], m_precision),
+             getAmountString(m_data.amountReOrg[row], m_precision) , getAmountString(m_data.amountRePhys[row], m_precision), getAmountString(m_data.amountUsed[row], m_precision),
+            getAmountString(m_data.amountDefused[row], m_precision),  getAmountString(m_data.amountSelfstorage[row], m_precision) , getAmountString(m_data.amountBurial[row], m_precision),
+            getAmountString(m_data.amountTransferUsed[row], m_precision), getAmountString(m_data.amountTransferDefused[row], m_precision),
+            getAmountString(m_data.amountTransferStorage[row], m_precision), getAmountString(m_data.amountTransferBurial[row], m_precision),
+             getAmountString(m_data.amountSelfstorageFull[row], m_precision) };
+        
+        
+     
+        POD10TableRow(h, w, rowData, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME,startRowY);
       
     
- 
-        rowData.clear();
-        rowData = {m_data.date, m_data.codeDescription[row], m_data.code[row], m_data.codeDangerLVL[row],
-            getAmountString(m_data.wasteNorm[row]), m_data.structuralUnit[row],  getAmountString(m_data.amountFormed[row]),
-             getAmountString(m_data.amountReOrg[row]) , getAmountString(m_data.amountRePhys[row]), getAmountString(m_data.amountUsed[row]),
-            getAmountString(m_data.amountDefused[row]),  getAmountString(m_data.amountSelfstorage[row]) , getAmountString(m_data.amountBurial[row]),
-            getAmountString(m_data.amountTransferUsed[row]), getAmountString(m_data.amountTransferDefused[row]), 
-            getAmountString(m_data.amountTransferStorage[row]), getAmountString(m_data.amountTransferBurial[row]), 
-             getAmountString(m_data.amountSelfstorageFull[row]) };
-        
- 
-     
-        POD10TableRow(h, w, rowData, wxPDF_ALIGN_CENTER, wxPDF_BORDER_FRAME);
-      
-  
     }
+    if (page != PageNo())
+        startRowY = GetTopMargin();
     SetXY(GetX(), GetY() - h);
-    Cell(w[0], h, "", wxPDF_BORDER_BOTTOM);
+    Cell(w[0], h, "", wxPDF_BORDER_BOTTOM,1);
+    double meY{ GetY() };
+    double meX{ GetX() };
+    SetXY(GetX(), startRowY);
+    Cell(w[0], meY - startRowY, m_data.entryDate, wxPDF_BORDER_NONE, 0, wxPDF_ALIGN_MIDDLE);
+    SetXY(meX, meY);
     Ln();
+    
     SetAutoPageBreak(1, 5.0);
         
 

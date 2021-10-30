@@ -26,6 +26,7 @@ public:
 	static int getActiveOrg();
 	static bool setActiveUnit(int unitID, wxWindow* reciever);
 	static int getActiveUnit();
+	static wxString getActiveOrgName();
 	static void addNewOrg(const organization& org);
 	static void editOrg(const organization& org);
 	static void deleteOrg(const organization& org);
@@ -39,6 +40,8 @@ public:
 	static std::vector<organization>* GetOrgArrayPtr();
 	static void SetPdfSavePath(const wxString& path);
 	static wxString GetPdfSavePath();
+	static std::uint32_t GetGridActiveCol();
+	static void SaveGridActiveCol(std::uint32_t activeCol);
 private:
 	static wxString m_activeOrgName;
 	static int m_activeOrgID;
@@ -53,6 +56,7 @@ private:
 	static std::vector<organization> getAllOrgAndUnitNames();
 	static wxFileConfig pConfig;
 	static wxFileInputStream cfgInStream;
+	static std::uint32_t m_gridActiveColumns;
 	Settings() {};
 };
 

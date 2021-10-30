@@ -36,7 +36,6 @@ private:
 	void getPassportColumnNames();
 	void getCodeInfoColumnNames();
 protected: 
-	wxString calculateFullStorageResult(const wxString &code, const wxString &date);
 	void updateSubsqPasspStrg(const wxString& code, const wxString& date);
 	void updateSubsqPOD10Strg(const wxString& code, const wxString& date, const wxString& diffAm, const wxString& id);
 	wxString gridToDBLabel(Grid_label gridLabel);
@@ -72,14 +71,11 @@ public:
 	int getUniqueCodes(passportPod9Info &data,const wxString& startDate,const wxString& endDate);
 	void getNextPod9Portion(passportPod9Info &data, const wxString &code, const wxString& startDate, const wxString& endDate);
 
-	void setMonthlyResult(const wxString &code, const wxDateTime &date);
-
 	void getPod10TableCount(pod10Info &data, const wxString& startDate, const wxString& endDate);
 	void getPod10TableInfo(pod10Info &data, const wxString &date);
 	void getPod10TableCodeDngr(pod10Info &data,const wxArrayString &codes);
 
 	void getJournalTableInfo(passportJournalInfo& data, const wxString& startDate, const wxString& endDate);
-	void getJournalCodeInfo(passportJournalInfo& data);
 
 	wxDateTime getFirstEntryDate();
 	wxDateTime getFirstEntryByCodeNoInit(const wxString& code);
@@ -94,6 +90,7 @@ public:
 	wxString getIdOfRow(const wxString& row);
 	void getRowDataByID(addPageInfo& info, const wxString& id);
 
+	bool AskToEnterAllEntryDates(const wxString& startDate,const wxString& endDate);
 
 	void getInitStorageList(std::vector<std::vector<wxString>>& list);
 	void getCodeInfoList(std::vector<std::vector<wxString>>& list);

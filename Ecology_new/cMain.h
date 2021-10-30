@@ -33,13 +33,8 @@ private:
 	//LIST PANEL
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
-	wxChoice* m_orgChoice;
-	wxChoice* m_unitChoice;
 	wxPanel* m_listBottomPanel = nullptr;
 	MaterialButton* m_deleteButton;
-	wxStaticText* m_unitText;
-	wxStaticText* m_orgText;
-	wxFlexGridSizer* m_orgListSizer;
 	wxBoxSizer* m_listMainSizer;
 	myGridTable* m_grid = nullptr;
 	void initListPanel();
@@ -48,6 +43,10 @@ private:
 	void OnUnitSelect(wxCommandEvent& evt);
 	void UpdateOrgChoices();
 	//MENU PANEL
+	wxChoice* m_orgChoice;
+	wxChoice* m_unitChoice;
+	wxStaticText* m_unitText;
+	wxStaticText* m_orgText;
 	wxPanel* m_mainMenu = nullptr;
 	wxWindow* m_activePanel = nullptr;
 	MainMenuTabButton* m_menuButtonList = nullptr;
@@ -94,7 +93,7 @@ private:
 	void OnFromPDFButton(wxCommandEvent& evt);
 	void OnSize(wxSizeEvent& evt);
 
-	
+
 	void initNewOrgPage();
 
 

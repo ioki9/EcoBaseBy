@@ -9,22 +9,23 @@ struct pod10Info
 {
 public:
 	wxString date{};
+	wxString entryDate{};
 	wxArrayString code{};
 	wxArrayString codeDangerLVL{};
 	wxArrayString codeDescription{};
-	wxArrayString amountFormed{};
-	wxArrayString amountReOrg{};
-	wxArrayString amountRePhys{};
-	wxArrayString amountUsed{};
-	wxArrayString amountDefused{};
-	wxArrayString amountSelfstorage{};
-	wxArrayString amountBurial{};
-	wxArrayString amountTransferUsed{};
-	wxArrayString amountTransferDefused{};
-	wxArrayString amountTransferStorage{};
-	wxArrayString amountTransferBurial{};
-	wxArrayString amountSelfstorageFull{};
-	wxArrayString wasteNorm{};
+	wxArrayDouble amountFormed{};
+	wxArrayDouble amountReOrg{};
+	wxArrayDouble amountRePhys{};
+	wxArrayDouble amountUsed{};
+	wxArrayDouble amountDefused{};
+	wxArrayDouble amountSelfstorage{};
+	wxArrayDouble amountBurial{};
+	wxArrayDouble amountTransferUsed{};
+	wxArrayDouble amountTransferDefused{};
+	wxArrayDouble amountTransferStorage{};
+	wxArrayDouble amountTransferBurial{};
+	wxArrayDouble amountSelfstorageFull{};
+	wxArrayDouble wasteNorm{};
 	wxArrayString structuralUnit{};
 
 
@@ -182,10 +183,14 @@ struct passportStorageInfo
 
 struct passportJournalInfo
 {
-	std::vector<double> amountTransferUsed{ 0 };
-	std::vector<double> amountTransferDefused{ 0 };
-	std::vector<double> amountTransferStorage{ 0 };
-	std::vector<double> amountTransferBurial{ 0 };
+	std::vector<double> amountTransferUsed;
+	std::vector<double> amountTransferDefused;
+	std::vector<double> amountTransferStorage;
+	std::vector<double> amountTransferBurial;
+	std::vector<double> amountUsed;
+	std::vector<double> amountDefused;
+	std::vector<double> amountStorage;
+	std::vector<double> amountBurial;
 	wxArrayString date{};
 	wxArrayString regnum{};
 	wxArrayString transporter{};

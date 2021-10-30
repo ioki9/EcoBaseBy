@@ -34,6 +34,7 @@
     <ClInclude Include="itemdata.h" />
     <ClInclude Include="MainMenuTabButton.h" />
     <ClInclude Include="MaterialButton.h" />
+    <ClInclude Include="MyBusyInfo.h" />
     <ClInclude Include="myDirPicker.h" />
     <ClInclude Include="myGridLabelsEnum.h" />
     <ClInclude Include="myGridTable.h" />
@@ -70,6 +71,7 @@
     <ClCompile Include="Dialog_OrgAddEdit.cpp" />
     <ClCompile Include="MainMenuTabButton.cpp" />
     <ClCompile Include="MaterialButton.cpp" />
+    <ClCompile Include="MyBusyInfo.cpp" />
     <ClCompile Include="myDirPicker.cpp" />
     <ClCompile Include="myGridTable.cpp" />
     <ClCompile Include="myGridTableData.cpp" />

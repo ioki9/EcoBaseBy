@@ -178,13 +178,16 @@ Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info, 
 				m_unit10Static->Hide();
 				m_structUnit10Ctrl->Hide();
 				m_recievedPhysText->Hide();
-				vertRightSizer->Detach(4);
+				m_structUnitChoice->SetSelection(-1);
+				m_amMovmStructCtrl->SetSelection(-1);
+				vertRightSizer->Detach(4); 
 				vertRightSizer->Detach(4);
 				vertRightSizer->InsertStretchSpacer(4, 0);
 				vertRightSizer->InsertStretchSpacer(5, 0);
 				vertRightSizer->Layout();
-				wxPostEvent(m_amMovmCtrl, wxCommandEvent(wxEVT_CHOICE));
 				wxPostEvent(m_orgTransRadio, wxCommandEvent(wxEVT_RADIOBUTTON));
+				wxPostEvent(m_amMovmCtrl, wxCommandEvent(wxEVT_CHOICE));
+	
 
 			}
 			else if (m_amRecCtrl->GetSelection() == 1)
@@ -256,6 +259,20 @@ Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info, 
 			}
 		});
 	m_amMovmCtrl->Bind(wxEVT_CHOICE, &Dialog_cMainListEdit::OnAmMovmSelect, this);
+	m_dngLvlCtrl->Bind(wxEVT_CHOICE, [&](wxCommandEvent& evt) {
+		if (m_dngLvlCtrl->GetSelection() > 2)
+			m_amountReceivedCtrl->SetValidator(utility::GetDoubleValidator(3, wxAtof(m_amountReceivedCtrl->GetValue())));
+		else
+		{
+			wxString temp = m_amountReceivedCtrl->GetValue();
+			if (temp.After('.').size() > 2)
+				temp.RemoveLast();
+			m_amountReceivedCtrl->Clear();
+			m_amountReceivedCtrl->SetValue(temp);
+			m_amountReceivedCtrl->SetValidator(utility::GetDoubleValidator(2, wxAtof(temp)));
+		}
+		
+		});
 	m_orgTransRadio->Bind(wxEVT_RADIOBUTTON, &Dialog_cMainListEdit::OnRadioButton, this);
 	m_selfTransRadio->Bind(wxEVT_RADIOBUTTON, &Dialog_cMainListEdit::OnRadioButton, this);
 
@@ -289,13 +306,73 @@ wxArrayString Dialog_cMainListEdit::GetUnitChoicesArr(const wxString& exclusion)
 	return arr;
 }
 
-void Dialog_cMainListEdit::OnApply(wxMouseEvent& evt)
+bool Dialog_cMainListEdit::VerifyValues()
 {
-	if (m_structUnitChoice->GetStringSelection() == m_structUnit10Ctrl->GetStringSelection())
+	DBMain db;
+	if (!db.IsCodeExists(m_codeCtrl->GetValue()))
+	{
+		wxMessageBox("Ошибка: введенное значение в поле \"Код отходов\" не существует");
+		return false;
+	}
+	if (m_codeCtrl->GetValue().IsEmpty())
+	{
+		wxMessageBox("Ошибка: поле \"Код отходов\" должно быть заполнено");
+		return false;
+	}
+	if (m_dngLvlCtrl->GetSelection() == -1)
+	{
+		wxMessageBox("Ошибка: поле \"Класс опосности\" должно быть заполнено");
+		return false;
+	}
+	if (m_amountReceivedCtrl->GetValue().IsEmpty())
+	{
+		wxMessageBox("Ошибка: поле \"Количество отходов\" должно быть заполнено");
+		return false;
+	}
+	if (m_amRecCtrl->GetSelection() == -1)
+	{
+		wxMessageBox("Ошибка: поле \"Поступло от/образовалось\" должно быть заполнено");
+		return false;
+	}
+	if (m_amRecCtrl->GetSelection() == 1 && m_structUnit10Ctrl->GetSelection() == -1)
+	{
+		wxMessageBox("Ошибка: поле \"Подразделение, в котором образовался данный вид отхода\" должно быть заполнено");
+		return false;
+	}
+	if (m_amMovmCtrl->GetSelection() == -1)
+	{
+		wxMessageBox("Ошибка: поле \"Движение отхода\" должно быть заполнено");
+		return false;
+	}
+	if (m_amMovmCtrl->GetSelection() > 3 && m_selfTransRadio->GetValue())
+	{
+		if (m_amMovmStructCtrl->GetSelection() == -1)
+		{
+			wxMessageBox("Ошибка: поле \"Цель\" должно быть заполнено");
+			return false;
+		}
+		if (m_structUnitChoice->GetSelection() == -1)
+		{
+			wxMessageBox("Ошибка: поле \"Передано своему подразделению\" должно быть заполнено");
+			return false;
+		}
+	}
+	if (m_amRecCtrl->GetSelection() == 0 && m_amMovmCtrl->GetSelection() == 2)
+	{
+		wxMessageBox("Ошибка: выбранная комбинация полей \"Поступило от/образовалось\" и \"Движение отхода\" невозможна.");
+		return false;
+	}
+	if (m_structUnitChoice->GetStringSelection() == m_structUnit10Ctrl->GetStringSelection() && m_structUnitChoice->GetSelection() != -1)
 	{
 		wxMessageBox("Ошибка:невозможно передать отход в подразделение в котором он образовался.");
-		return;
+		return false;
 	}
+	return true;
+}
+void Dialog_cMainListEdit::OnApply(wxMouseEvent& evt)
+{
+	if (!VerifyValues())
+		return;
 
 	addPageInfo info;
 	DBMain db;
@@ -497,6 +574,7 @@ void Dialog_cMainListEdit::OnAmMovmSelect(wxCommandEvent& evt)
 			m_selfTransRadio->Enable(0);
 			m_structUnit9Ctrl->Clear();
 			m_structUnit9Ctrl->Enable(0);
+			
 			return;
 		}
 		if (m_orgTransRadio->IsEnabled() || m_selfTransRadio->IsEnabled())
@@ -554,14 +632,14 @@ void Dialog_cMainListEdit::OnEnteredCodeExists(wxCommandEvent& evt)
 	{
 		m_dngLvlCtrl->SetSelection(wxNOT_FOUND);
 		m_dngLvlCtrl->Enable();
+		wxPostEvent(m_dngLvlCtrl, wxCommandEvent(wxEVT_CHOICE));
 	}
-
 	else
 	{
 		m_dngLvlCtrl->SetStringSelection(evt.GetString());
 		m_dngLvlCtrl->Enable(false);
+		wxPostEvent(m_dngLvlCtrl, wxCommandEvent(wxEVT_CHOICE));
 	}
-
 }
 
 void Dialog_cMainListEdit::SetValues()

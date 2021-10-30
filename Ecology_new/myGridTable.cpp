@@ -1,4 +1,7 @@
 #include "myGridTable.h"
+#include "Dialog_ListColumnSelect.h"
+#include "CustomEvents.h"
+#include <array>
 
 myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize) 
 	: wxGrid(parent,id,pos,size)
@@ -8,7 +11,7 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 
 	this->SetTable(m_tableData, true, wxGrid::wxGridSelectRows);
 
-
+	SetActiveColumns();
 	
 	this->HideRowLabels();
 	this->DisableDragGridSize();
@@ -17,15 +20,18 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 	this->SetDefaultCellFont(wxFontInfo(11).FaceName("Segoe UI"));
 	this->SetLabelFont(wxFontInfo(10).FaceName("Segoe UI"));
 	this->AutoSizeAllColLabelSize();
-	this->SetColSize(static_cast<int>(Grid_label::grid_date),85);
+
+
 	this->SetDefaultCellAlignment(wxALIGN_CENTRE, wxALIGN_BOTTOM);
 	this->SetLabelTextColour(wxColour(40, 40, 40));
 	this->SetLabelBackgroundColour(*wxWHITE);
 	this->SetDefaultRowSize(30,true);
 
+
 	this->SetColLabelSize(40);
 	this->EnableGridLines(false);
 	this->SetDefaultCellBackgroundColour(*wxWHITE);
+	
 	m_cellHighlightPenWidth = 0;
 	m_cellHighlightROPenWidth = 0;
 	EnableEditing(false);
@@ -37,7 +43,17 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 	Bind(wxEVT_GRID_RANGE_SELECT, &myGridTable::DisableRangeHandler, this);
 	Bind(wxEVT_GRID_SELECT_CELL, &myGridTable::DisableRangeSelectCellHandler, this);
 	Bind(wxEVT_GRID_CELL_LEFT_CLICK, &myGridTable::DisableCtrlMaiusHandler, this);
+	Bind(wxEVT_GRID_LABEL_RIGHT_CLICK, [&](wxGridEvent& evt)
+		{
+			Dialog_ListColumnSelect dlg(this,m_gridLabels,m_activeCol);
 
+		});
+	Bind(EVT_GRID_ACTIVE_COL_CHANGE, [&](wxCommandEvent& evt) {
+			m_activeCol = evt.GetInt();
+			SetActiveColumns();
+			Settings::SaveGridActiveCol(m_activeCol);
+			AutoSizeAllColLabelSize();
+		});
 	GetGridWindow()->Bind(wxEVT_MOTION, &myGridTable::DisableDraggingHandler, this);
 
 }
@@ -65,11 +81,31 @@ bool myGridTable::isRowSelected()
 
 void myGridTable::AutoSizeAllColLabelSize()
 {
+	int width{};
+	uint_fast8_t count{};
 	for (size_t i{ 0 }; i < static_cast<int>(Grid_label::grid_max_labels); ++i)
 	{
-		this->AutoSizeColLabelSize(i);
+		if (IsColShown(i))
+		{
+			if(i != static_cast<int>(Grid_label::grid_date))
+				this->AutoSizeColLabelSize(i);
+			else
+				this->SetColSize(static_cast<int>(Grid_label::grid_date), 85);
+			width += GetColWidth(i);
+			count++;
+		}
 	}
 	
+
+	if (width < GetSize().GetWidth())
+	{
+		for (size_t i{ 0 }; i < static_cast<int>(Grid_label::grid_max_labels); ++i)
+		{
+			if (IsColShown(i))
+				SetColSize(i, GetSize().GetWidth() / count);
+		}
+	}
+
 }
 
 void myGridTable::initGridLabels()
@@ -93,8 +129,20 @@ void myGridTable::initGridLabels()
 	m_gridLabels[Grid_label::grid_amount_tStorage] = "Передано на\n хранение";
 	m_gridLabels[Grid_label::grid_amount_storageFull] = "Всего на хранении";
 	m_gridLabels[Grid_label::grid_struct_unitPOD9] = "Структурное подразделение\n ПОД9";
-	m_gridLabels[Grid_label::grid_struct_unitPOD10] = "Структурное подразделение\n ПОД10";
 	m_gridLabels[Grid_label::grid_waste_norm] = "Норматив\n образования отхода";
+}
+
+void myGridTable::SetActiveColumns()
+{
+	for (size_t i{ 0 }; i < static_cast<size_t>(Grid_label::grid_max_labels); ++i)
+	{
+		if (m_activeCol & (1ul << i) && !IsColShown(i))
+			this->ShowCol(i);
+		else if (!(m_activeCol & (1ul << i)) && IsColShown(i))
+			this->HideCol(i);
+	}
+
+	this->Refresh();
 }
 
 void myGridTable::OnCellSelect(wxGridEvent& evt)

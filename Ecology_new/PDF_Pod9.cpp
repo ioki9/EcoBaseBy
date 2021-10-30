@@ -159,7 +159,12 @@ void PDF_Pod9::drawTable()
     /////// Column parameters
     const std::vector<double> w = { 22.5,17,17,69,17,17,17,17,54,12.5,17 };
     std::array<double, 7> results{0, 0, 0, 0, 0, 0, 0};
-
+    if(m_data.codeDangerLVL.empty())
+        m_precision = 3;
+    else if (m_data.codeDangerLVL[0] == '4' || m_data.codeDangerLVL[0] == 'Ì')
+        m_precision = 2;
+    else
+        m_precision = 3;
     double h{ 5.0 };
 
     //Table header
@@ -177,6 +182,7 @@ void PDF_Pod9::drawTable()
     
    //////table
     wxString prevDate{ m_data.date[0] };
+    wxString purpose{};
     int j;
     std::vector<wxString> rowData{};
     double transferValue{};
@@ -188,15 +194,40 @@ void PDF_Pod9::drawTable()
             prevDate = m_data.date[j - 1];
         }
 
+        if (m_data.amountTransferUsed[j] != 0)
+        {
+            transferValue = m_data.amountTransferUsed[j];
+            purpose = "»";
+        }
+        else if (m_data.amountTransferDefused[j] != 0)
+        {
+            transferValue = m_data.amountTransferDefused[j];
+            purpose = "Œ";
+        }
+        else if (m_data.amountTransferBurial[j] != 0)
+        {
+            transferValue = m_data.amountTransferBurial[j];
+            purpose = "«";
+        }
+        else if(m_data.amountTransferStorage[j] != 0)
+        {
+            transferValue = m_data.amountTransferStorage[j];
+            purpose = "’";
+        }
+        else
+        {
+            transferValue = 0.0;
+            purpose = "";
+        }
 
-
-        rowData = { m_data.date[j], getAmountString(m_data.amountFormed[j]), getAmountString(m_data.amountReceivedOrg[j]),
-                   m_data.owner[j], getAmountString(m_data.amountReceivedPhys[j]), getAmountString(m_data.amountUsed[j]),
-                    getAmountString(m_data.amountDefused[j]), getAmountString(m_data.amountTransferStorage[j]),m_data.stuct_unit9[j],
-                       " ", getAmountString(m_data.amountFullStorage[j]) };
+        rowData = { m_data.date[j], getAmountString(m_data.amountFormed[j],m_precision), getAmountString(m_data.amountReceivedOrg[j],m_precision),
+                   m_data.owner[j], getAmountString(m_data.amountReceivedPhys[j],m_precision), getAmountString(m_data.amountUsed[j],m_precision),
+                    getAmountString(m_data.amountDefused[j],m_precision), getAmountString(transferValue,m_precision),m_data.stuct_unit9[j],
+                       purpose,"" };
 
        if (j != 0 && compareDates(prevDate,m_data.date[j]) != 0)
        {
+           results[6] = m_data.amountFullStorage[j];
            drawResultRow(w, results);
            std::fill(results.begin(), results.end(), 0);
        }
@@ -208,9 +239,10 @@ void PDF_Pod9::drawTable()
        results[2] += m_data.amountReceivedPhys[j];
        results[3] += m_data.amountUsed[j];
        results[4] += m_data.amountDefused[j];
-       results[5] += m_data.amountTransferStorage[j];
-       results[6] += m_data.amountFullStorage[j];
+       results[5] += transferValue;
+      
     }
+   results[6] = m_data.amountFullStorage[j-1];
    drawResultRow(w, results);
    std::fill(results.begin(), results.end(), 0);
 }
@@ -219,24 +251,24 @@ void PDF_Pod9::drawTable()
 void PDF_Pod9::drawResultRow(const std::vector<double>& w, const std::array<double,7>& value)
 {
     font.SetWeight(wxFONTWEIGHT_BOLD);
-    SetFont(font);
+    SetFont(font); 
     Cell(w[0], 10, wxEmptyString, wxPDF_BORDER_FRAME);
     SetXY(GetX() - w[0], GetY());
-    Cell(w[0], 5, wxS("»“Œ√Œ"),0,1, wxPDF_ALIGN_CENTER);
+    Cell(w[0], 5, wxS("»“Œ√Œ"), 0, 1, wxPDF_ALIGN_CENTER);
     font.SetWeight(wxFONTWEIGHT_NORMAL);
     SetFont(font);
     Cell(w[0], 5, wxS("Á‡ ÏÂÒˇˆ"), 0,0, wxPDF_ALIGN_CENTER);
     SetXY(GetX(),GetY() - 5);
-    Cell(w[1], 10, getAmountString(value[0]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-    Cell(w[2], 10, getAmountString(value[1]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[1], 10, getAmountString(value[0], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[2], 10, getAmountString(value[1], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
     Cell(w[3], 10, wxS(""), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-    Cell(w[4], 10, getAmountString(value[2]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-    Cell(w[5], 10, getAmountString(value[3]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-    Cell(w[6], 10, getAmountString(value[4]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-    Cell(w[7], 10, getAmountString(value[5]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[4], 10, getAmountString(value[2], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[5], 10, getAmountString(value[3], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[6], 10, getAmountString(value[4], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[7], 10, getAmountString(value[5], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
     Cell(w[8], 10, wxS(""), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
     Cell(w[9], 10, wxS(""), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-    Cell(w[10], 10, getAmountString(value[6]), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+    Cell(w[10], 10, getAmountString(value[6], m_precision), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
     Ln();
 
 }

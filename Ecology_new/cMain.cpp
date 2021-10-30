@@ -3,6 +3,9 @@
 #include <chrono>
 #include <wx/pdfdoc.h>
 #include <wx/pdffontmanager.h>
+#include <wx/utils.h>
+#include <wx/busyinfo.h>
+#include "MyBusyInfo.h"
 #include "PDF_Main.h"
 #include "Dialog_cMainListEdit.h"
 #include "Dialog_ask.h"
@@ -46,6 +49,7 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoDataBase", wxDefaultPosition, wx
 	this->Bind(EVT_ORGANIZATION_CHANGED, &cMain::OnOrgChanged,this);
 	this->Bind(wxEVT_SIZE, &cMain::OnSize, this);
 	this->Bind(EVT_DATABASE_CHANGED, &cMain::OnDbChange, this);
+
 	
 }
 
@@ -58,44 +62,12 @@ cMain::~cMain()
 
 void cMain::initListPanel()
 {
-	m_listPanel = new wxPanel(this, ID_LIST_PANEL, wxDefaultPosition, wxSize(800, 600));
+	m_listPanel = new wxPanel(this, ID_LIST_PANEL, wxDefaultPosition, wxDefaultSize);
 	m_listPanel->SetBackgroundColour(wxColor(255, 255, 255));
 	m_listPanel->SetFont(gui_MainFont);
 	m_listMainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
-	m_orgListSizer = new wxFlexGridSizer(2, 2, wxSize(5, 5));
-	wxArrayString orgNames;
-	wxString activeOrg;
-	wxArrayString unitNames;
-	for (const auto& it : *Settings::GetOrgArrayPtr())
-	{
-		orgNames.Add(it.name);
-		if (it.id == Settings::getActiveOrg())
-		{
-			activeOrg = it.name;
-			for (const auto& unit : it.units)
-				unitNames.Add(unit.name);
-		}
-			
-	}
-	m_orgChoice = new wxChoice(m_listPanel, -1, wxPoint(30, 50), wxSize(250, 30), orgNames);
-	m_orgChoice->SetStringSelection(activeOrg);
-	m_orgChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
-	m_orgText = new wxStaticText(m_listPanel, -1, "Организация:");
-	m_unitText = new wxStaticText(m_listPanel, -1, "Подразделение:");
-	m_unitChoice = new wxChoice(m_listPanel, -1, wxPoint(30, 50), wxSize(250, 30), unitNames);
-	int activeUnit;
-	if (Settings::getActiveUnit() > -1)
-		activeUnit = Settings::getActiveUnit();
-	else
-		activeUnit = 0;
-	m_unitChoice->SetStringSelection(unitNames[activeUnit]);
-	m_unitChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
 
-	m_orgListSizer->Add(m_orgText, 0,wxLEFT,5 );
-	m_orgListSizer->Add(m_orgChoice, 0, wxLEFT,5);
-	m_orgListSizer->Add(m_unitText, 0, wxLEFT, 5);
-	m_orgListSizer->Add(m_unitChoice, 0, wxLEFT, 5);
 
 	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ИЗМЕНИТЬ", true,wxDefaultPosition, wxSize(100, 35));
 	editButton->SetButtonLineColour(gui_MainColour);
@@ -109,19 +81,17 @@ void cMain::initListPanel()
 	buttonSizer->Add(m_deleteButton, 0,  wxRIGHT, 20);
 
 	
-	m_grid = new myGridTable(m_listPanel, wxID_ANY, wxPoint(0, 0),wxSize(m_listPanel->GetSize().GetX(), m_listPanel->GetSize().GetY()));
+	m_grid = new myGridTable(m_listPanel, wxID_ANY, wxPoint(0, 0),wxSize(this->GetSize().GetWidth() - m_mainMenuWidth, m_listPanel->GetSize().GetY()));
 
 	
 
-	m_listMainSizer->Add(m_orgListSizer);
 	m_listMainSizer->AddSpacer(50);
 	m_listMainSizer->Add(buttonSizer,0,wxALIGN_RIGHT);
 	m_listMainSizer->Add(m_grid,1,wxEXPAND | wxTOP,3);
 	m_listPanel->SetSizerAndFit(m_listMainSizer);
 	editButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListEditButton, this);
 	m_deleteButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnListDeleteButton, this);
-	m_orgChoice->Bind(wxEVT_CHOICE, &cMain::OnOrgSelect, this);
-	m_unitChoice->Bind(wxEVT_CHOICE, &cMain::OnUnitSelect, this);
+
 }
 
 void cMain::initAddPanel()
@@ -142,7 +112,9 @@ void cMain::initMainMenu()
 {
 	
 	m_mainMenu = new wxPanel(this, ID_MAINMENU_PANEL, wxDefaultPosition, wxSize(m_mainMenuWidth, 200));
+	m_mainMenu->SetDoubleBuffered(true);
 	m_mainMenu->SetBackgroundColour(gui_MainColour);
+	m_mainMenu->SetFont(wxFontInfo(10.5).FaceName("Segoe UI"));
 
 	m_menuButtonList = new MainMenuTabButton(m_mainMenu, "Таблица", ID_MAINMENU_LIST_BUTTON,false,wxSize(m_mainMenuWidth,50),wxPoint(0,150));
 	m_menuButtonList->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
@@ -156,11 +128,45 @@ void cMain::initMainMenu()
 	m_menuButtonForm->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonForm);
 
-	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "Настройки", ID_MAINMENU_SETTINGS_BUTTON, true, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
+	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "Настройки", ID_MAINMENU_SETTINGS_BUTTON, false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
 	m_menuButtonSetting->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_menuButtonSetting->setDropArrowtSize(wxSize(14, 30));
 	m_allMenuButtons.push_back(m_menuButtonSetting);
 	
+	wxArrayString orgNames;
+	wxString activeOrg;
+	wxArrayString unitNames;
+	for (const auto& it : *Settings::GetOrgArrayPtr())
+	{
+		orgNames.Add(it.name);
+		if (it.id == Settings::getActiveOrg())
+		{
+			activeOrg = it.name;
+			for (const auto& unit : it.units)
+				unitNames.Add(unit.name);
+		}
+
+	}
+	m_orgChoice = new wxChoice(m_mainMenu, -1, wxPoint(120, 42), wxSize(140, 30), orgNames);
+	m_orgChoice->SetStringSelection(activeOrg);
+	m_orgChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
+	m_orgText = new wxStaticText(m_mainMenu, -1, "Организация:", wxPoint(8, 42));
+	m_orgText->SetForegroundColour(*wxWHITE);
+	m_unitText = new wxStaticText(m_mainMenu, -1, "Подразделение:", wxPoint(8, 82));
+	m_unitText->SetForegroundColour(*wxWHITE);
+	m_unitChoice = new wxChoice(m_mainMenu, -1, wxPoint(120, 82), wxSize(140, 30), unitNames);
+
+	int activeUnit;
+	if (Settings::getActiveUnit() > -1)
+		activeUnit = Settings::getActiveUnit();
+	else
+		activeUnit = 0;
+	m_unitChoice->SetStringSelection(unitNames[activeUnit]);
+	m_unitChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
+	m_orgChoice->Bind(wxEVT_CHOICE, &cMain::OnOrgSelect, this);
+	m_unitChoice->Bind(wxEVT_CHOICE, &cMain::OnUnitSelect, this);
+
+
 }
 
 void cMain::setActiveMenuButton(MainMenuTabButton* activeBtn)
@@ -175,7 +181,8 @@ void  cMain::initFormPDFPage()
 	m_formPDFPanel->Hide();
 	m_formPDFPanel->SetBackgroundColour(*wxWHITE);
 	m_formPDFPanel->SetFont(wxFontInfo(14).FaceName("Segoe UI").Bold(false));
-	
+	m_formPDFPanel->SetDoubleBuffered(true);
+
 	m_firstDate = m_dataBase->getFirstEntryDate();
 	m_lastDate = m_dataBase->getLastEntryDate();
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -297,6 +304,9 @@ void cMain::OnSize(wxSizeEvent& evt)
 	evt.Skip();
 }
 
+
+
+
 void cMain::OnFromPDFButton(wxCommandEvent& evt)
 {
 	PDF_Main pdf;
@@ -304,24 +314,51 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 	{
 		case ID_FORMPDF_POD9_BUTTON:
 		{
-			pdf.formPod9(m_date1_pod9->GetValue(), m_date2_pod9->GetValue());
+			wxWindowDisabler* disabler = new wxWindowDisabler(true);
+			
+			MyBusyInfo wait(this,"Пожалуйста, подождите... это может занять несколько минут.");
+			int temp{ Settings::getActiveUnit() };
+			for (const auto& it : *Settings::GetOrgArrayPtr())
+			{
+				if (it.id == Settings::getActiveOrg())
+				{
+					
+					for (const auto& unit : it.units)
+					{
+						Settings::setActiveUnit(unit.id, this);
+						pdf.formPod9(m_date1_pod9->GetValue(), m_date2_pod9->GetValue(), Settings::getActiveOrgName(), unit.name);
+					}
+					break;
+				}
+			}
+			Settings::setActiveUnit(temp, this);
+			wxTheApp->Yield();
+			wxMilliSleep(200);
+			delete disabler;
+			Refresh();
+			Update();
 			break;
 		}
 		case ID_FORMPDF_POD10_BUTTON:
 		{
-			pdf.formPod10(m_date1_pod10->GetValue(), m_date2_pod10->GetValue());
+			if (!m_dataBase->AskToEnterAllEntryDates(m_date1_pod10->GetValue().Format("%Y.%m.%d"), m_date2_pod10->GetValue().Format("%Y.%m.%d")))
+			{
+				wxMessageBox("ПОД 10 не может быть сформирован без \"даты внесения\"");
+				return;
+			}
+			pdf.formPod10(m_date1_pod10->GetValue(), m_date2_pod10->GetValue(),Settings::getActiveOrgName());
 			break;
 		}
 		case ID_FORMPDF_JOURNAL_BUTTON:
 		{
-			pdf.formJournal(m_date1_journal->GetValue(), m_date2_journal->GetValue());
+			pdf.formJournal(m_date1_journal->GetValue(), m_date2_journal->GetValue(), Settings::getActiveOrgName());
 			break;
 		}
 
 		default:
 			break;
 	}
-
+	
 	
 }
 
@@ -440,7 +477,7 @@ void cMain::UpdateOrgChoices()
 			activeOrg = it.name;
 			for (const auto& unit : it.units)
 				unitNames.Add(unit.name);
-			break;
+			
 		}
 	}
 	m_orgChoice->Set(orgNames);
