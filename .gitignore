@@ -390,6 +390,7 @@ FodyWeavers.xsd
 out/
 bin/
 CMake/
+CMake
 
 CMakeLists.txt.user
 CMakeCache.txt
