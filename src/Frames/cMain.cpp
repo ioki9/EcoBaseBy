@@ -333,8 +333,12 @@ void cMain::OnSize(wxSizeEvent& evt)
 void cMain::OnFromPDFButton(wxCommandEvent& evt)
 {
 	PDF_Main pdf;
+	wxString activeOrg{ Settings::getActiveOrgName() };
+	for (size_t i{ 0 }; i < wxFileName::GetForbiddenChars().size(); ++i)
+		activeOrg.Replace(wxFileName::GetForbiddenChars()[i], "");
 	switch (evt.GetId())
 	{
+		
 		case ID_FORMPDF_POD9_BUTTON:
 		{
 			wxWindowDisabler* disabler = new wxWindowDisabler(true);
@@ -349,7 +353,8 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 					for (const auto& unit : it.units)
 					{
 						Settings::setActiveUnit(unit.id, this);
-						pdf.formPod9(m_date1_pod9->GetValue(), m_date2_pod9->GetValue(), Settings::getActiveOrgName(), unit.name);
+						pdf.formPod9(m_date1_pod9->GetValue(), m_date2_pod9->GetValue(), 
+							activeOrg, unit.name,wxString::Format("%i",unit.id));
 					}
 					break;
 				}
@@ -369,12 +374,13 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 				wxMessageBox("ПОД 10 не может быть сформирован без \"даты внесения\"");
 				return;
 			}
-			pdf.formPod10(m_date1_pod10->GetValue(), m_date2_pod10->GetValue(),Settings::getActiveOrgName());
+
+			pdf.formPod10(m_date1_pod10->GetValue(), m_date2_pod10->GetValue(), activeOrg);
 			break;
 		}
 		case ID_FORMPDF_JOURNAL_BUTTON:
 		{
-			pdf.formJournal(m_date1_journal->GetValue(), m_date2_journal->GetValue(), Settings::getActiveOrgName());
+			pdf.formJournal(m_date1_journal->GetValue(), m_date2_journal->GetValue(), activeOrg);
 			break;
 		}
 

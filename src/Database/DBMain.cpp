@@ -334,24 +334,28 @@ wxString DBMain::convertDate(const wxString &date)
 	return newDate.Format(wxS("%d.%m.%Y"));
 }
 
-int DBMain::getUniqueCodes(passportPod9Info &data, const wxString& startDate, const wxString& endDate)
+int DBMain::getUniqueCodes(passportPod9Info &data, const wxString& unitID, const wxString& startDate, const wxString& endDate)
 {
-		m_rs = ExecuteQuery(wxS("SELECT DISTINCT Code FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " +
-	m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
-
+	wxString test = (wxS("SELECT DISTINCT Code FROM " + GetActivePasspTable() + " WHERE "
+		+ m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' AND "
+		+ m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID + "'"));
+		m_rs = ExecuteQuery(wxS("SELECT DISTINCT Code FROM " + GetActivePasspTable() + " WHERE " 
+			+ m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' AND "
+			+ m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID +"'"));
 		while (m_rs.NextRow())
 		{
 			data.uniqueCodes.Add(m_rs.GetString(0));
 		}
 		m_rs.Finalize();
 	return ExecuteScalar(wxS("SELECT COUNT(DISTINCT Code) FROM " + GetActivePasspTable() + " WHERE " + m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " +
-		m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
+		m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' AND " + m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID + "'"));
 }
 
-void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code, const wxString& startDate, const wxString& endDate)
+void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code,const wxString& unitID, const wxString& startDate, const wxString& endDate)
 {
-		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code + "' AND " + 
-			m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' ORDER BY Date"));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code + "' AND " +
+		m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate +
+		"' AND " + m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID + "' ORDER BY Date"));
 		int count{0};
 		if (!data.id.IsEmpty())
 		{
@@ -365,7 +369,7 @@ void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code, con
 			data.stuct_unit9.Add(m_rs.GetAsString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD9]));
 			data.date.Add(convertDate(m_rs.GetString(m_passpColumns[DB_COLUMN_DATE])));
 			data.receiver.Add(m_rs.GetString(m_passpColumns[DB_COLUMN_RECEIVER]));
-
+			data.wasteNorm = m_rs.GetAsString(m_passpColumns[DB_COLUMN_WASTE_NORM]);
 			if (m_rs.GetString(m_passpColumns[DB_COLUMN_OWNER]) == m_rs.GetString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD10]))
 				if (m_rs.GetString(m_passpColumns[DB_COLUMN_DEPENDENCY]).starts_with('2'))
 					data.owner.Add(m_rs.GetString(m_passpColumns[DB_COLUMN_OWNER]));
@@ -388,10 +392,10 @@ void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code, con
 			data.amountTransferStorage.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]));
 			data.amountTransferBurial.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]));
 			data.amountFullStorage.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
-			
+			data.codeDangerLVL = m_rs.GetString(m_passpColumns[DB_COLUMN_DNG_LVL]);
 			count++;
 		}
-		data.codeDangerLVL = m_rs.GetString(m_passpColumns[DB_COLUMN_DNG_LVL]);
+
 		data.rowCount = std::move(count);
 		m_rs.Finalize();
 
@@ -1560,7 +1564,6 @@ bool DBMain::editInitStorageEntry(const wxString& code, const wxDateTime& date, 
 		updateSubsqPasspStrg(oldCode, dateS);
 		updateSubsqPOD10Strg(code, dateS, amount, idPOD10);
 		updateSubsqPasspStrg(code, dateS);
-		
 	}
 	m_rs.Finalize();
 	Commit();
@@ -1618,10 +1621,14 @@ void  DBMain::updateSubsqPOD10Strg(const wxString& code, const wxString& date, c
 void DBMain::getPod10TableCount(pod10Info &data, const wxString& startDate, const wxString& endDate)
 {
 	data.tableCount = ExecuteScalar(wxS("SELECT COUNT(DISTINCT Date) FROM " + GetActiveStrgTable() + " WHERE " + 
-		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
+		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + 
+		"' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'  AND ("
+		+ m_storageColumns[DB_COLUMN_INITIAL] + " IS NULL OR " + m_storageColumns[DB_COLUMN_INITIAL] + " = '')"));
 
 	m_rs = ExecuteQuery(wxS("SELECT DISTINCT Date FROM " + GetActiveStrgTable() + " WHERE " + 
-		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate + "'"));
+		m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " 
+		+ m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' AND ("
+		+ m_storageColumns[DB_COLUMN_INITIAL] + " IS NULL OR " + m_storageColumns[DB_COLUMN_INITIAL] + " = '')"));
 
 	while (m_rs.NextRow())
 	{
@@ -1638,11 +1645,12 @@ void DBMain::getPod10TableInfo(pod10Info &data, const wxString &date)
 	{
 		data.emptyPod10StructInfo();
 	}
-	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Date LIKE '%" + date + "%' ORDER BY " + m_storageColumns[DB_COLUMN_CODE]));
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Date LIKE '%" + date + "%' AND ("
+		+ m_storageColumns[DB_COLUMN_INITIAL] + " IS NULL OR "+m_storageColumns[DB_COLUMN_INITIAL] + " = '') ORDER BY " + m_storageColumns[DB_COLUMN_CODE]));
 	while (m_rs.NextRow())
 	{
 		data.date = m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]);
-		data.entryDate = m_rs.GetAsString(m_storageColumns[DB_COLUMN_ENTRYDATE]);
+		data.entryDate = m_rs.GetDate(m_storageColumns[DB_COLUMN_ENTRYDATE]).Format("%d.%m.%Y");
 		data.code.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]));
 		data.amountFormed.Add(m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_FORMED]));
 		data.amountReOrg.Add(m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]));
@@ -1686,7 +1694,7 @@ void DBMain::getJournalTableInfo(passportJournalInfo& data, const wxString& star
 		"' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' ORDER BY Date"));
 	while (m_rs.NextRow())
 	{
-		if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_DEPENDENCY]).starts_with('2') || m_rs.GetAsString(m_passpColumns[DB_COLUMN_OWNER]) == "")
+		if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_DEPENDENCY]).starts_with('2') || m_rs.GetAsString(m_passpColumns[DB_COLUMN_TRANSPORT]) == "")
 			continue;
 		data.amountTransferBurial.push_back(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]));
 		data.amountTransferDefused.push_back(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]));
@@ -1876,7 +1884,6 @@ void DBMain::getNextRowData(std::vector<wxString> &rowItem,const wxString& id, b
 
 wxString DBMain::getIdOfRow(const wxString& row)
 {
-
 	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE rowid AND " + m_passpColumns[DB_COLUMN_UNIT_ID] + " = '"+
 		wxString::Format("%i",Settings::getActiveUnitID()) + "' LIMIT 1 OFFSET " + row));
 	m_rs.NextRow();
@@ -2004,9 +2011,11 @@ bool DBMain::AskToEnterAllEntryDates(const wxString& startDate, const wxString& 
 	bool dlgCancel{false};
 	while(true)
 	{
+
 		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_DATE] + " >= '" + startDate.Mid(0, 7) +
-			"' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate.Mid(0, 7) + "' " + " AND " + m_storageColumns[DB_COLUMN_ENTRYDATE] + " IS NULL OR "
-			+ m_storageColumns[DB_COLUMN_ENTRYDATE] + " = ''"));
+			"' AND " + m_storageColumns[DB_COLUMN_DATE] + " <= '" + endDate.Mid(0, 7) + "' " + " AND (" 
+			+ m_storageColumns[DB_COLUMN_ENTRYDATE] + " IS NULL OR "+ m_storageColumns[DB_COLUMN_ENTRYDATE] + " = '') AND (" 
+			+ m_storageColumns[DB_COLUMN_INITIAL] + " IS NULL OR " + m_storageColumns[DB_COLUMN_INITIAL] + " = '')"));
 
 		if (!m_rs.NextRow())
 			break;
@@ -2019,13 +2028,6 @@ bool DBMain::AskToEnterAllEntryDates(const wxString& startDate, const wxString& 
 			main->SetFont(gui_MainFont);
 			wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Дата внесения уч. записи в книгу ПОД10\n на дату \"" + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + "\":");
 			wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
-
-			wxDateTime::Month month{ static_cast<wxDateTime::Month>(wxAtoi(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]).Mid(5, 2)) - 1) };
-			int year{ wxAtoi(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE].Mid(0, 4))) };
-			wxDateTime date1(1, month, year);
-			wxDateTime date2;
-			date2.SetToLastMonthDay(month, year);
-			dateCtrl->SetRange(date1,date2);
 
 			MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
 			btnNO->SetButtonLineColour(*wxWHITE);
@@ -2059,7 +2061,8 @@ bool DBMain::AskToEnterAllEntryDates(const wxString& startDate, const wxString& 
 				});
 
 			btnNO->Bind(wxEVT_MOTION, [](wxMouseEvent& evt) { wxSetCursor(wxCURSOR_HAND); });
-			btnNO->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&dlg, &dlgCancel](wxCommandEvent& evt) { dlgCancel = true;
+			btnNO->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&dlg, &dlgCancel,this](wxCommandEvent& evt) { dlgCancel = true;
+																					Commit();
 																					dlg.Close(); });
 			
 			dlg.ShowModal();

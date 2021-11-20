@@ -20,7 +20,7 @@ void PDF_Pod9::Header()
         Line(GetX(), GetY() + 10.5, GetPageWidth() - 10, GetY() + 10.5);
         Line(GetX(), GetY() + 15.5, GetPageWidth() - 10, GetY() + 15.5);
         Line(GetX(), GetY() + 20.5, GetPageWidth() - 10, GetY() + 20.5);
-        Line(GetX(), GetY() + 25.5, GetPageWidth() - 10, GetY() + 25.5);
+        //Line(GetX(), GetY() + 25.5, GetPageWidth() - 10, GetY() + 25.5);
         //code description here
         Cell(205, 3, m_data.codeDescription, 0, 0, wxPDF_ALIGN_CENTER);
         //code number here
@@ -36,18 +36,21 @@ void PDF_Pod9::Header()
         Cell(31, 1, wxS("(степень опасности или"), 0, 0);
         Ln(3);
         SetX(256);
-        Cell(31, 1, wxS("класс опасности отхода)"), 0, 0);
+        Cell(31, 1, wxS("класс опасности отхода)"), 0, 1);
+        font.SetPointSize(12);
+        font.MakeBold();
+        SetFont(font);
+        Cell(GetPageWidth() - 10, 8, m_data.wasteNorm, 0, 1, wxPDF_ALIGN_CENTER);
         font.SetPointSize(11);
         SetFont(font);
-        Ln(8);
         Cell(GetPageWidth() - 10, 3, wxS("(норматив образования отхода)"), 0, 0, wxPDF_ALIGN_CENTER);
         Ln(5.5);
         font.SetPointSize(13);
         font.SetWeight(wxFONTWEIGHT_BOLD);
         SetFont(font);
         //WATCH HERE TOO
-        Cell(GetPageWidth() - 10, 3, wxS("Деятельность по использованию отходов"), 0, 0, wxPDF_ALIGN_CENTER);
-        Ln(5);
+        MultiCell(GetPageWidth() - 10, 5, m_data.codeDescription, wxPDF_BORDER_BOTTOM, wxPDF_ALIGN_MIDDLE);
+        Ln(2);
         font.SetPointSize(11);
         font.SetWeight(wxFONTWEIGHT_NORMAL);
         SetFont(font);
@@ -213,12 +216,22 @@ void PDF_Pod9::drawTable()
             transferValue = m_data.amountTransferStorage[j];
             purpose = "Х";
         }
+        else if (m_data.amountSelfstorage[j] != 0)
+        {
+            transferValue = m_data.amountSelfstorage[j];
+            purpose = "Х";
+        }
+        else if (m_data.amountBurial[j] != 0)
+        {
+            transferValue = m_data.amountBurial[j];
+            purpose = "З";
+        }
         else
         {
             transferValue = 0.0;
             purpose = "";
         }
-
+        
         rowData = { m_data.date[j], getAmountString(m_data.amountFormed[j],m_precision), getAmountString(m_data.amountReceivedOrg[j],m_precision),
                    m_data.owner[j], getAmountString(m_data.amountReceivedPhys[j],m_precision), getAmountString(m_data.amountUsed[j],m_precision),
                     getAmountString(m_data.amountDefused[j],m_precision), getAmountString(transferValue,m_precision),m_data.stuct_unit9[j],

@@ -12,7 +12,7 @@ wxString PDF_Main::formatToYMD(wxDateTime date)
 	return date.Format(wxS("%Y.%m.%d"));
 }
 
-void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName, const wxString& unitName)
+void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName, const wxString& unitName, const wxString& unitID)
 {
 	wxString BSunitName{ '\\'+ unitName  };
 	if (unitName.IsEmpty())
@@ -21,11 +21,11 @@ void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate, 
 		wxFileName::Mkdir(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	passportPod9Info passData;
 	wxString codename;
-	int unique{ m_dataBase->getUniqueCodes(passData,formatToYMD(startDate),formatToYMD(endDate)) };
+	int unique{ m_dataBase->getUniqueCodes(passData,unitID,formatToYMD(startDate),formatToYMD(endDate)) };
 	int i{};
 	for (i = 0; i < unique; i++)
 	{
-		m_dataBase->getNextPod9Portion(passData, passData.uniqueCodes[i], formatToYMD(startDate), formatToYMD(endDate));
+		m_dataBase->getNextPod9Portion(passData, passData.uniqueCodes[i], unitID, formatToYMD(startDate), formatToYMD(endDate));
 		PDF_Pod9 pdf(passData, passData.uniqueCodes[i]);
 		pdf.AddPage();
 		pdf.drawTable();

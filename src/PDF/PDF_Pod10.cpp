@@ -5,6 +5,7 @@
 
 void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate, const wxString& orgName)
 {
+    
     if (!wxDirExists(Settings::GetPdfSavePath() + "\\" + orgName))
         wxFileName::Mkdir(Settings::GetPdfSavePath() + "\\" + orgName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
     m_dataBase = new DBMain();

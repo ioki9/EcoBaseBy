@@ -68,8 +68,8 @@ public:
 	wxString checkFullStorage(const wxString& code);
 
 	wxString convertDate(const wxString &date);
-	int getUniqueCodes(passportPod9Info &data,const wxString& startDate,const wxString& endDate);
-	void getNextPod9Portion(passportPod9Info &data, const wxString &code, const wxString& startDate, const wxString& endDate);
+	int getUniqueCodes(passportPod9Info &data, const wxString& unitID,const wxString& startDate,const wxString& endDate);
+	void getNextPod9Portion(passportPod9Info &data, const wxString &code, const wxString& unitID, const wxString& startDate, const wxString& endDate);
 
 	void getPod10TableCount(pod10Info &data, const wxString& startDate, const wxString& endDate);
 	void getPod10TableInfo(pod10Info &data, const wxString &date);

@@ -22,6 +22,9 @@ void Settings::SetPdfSavePath(const wxString& path)
 {
 	m_pdfSavePath = path;
 	pConfig.Write(wxS("pdfSavePath"), m_pdfSavePath);
+	pConfig.SetPath(wxS("/"));
+	wxFileOutputStream out(Settings::GetCfgFile());
+	pConfig.Save(out);
 }
 
 wxString Settings::GetPdfSavePath()
@@ -38,6 +41,7 @@ void Settings::SaveGridActiveCol(std::int32_t activeCol)
 {
 	m_gridActiveColumns = activeCol;
 	pConfig.Write(wxS("activeColumns"), m_gridActiveColumns);
+	pConfig.SetPath(wxS("/"));
 	wxFileOutputStream out(Settings::GetCfgFile());
 	pConfig.Save(out);
 }
@@ -74,6 +78,7 @@ bool Settings::setActiveUnit(int unitID,wxWindow* reciever)
 	pConfig.Write(wxS("activeUnit"), unitID);
 	m_activeUnitID = unitID;
 	SendEventActiveUnitChanged(reciever);
+	pConfig.SetPath(wxS("/"));
 	return true;
 }
 
@@ -137,6 +142,7 @@ void Settings::deleteOrg(const organization& org)
 		count++;
 	}
 	m_organizations.erase(m_organizations.begin() + count);
+	pConfig.SetPath(wxS("/"));
 	wxFileOutputStream out(Settings::GetCfgFile());
 	pConfig.Save(out);
 }
@@ -211,6 +217,7 @@ void Settings::LoadState()
 void Settings::SaveState()
 {
 	pConfig.Write(wxS("pdfSavePath"), m_pdfSavePath);
+	pConfig.SetPath(wxS("/"));
 	wxFileOutputStream out(Settings::GetCfgFile());
 	pConfig.Save(out);
 }

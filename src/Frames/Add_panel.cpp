@@ -202,7 +202,7 @@ void Add_panel::initPage1()
 		});
 	m_amRecCtrl->Bind(wxEVT_CHOICE, [&, midVertSizerRight](wxCommandEvent& evt)
 	{	
-		if (evt.GetSelection() == 0)
+		if (m_amRecCtrl->GetSelection() == 0)
 		{
 			m_receiverCtrl->Clear();
 			m_receiverCtrl->Enable(0);
@@ -225,7 +225,7 @@ void Add_panel::initPage1()
 			wxPostEvent(m_orgTransRadio, wxCommandEvent(wxEVT_RADIOBUTTON));
 
 		}
-		else if (evt.GetSelection() == 1)
+		else if (m_amRecCtrl->GetSelection() == 1)
 		{
 			if (midVertSizerRight->GetItem(4)->GetWindow() == m_unit10Static)
 				return;
@@ -246,7 +246,7 @@ void Add_panel::initPage1()
 			wxPostEvent(m_amMovmCtrl, wxCommandEvent(wxEVT_CHOICE));
 			wxPostEvent(m_orgTransRadio, wxCommandEvent(wxEVT_RADIOBUTTON));
 		}
-		else if (evt.GetSelection() == 2)
+		else if (m_amRecCtrl->GetSelection() == 2)
 		{
 			if (midVertSizerRight->GetItem(4)->GetWindow() == m_recievedPhysText)
 				return;
@@ -485,6 +485,8 @@ void Add_panel::OnButtonApply(wxCommandEvent& evt)
 			info.amountFormed = m_amountReceivedCtrl->GetValue();
 			info.owner = m_structUnit10Ctrl->GetStringSelection();
 			info.structUnit10 = m_structUnit10Ctrl->GetStringSelection();
+			if(m_amMovmCtrl->GetSelection() == 2 || m_amMovmCtrl->GetSelection() == 3)
+				info.structUnit9 = m_structUnit10Ctrl->GetStringSelection();
 			for (const auto& it : *Settings::GetOrgArrayPtr())
 			{
 				if (it.id == Settings::getActiveOrg())
@@ -502,11 +504,13 @@ void Add_panel::OnButtonApply(wxCommandEvent& evt)
 		case 2:
 		{
 			info.amountReceivedPhys = m_amountReceivedCtrl->GetValue();
+			info.structUnit9 = m_receiverCtrl->GetValue();
 			break;
 		}
 		case 3:
 		{
 			info.amountReceivedOrg = m_amountReceivedCtrl->GetValue();
+			info.structUnit9 = m_receiverCtrl->GetValue();
 			break;
 		}
 	}

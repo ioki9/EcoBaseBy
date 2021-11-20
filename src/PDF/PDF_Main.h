@@ -19,7 +19,7 @@ protected:
 	
 public:
 	void formJournal(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName);
-	void formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName,const wxString& unitName);
+	void formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName,const wxString& unitName,const wxString& unitID);
 	void formPod10(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName);
 };
 

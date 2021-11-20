@@ -80,7 +80,7 @@ public:
 
 struct passportPod9Info
 {
-
+	wxString wasteNorm;
 	wxArrayString uniqueCodes;
 	wxArrayInt id;
 	wxArrayString idString;
@@ -134,6 +134,9 @@ struct passportPod9Info
 		amountReceivedPhys.Clear();
 		amountReceivedOrg.Clear();
 		amountFormed.Clear();
+		uniqueCodes.Clear();
+		idString.Clear();
+		stuct_unit9.Clear();
 	}
 
 	void emptyPodStruct9Info()
@@ -160,6 +163,8 @@ struct passportPod9Info
 		amountTransferDefused.Empty();
 		amountTransferStorage.Empty();
 		amountTransferBurial.Empty();
+		idString.Empty();
+		stuct_unit9.Empty();
 	}
 };
 
