@@ -1,0 +1,6 @@
+[submodule "3rd/wxsqlite3"]
+	path = 3rd/wxsqlite3
+	url = https://github.com/utelle/wxsqlite3.git
+[submodule "3rd/wxpdfdoc"]
+	path = 3rd/wxpdfdoc
+	url = https://github.com/utelle/wxpdfdoc.git
