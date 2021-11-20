@@ -9,7 +9,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 project ("EcoBaseBy" VERSION 0.1)
 include("${CMAKE_CURRENT_SOURCE_DIR}/resource/CMakeLists.txt")
 include("${CMAKE_CURRENT_SOURCE_DIR}/src/CMakeLists.txt")
-
 set(DOCUMENTS_DIR ${CMAKE_CURRENT_BINARY_DIR}/Documents)
 if(WIN32)
 	set(wxWidgets_ROOT_DIR $ENV{WXWIN})
