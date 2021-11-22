@@ -665,7 +665,7 @@ void Add_panel::ClearControls()
 	m_codeCtrl->Clear();
 	m_amountReceivedCtrl->Clear();
 	m_dngLvlCtrl->SetSelection(-1);
-	m_structUnit10Ctrl->Clear();
+	m_structUnit10Ctrl->SetSelection(-1);
 	m_amRecCtrl->SetSelection(1);
 	wxPostEvent(m_amRecCtrl, wxCommandEvent(wxEVT_CHOICE));
 	m_amMovmCtrl->SetSelection(-1);

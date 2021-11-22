@@ -36,7 +36,9 @@ Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info, 
 	m_transporterCtrl = new wxTextCtrl(m_mainPanel, wxID_ANY, info.transporter, wxDefaultPosition, wxSize(250, 30));
 	m_transporterCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_TRANSPORT));
 	wxStaticText* calendar = new wxStaticText(m_mainPanel, wxID_ANY, "Дата рейса:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
-	m_date = new wxDatePickerCtrl(m_mainPanel, wxID_ANY, wxDateTime::Today(), wxPoint(600, 230), wxSize(250, 30), wxDP_DROPDOWN);
+	wxDateTime currentDate;
+	currentDate.ParseFormat(info.date, wxS("%Y.%m.%d"));
+	m_date = new wxDatePickerCtrl(m_mainPanel, wxID_ANY, currentDate, wxPoint(600, 230), wxSize(250, 30), wxDP_DROPDOWN);
 	wxStaticText* code = new wxStaticText(m_mainPanel, wxID_ANY, "Код отхода:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	wxStaticText* codeDng = new wxStaticText(m_mainPanel, wxID_ANY, "Класс опасности:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	wxArrayString dngLvlStr;

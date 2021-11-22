@@ -32,7 +32,19 @@ public:
 	int tableCount{ 0 };
 	wxArrayString allDates;
 	int rowCount{ 0 };
+	void sortByCode(int low, int high)
+	{
+		if (low < high)
+		{
+			//partition index
+			int pi = sortPartition(low, high);
 
+			// Separately sort elements before
+			// partition and after partition
+			sortByCode(low, pi - 1);
+			sortByCode(pi + 1, high);
+		}
+	}
 	void emptyPod10StructInfo()
 	{
 		date.Empty();
@@ -75,6 +87,67 @@ public:
 		codeDescription.Clear();
 		wasteNorm.Clear();
 		structuralUnit.Clear();
+	}
+private:
+	int sortPartition(int low, int high)
+	{
+		wxString pivot = code[high];
+		int indexSmaller = low - 1;
+		for (int j{ low }; j <= high - 1; ++j)
+		{
+			if (code[j] <= pivot)
+			{
+				//swap elements in all dependent arrays
+				++indexSmaller;
+				swap(code, indexSmaller, j);
+				swap(codeDangerLVL, indexSmaller, j);
+				swap(amountFormed, indexSmaller, j);
+				swap(amountReOrg, indexSmaller, j);
+				swap(amountRePhys, indexSmaller, j);
+				swap(amountUsed, indexSmaller, j);
+				swap(amountDefused, indexSmaller, j);
+				swap(amountSelfstorage, indexSmaller, j);
+				swap(amountBurial, indexSmaller, j);
+				swap(amountTransferUsed, indexSmaller, j);
+				swap(amountTransferDefused, indexSmaller, j);
+				swap(amountTransferStorage, indexSmaller, j);
+				swap(wasteNorm, indexSmaller, j);
+				swap(amountTransferBurial, indexSmaller, j);
+				swap(amountSelfstorageFull, indexSmaller, j);
+				swap(structuralUnit,indexSmaller, j);
+			}
+		}
+		swap(code,indexSmaller + 1,high);
+		swap(codeDangerLVL, indexSmaller + 1, high);
+		swap(amountFormed, indexSmaller + 1, high);
+		swap(amountReOrg, indexSmaller + 1, high);
+		swap(amountRePhys, indexSmaller + 1, high);
+		swap(amountUsed, indexSmaller + 1, high);
+		swap(amountDefused, indexSmaller + 1, high);
+		swap(amountSelfstorage, indexSmaller + 1, high);
+		swap(amountBurial, indexSmaller + 1, high);
+		swap(amountTransferUsed, indexSmaller + 1, high);
+		swap(amountTransferDefused, indexSmaller + 1, high);
+		swap(amountTransferStorage, indexSmaller + 1, high);
+		swap(wasteNorm, indexSmaller + 1, high);
+		swap(amountTransferBurial, indexSmaller + 1, high);
+		swap(amountSelfstorageFull, indexSmaller + 1, high);
+		swap(structuralUnit, indexSmaller + 1, high);
+		
+		return (indexSmaller + 1);
+	}
+
+	void swap(wxArrayString& arr,int aPos,int bPos)
+	{
+		wxString temp = arr[aPos];
+		arr[aPos] = arr[bPos];
+		arr[bPos] = temp;
+	}
+	void swap(wxArrayDouble& arr, int aPos, int bPos)
+	{
+		double temp = arr[aPos];
+		arr[aPos] = arr[bPos];
+		arr[bPos] = temp;
 	}
 };
 

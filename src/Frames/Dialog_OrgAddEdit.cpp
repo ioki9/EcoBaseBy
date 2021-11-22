@@ -429,7 +429,7 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 		codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
 		wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Дата:");
 		wxDateTime currentDate;
-		currentDate.ParseFormat(m_strgList->GetSelectedItemRef()->get()[0], wxS("%Y.%m.%d"));
+		currentDate.ParseFormat(m_strgList->GetSelectedItemRef()->get()[0], wxS("%d.%m.%Y"));
 		wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY,currentDate, wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
 		
 		wxDateTime firstDate;
@@ -512,7 +512,8 @@ void Dialog_OrgAddEdit::OnStorageListAdd(wxCommandEvent& evt)
 	wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Дата:");
 	wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY, wxDateTime::Today(), wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
 	wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "Хранение:");
-	wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY);
+	wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
+		wxDefaultPosition, wxDefaultSize, 0L, utility::GetDoubleValidator(3));
 
 
 	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));

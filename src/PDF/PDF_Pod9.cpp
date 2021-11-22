@@ -185,15 +185,26 @@ void PDF_Pod9::drawTable()
    //table
     wxString prevDate{ m_data.date[0] };
     wxString purpose{};
+    wxString fullStrgColValue{ "" };
     int j;
     std::vector<wxString> rowData{};
-    double transferValue{};
+    double transferValue{0.0};
 
     for (j = 0; j < m_data.rowCount; j++)
     {
+        //we check if row is initial, if it is we skip all the unnecessary steps and more importantly avoid reassignment
+        if (m_data.regnum[j] == "initial")
+        {
+            rowData = { m_data.date[j], "", "","", "", "", "","", "","",getAmountString(m_data.amountFullStorage[j], m_precision) };
+            //we reassign date here for correct prevDate check on next row
+            if(m_data.rowCount > 1)
+                m_data.date[j] = m_data.date[j + 1];
+            goto drawRow;
+        }
+
         if (j != 0)
         {
-            prevDate = m_data.date[j - 1];
+            prevDate = m_data.date[j-1];
         }
 
         if (m_data.amountTransferUsed[j] != 0)
@@ -239,11 +250,13 @@ void PDF_Pod9::drawTable()
 
        if (j != 0 && compareDates(prevDate,m_data.date[j]) != 0)
        {
-           results[6] = m_data.amountFullStorage[j];
+
+           results[6] = m_data.amountFullStorage[j-1];
            drawResultRow(w, results);
            std::fill(results.begin(), results.end(), 0);
        }
        //table row
+       drawRow:
        tableRow(h, w, rowData, wxPDF_BORDER_FRAME, wxPDF_ALIGN_CENTER);
 
        results[0] += m_data.amountFormed[j];

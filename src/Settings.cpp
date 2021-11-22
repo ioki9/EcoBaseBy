@@ -10,7 +10,7 @@ vector<organization> Settings::m_organizations{};
 int Settings::m_activeUnitID = -1;
 int Settings::m_lastAddedOrgID = -1;
 wxFileConfig Settings::pConfig(Settings::cfgInStream);
-wxString Settings::m_pdfSavePath{ wxGetCwd()+"/Documents"};
+wxString Settings::m_pdfSavePath{ wxGetCwd() + "/Documents"};
 std::int32_t Settings::m_gridActiveColumns = 0xffffffff;
 
 vector<organization>* Settings::GetOrgArrayPtr()
@@ -201,7 +201,7 @@ void Settings::LoadState()
 	if (m_isInitialized)
 		return;
 		
-	pConfig.Read(wxS("pdfSavePath"), &m_pdfSavePath, wxGetCwd());
+	pConfig.Read(wxS("pdfSavePath"), &m_pdfSavePath, wxGetCwd() + "/Documents");
 	pConfig.Read(wxS("activeColumns"), &m_gridActiveColumns, 0xffffffff);
 	m_organizations = Settings::getAllOrgAndUnitNames();
 	pConfig.SetPath(wxS("/organizations"));

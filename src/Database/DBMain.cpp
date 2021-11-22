@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <wx/datectrl.h>
 #include <wx/datetime.h>
+#include <algorithm>   
+#include <vector>
 #include "../Settings.h"
 #include "../GUI_parameters.h"
 #include "../Controls/MaterialButton.h"
@@ -336,9 +338,6 @@ wxString DBMain::convertDate(const wxString &date)
 
 int DBMain::getUniqueCodes(passportPod9Info &data, const wxString& unitID, const wxString& startDate, const wxString& endDate)
 {
-	wxString test = (wxS("SELECT DISTINCT Code FROM " + GetActivePasspTable() + " WHERE "
-		+ m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' AND "
-		+ m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID + "'"));
 		m_rs = ExecuteQuery(wxS("SELECT DISTINCT Code FROM " + GetActivePasspTable() + " WHERE " 
 			+ m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate + "' AND "
 			+ m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID +"'"));
@@ -353,14 +352,61 @@ int DBMain::getUniqueCodes(passportPod9Info &data, const wxString& unitID, const
 
 void DBMain::getNextPod9Portion(passportPod9Info &data,const wxString &code,const wxString& unitID, const wxString& startDate, const wxString& endDate)
 {
+	int count{ 0 };
+	if (!data.id.IsEmpty())
+	{
+		data.emptyPodStruct9Info();
+	}
+
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code + "' AND " +
+		m_passpColumns[DB_COLUMN_DATE] + " <= '" + startDate + "' ORDER BY " + m_passpColumns[DB_COLUMN_DATE] + " DESC"));
+
+	while (m_rs.NextRow())
+	{
+		if (m_rs.GetInt(m_passpColumns[DB_COLUMN_INITIAL]) == 1)
+		{
+			data.id.Add(m_rs.GetInt(m_passpColumns[DB_COLUMN_ID]));
+			data.idString.Add(m_rs.GetAsString(m_passpColumns[DB_COLUMN_ID]));
+			data.stuct_unit9.Add(m_rs.GetAsString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD9]));
+			data.date.Add(convertDate(m_rs.GetString(m_passpColumns[DB_COLUMN_DATE])));
+			data.receiver.Add(m_rs.GetString(m_passpColumns[DB_COLUMN_RECEIVER]));
+			data.wasteNorm = m_rs.GetAsString(m_passpColumns[DB_COLUMN_WASTE_NORM]);
+			if (m_rs.GetString(m_passpColumns[DB_COLUMN_OWNER]) == m_rs.GetString(m_passpColumns[DB_COLUMN_STRUCTURAL_POD10]))
+				if (m_rs.GetString(m_passpColumns[DB_COLUMN_DEPENDENCY]).starts_with('2'))
+					data.owner.Add(m_rs.GetString(m_passpColumns[DB_COLUMN_OWNER]));
+				else
+					data.owner.Add("");
+			else
+				data.owner.Add(m_rs.GetString(m_passpColumns[DB_COLUMN_OWNER]));
+			data.transporter.Add(m_rs.GetString(m_passpColumns[DB_COLUMN_TRANSPORT]));
+			data.regnum.Add("initial");
+			data.amountFormed.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_FORMED]));
+			data.amountReceivedPhys.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_PHYS]));
+			data.amountReceivedOrg.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_RECEIVED_ORG]));
+			data.amountUsed.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_USED]));
+			data.amountDefused.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_DEFUSED]));
+			data.amountSelfstorage.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]));
+			data.amountBurial.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_BURIAL]));
+			data.amountTransferUsed.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]));
+			data.amountTransferDefused.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]));
+			data.amountTransferStorage.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]));
+			data.amountTransferBurial.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]));
+			data.amountFullStorage.Add(m_rs.GetDouble(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
+			data.codeDangerLVL = m_rs.GetString(m_passpColumns[DB_COLUMN_DNG_LVL]);
+			++count;
+			break;
+		}
+		if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_DATE]) != startDate)
+			break;
+	}
+		
+	m_rs.Finalize();
 	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActivePasspTable() + " WHERE Code = '" + code + "' AND " +
 		m_passpColumns[DB_COLUMN_DATE] + " >= '" + startDate + "' AND " + m_passpColumns[DB_COLUMN_DATE] + " <= '" + endDate +
 		"' AND " + m_passpColumns[DB_COLUMN_UNIT_ID] + " = '" + unitID + "' ORDER BY Date"));
-		int count{0};
-		if (!data.id.IsEmpty())
-		{
-			data.emptyPodStruct9Info();
-		}
+
+
+
 
 		while (m_rs.NextRow())
 		{
@@ -1491,6 +1537,10 @@ bool DBMain::DeleteOrgTables(int orgID)
 bool DBMain::insertInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount)
 {
 	Begin();
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBCodesTableName + " WHERE Code = '" + code + "'"));
+	m_rs.NextRow();
+	wxString codeDng{ m_rs.GetAsString(2) };
+	m_rs.Finalize();
 	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
 		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
 	if (m_rs.NextRow())
@@ -1501,12 +1551,12 @@ bool DBMain::insertInitStorageEntry(const wxString& code, const wxDateTime& date
 	m_rs.Finalize();
 	wxString dateS = date.Format(wxS("%Y.%m.%d"));
 	ExecuteUpdate(wxS("INSERT INTO " + GetActiveStrgTable() + " (" + m_storageColumns[DB_COLUMN_DATE] + ", " + m_storageColumns[DB_COLUMN_CODE] + ", "
-		+ m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + ", " + m_storageColumns[DB_COLUMN_INITIAL] + ") VALUES ('"
-		+ dateS.Mid(0, 7) + "', '" + code + "', '" + amount + "', '1')"));
+		+ m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + ", " + m_storageColumns[DB_COLUMN_INITIAL] + ", " + m_storageColumns[DB_COLUMN_DNG_LVL] + ")" +
+		" VALUES('"+ dateS.Mid(0, 7) + "', '" + code + "', '" + amount + "', '1', '" + codeDng + "')"));
 
 	ExecuteUpdate(wxS("INSERT INTO " + GetActivePasspTable() + " (" + m_passpColumns[DB_COLUMN_DATE] + ", " + m_passpColumns[DB_COLUMN_CODE] + ", "
-		+ m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + ", " + m_passpColumns[DB_COLUMN_INITIAL] + ") VALUES ('"
-		+ dateS + "', '" + code + "', '" + amount + "', '1')"));
+		+ m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + ", " + m_passpColumns[DB_COLUMN_INITIAL] + ", " + m_passpColumns[DB_COLUMN_DNG_LVL] + ") " +
+		" VALUES ('" + dateS + "', '" + code + "', '" + amount + "', '1', '" + codeDng + "')"));
 
 	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + code + "' AND " +
 		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
@@ -1523,6 +1573,10 @@ bool DBMain::insertInitStorageEntry(const wxString& code, const wxDateTime& date
 bool DBMain::editInitStorageEntry(const wxString& code, const wxDateTime& date, const wxString& amount,const wxString& oldCode)
 {
 	Begin();
+	m_rs = ExecuteQuery(wxS("SELECT * FROM " + DBCodesTableName + " WHERE Code = '" + code + "'"));
+	m_rs.NextRow();
+	wxString codeDng{ m_rs.GetAsString(2) };
+	m_rs.Finalize();
 	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + oldCode + "' AND " +
 		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
 	if (!m_rs.NextRow())
@@ -1541,6 +1595,7 @@ bool DBMain::editInitStorageEntry(const wxString& code, const wxDateTime& date, 
 	ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET " +
 		m_storageColumns[DB_COLUMN_CODE] + "= '" + code + "', " +
 		m_storageColumns[DB_COLUMN_DATE] + "= '" + dateS.Mid(0, 7) + "', " +
+		m_storageColumns[DB_COLUMN_DNG_LVL] + "= '" + codeDng + "', " +
 		m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + "= '" + amount +
 		"' WHERE " + m_storageColumns[DB_COLUMN_CODE] + " = '" + oldCode + "' AND " +
 		m_storageColumns[DB_COLUMN_INITIAL] + " = '1'"));
@@ -1548,6 +1603,7 @@ bool DBMain::editInitStorageEntry(const wxString& code, const wxDateTime& date, 
 	ExecuteUpdate(wxS("UPDATE " + GetActivePasspTable() + " SET " +
 		m_passpColumns[DB_COLUMN_CODE] + "= '" + code + "', " +
 		m_passpColumns[DB_COLUMN_DATE] + "= '" + dateS + "', " +
+		m_passpColumns[DB_COLUMN_DNG_LVL] + "= '" + codeDng + "', " +
 		m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL] + "= '" + amount +
 		"' WHERE " + m_passpColumns[DB_COLUMN_CODE] + " = '" + oldCode + "' AND " +
 		m_passpColumns[DB_COLUMN_INITIAL] + " = '1'"));
@@ -1645,8 +1701,16 @@ void DBMain::getPod10TableInfo(pod10Info &data, const wxString &date)
 	{
 		data.emptyPod10StructInfo();
 	}
+	m_rs = ExecuteQuery(wxS("SELECT DISTINCT " + m_storageColumns[DB_COLUMN_CODE] + " FROM " + GetActiveStrgTable()));
+	std::vector<wxString> distinctCodes{};
+	while (m_rs.NextRow())
+	{
+		distinctCodes.push_back(m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]));
+	}
+	m_rs.Finalize();
+
 	m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Date LIKE '%" + date + "%' AND ("
-		+ m_storageColumns[DB_COLUMN_INITIAL] + " IS NULL OR "+m_storageColumns[DB_COLUMN_INITIAL] + " = '') ORDER BY " + m_storageColumns[DB_COLUMN_CODE]));
+		+ m_storageColumns[DB_COLUMN_INITIAL] + " IS NULL OR " + m_storageColumns[DB_COLUMN_INITIAL] + " = '')"));
 	while (m_rs.NextRow())
 	{
 		data.date = m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]);
@@ -1667,9 +1731,46 @@ void DBMain::getPod10TableInfo(pod10Info &data, const wxString &date)
 		data.wasteNorm.Add(m_rs.GetDouble(m_storageColumns[DB_COLUMN_WASTE_NORM]));
 		data.structuralUnit.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_STRUCTURAL_POD10]));
 		data.codeDangerLVL.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DNG_LVL]));
+		distinctCodes.erase(std::find(distinctCodes.begin(), distinctCodes.end(), m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE])));
 		count++;
 	}
+	m_rs.Finalize();
+	//we gather all previous entrys that have sotrage amount
+	wxString query = "SELECT MAX("+ m_storageColumns[DB_COLUMN_DATE] +"),* FROM " + GetActiveStrgTable() 
+		+ " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " IN (";
+	for (const auto& it : distinctCodes)
+	{
+		query += it + ", ";
+	}
+	query.RemoveLast(2);
+	query += ") AND " + m_storageColumns[DB_COLUMN_DATE] + " < '" + date + "' GROUP BY " + m_storageColumns[DB_COLUMN_CODE];
+	m_rs = ExecuteQuery(query);
+	while (m_rs.NextRow())
+	{
+		if (m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) > 0)
+		{
+			data.code.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]));
+			data.codeDangerLVL.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DNG_LVL]));
+			data.amountSelfstorageFull.Add(m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
+			data.amountFormed.Add(0.0);
+			data.amountReOrg.Add(0.0);
+			data.amountRePhys.Add(0.0);
+			data.amountUsed.Add(0.0);
+			data.amountDefused.Add(0.0);
+			data.amountSelfstorage.Add(0.0);
+			data.amountBurial.Add(0.0);
+			data.amountTransferUsed.Add(0.0);
+			data.amountTransferDefused.Add(0.0);
+			data.amountTransferStorage.Add(0.0);
+			data.amountTransferBurial.Add(0.0);
+			data.wasteNorm.Add(0.0);
+			data.structuralUnit.Add("");
+			++count;
+		}
+	}
+	m_rs.Finalize();
 	data.rowCount = std::move(count);
+	data.sortByCode(0, data.code.size()-1);
 	m_rs.Finalize();
 
 
