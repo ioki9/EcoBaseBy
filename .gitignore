@@ -394,7 +394,8 @@ CMake
 3rd/wxpdfdoc/lib
 3rd/wxsqlite3/lib
 
-.vscode/
+.vscode
+.vscode/settings.json
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
