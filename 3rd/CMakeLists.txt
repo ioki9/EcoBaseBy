@@ -34,7 +34,7 @@ if(WIN32)
 						  ${wxWidgets_LIB_DIR}/wxbase${wxWidgetsDllVerPrefix}ud_xml_vc_${wxWidgetsVendor}.dll
 						  ${wxSQLite3LibLoc}/vc_dll/wxsqlite3d.dll
 						  ${wxPDFDocLibLoc}/vc_dll/wxpdfdocd.dll
-						  DESTINATION ${PROJECT_NAME})
+						  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 		else()
 			set(wxWidgets_CONFIGURATION mswu)
 			set_property(TARGET wxSQLite3Lib PROPERTY IMPORTED_LOCATION "${wxSQLite3LibLoc}/vc_dll/wxsqlite3.dll")
@@ -51,7 +51,7 @@ if(WIN32)
 						  ${wxWidgets_LIB_DIR}/wxbase${wxWidgetsDllVerPrefix}u_xml_vc_${wxWidgetsVendor}.dll
 						  ${wxSQLite3LibLoc}/vc_dll/wxsqlite3.dll
 						  ${wxPDFDocLibLoc}/vc_dll/wxpdfdoc.dll
-						  DESTINATION ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME})
+						  DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 		endif()
 	else()
 		add_library(wxSQLite3Lib STATIC IMPORTED)
