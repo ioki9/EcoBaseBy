@@ -9,24 +9,24 @@ void PDF_Journal::drawHeader()
 
 	double hd_h{ 30.0 };
 	AddPage();
-	wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_ROMAN).Bold().Encoding(wxFONTENCODING_CP1251));
+	wxFont font(wxFontInfo(10).FaceName("Times New Roman").Bold().Encoding(wxFONTENCODING_CP1251));
 	SetFont(font);
-	tableHeaderCell(w[0], hd_h, wxS("Регистра-\nционый номер сопроводи-\nтельного паспорта"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[1], hd_h, wxS("Дата перевозки отходов произ-\nводства"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[2], hd_h, wxS("Перевозчик отходов производства, номер и дата договора на передачу отходов производства"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[3], hd_h, wxS("Получатель отходов\nпроизводства "), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[4], hd_h, wxS("Код\nотходов"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[5], hd_h, wxS("Класс\nопасности"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[0], hd_h, wxS("Р РµРіРёСЃС‚СЂР°-\nС†РёРѕРЅС‹Р№ РЅРѕРјРµСЂ СЃРѕРїСЂРѕРІРѕРґРё-\nС‚РµР»СЊРЅРѕРіРѕ РїР°СЃРїРѕСЂС‚Р°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[1], hd_h, wxS("Р”Р°С‚Р° РїРµСЂРµРІРѕР·РєРё РѕС‚С…РѕРґРѕРІ РїСЂРѕРёР·-\nРІРѕРґСЃС‚РІР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[2], hd_h, wxS("РџРµСЂРµРІРѕР·С‡РёРє РѕС‚С…РѕРґРѕРІ РїСЂРѕРёР·РІРѕРґСЃС‚РІР°, РЅРѕРјРµСЂ Рё РґР°С‚Р° РґРѕРіРѕРІРѕСЂР° РЅР° РїРµСЂРµРґР°С‡Сѓ РѕС‚С…РѕРґРѕРІ РїСЂРѕРёР·РІРѕРґСЃС‚РІР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[3], hd_h, wxS("РџРѕР»СѓС‡Р°С‚РµР»СЊ РѕС‚С…РѕРґРѕРІ\nРїСЂРѕРёР·РІРѕРґСЃС‚РІР° "), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[4], hd_h, wxS("РљРѕРґ\nРѕС‚С…РѕРґРѕРІ"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[5], hd_h, wxS("РљР»Р°СЃСЃ\nРѕРїР°СЃРЅРѕСЃС‚Рё"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	double currentX{ GetX() };
-	tableHeaderCell(w[6] + w[7] + w[8] + w[9], hd_h /3.0, wxS("Передано отходов производства"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[6] + w[7] + w[8] + w[9], hd_h /3.0, wxS("РџРµСЂРµРґР°РЅРѕ РѕС‚С…РѕРґРѕРІ РїСЂРѕРёР·РІРѕРґСЃС‚РІР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	SetXY(currentX, GetY() + hd_h / 3);
-	tableHeaderCell(w[7], hd_h / 1.5, wxS("на использо-\nвание, тонн"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[7], hd_h / 1.5, wxS("на обезврежи-\nвание, тонн"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[8], hd_h / 1.5, wxS("на захороне-\nние, тонн"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
-	tableHeaderCell(w[9], hd_h / 1.5, wxS("на хранение, тонн"), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[7], hd_h / 1.5, wxS("РЅР° РёСЃРїРѕР»СЊР·Рѕ-\nРІР°РЅРёРµ, С‚РѕРЅРЅ"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[7], hd_h / 1.5, wxS("РЅР° РѕР±РµР·РІСЂРµР¶Рё-\nРІР°РЅРёРµ, С‚РѕРЅРЅ"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[8], hd_h / 1.5, wxS("РЅР° Р·Р°С…РѕСЂРѕРЅРµ-\nРЅРёРµ, С‚РѕРЅРЅ"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	tableHeaderCell(w[9], hd_h / 1.5, wxS("РЅР° С…СЂР°РЅРµРЅРёРµ, С‚РѕРЅРЅ"), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
 	font.SetWeight(wxFONTWEIGHT_NORMAL);
 	SetFont(font);
-	for (size_t i{ 0 }; i < 10; i++)
+	for (int i{ 0 }; i < 10; i++)
 	{
 		wxString hRowNum = wxString::Format(wxS("%i"), i + 1);
 		Cell(w[i], 4, hRowNum, wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
@@ -37,7 +37,7 @@ void PDF_Journal::Header()
 {
 	if (PageNo() != 1)
 	{
-		for (size_t i{ 0 }; i < 10; i++)
+		for (int i{ 0 }; i < 10; i++)
 		{
 			wxString hRowNum = wxString::Format(wxS("%i"), i + 1);
 			Cell(w[i], 4, hRowNum, wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
@@ -58,7 +58,7 @@ void PDF_Journal::drawTable()
 	int dateDiff{ 0 };
 
 	rowData.reserve(10);
-	for (size_t row{ 0 }; row < m_data.date.GetCount(); ++row)
+	for (int row{ 0 }; row < m_data.date.GetCount(); ++row)
 	{
 		if (m_data.amountTransferUsed[row] != 0.0)
 			m_amUsed = m_data.amountTransferUsed[row];
@@ -82,7 +82,7 @@ void PDF_Journal::drawTable()
 
 		if (m_data.codeDangerLVL.empty())
 			m_precision = 3;
-		else if (m_data.codeDangerLVL[row][0] == '4' || m_data.codeDangerLVL[row][0] == 'н')
+		else if (m_data.codeDangerLVL[row][0] == '4' || m_data.codeDangerLVL[row][0] == 'РЅ')
 			m_precision = 2;
 		else
 			m_precision = 3;
@@ -158,36 +158,36 @@ void PDF_Journal::resultData(std::array<std::array<double, 5>, 4>& value, const 
 
 void PDF_Journal::drawResultRow(const std::array<std::array<double, 5>, 4>& value)
 {
-	wxFont font(wxFontInfo(10).Family(wxFONTFAMILY_ROMAN).Bold().Encoding(wxFONTENCODING_CP1251));
+	wxFont font(wxFontInfo(10).FaceName("Times New Roman").Bold().Encoding(wxFONTENCODING_CP1251));
 	SetFont(font);
-	Cell(w[0] + w[1] + w[2] + w[3] + w[4], h * 5, wxS("Итого передано в налоговый период"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	Cell(w[0] + w[1] + w[2] + w[3] + w[4], h * 5, wxS("РС‚РѕРіРѕ РїРµСЂРµРґР°РЅРѕ РІ РЅР°Р»РѕРіРѕРІС‹Р№ РїРµСЂРёРѕРґ"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	double x{ GetX() };
 
-	Cell(w[5], h, wxS("1-го класса"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	Cell(w[5], h, wxS("1-РіРѕ РєР»Р°СЃСЃР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[6], h, getAmountString(value[0][0], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[7], h, getAmountString(value[1][0], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[8], h, getAmountString(value[2][0], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[9], h, getAmountString(value[3][0],3), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
 	SetXY(x, GetY());
-	Cell(w[5], h, wxS("2-го класса"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	Cell(w[5], h, wxS("2-РіРѕ РєР»Р°СЃСЃР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[6], h, getAmountString(value[0][1], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[7], h, getAmountString(value[1][1], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[8], h, getAmountString(value[2][1], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[9], h, getAmountString(value[3][1], 3), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
 	SetXY(x, GetY());
-	Cell(w[5], h, wxS("3-го класса"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	Cell(w[5], h, wxS("3-РіРѕ РєР»Р°СЃСЃР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[6], h, getAmountString(value[0][2], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[7], h, getAmountString(value[1][2], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[8], h, getAmountString(value[2][2], 3), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[9], h, getAmountString(value[3][2], 3), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
 	SetXY(x, GetY());
-	Cell(w[5], h, wxS("4-го класса"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	Cell(w[5], h, wxS("4-РіРѕ РєР»Р°СЃСЃР°"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[6], h, getAmountString(value[0][3], 2), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[7], h, getAmountString(value[1][3], 2), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[8], h, getAmountString(value[2][3], 2), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[9], h, getAmountString(value[3][3], 2), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
 	SetXY(x, GetY());
-	Cell(w[5], h, wxS("неопасных"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
+	Cell(w[5], h, wxS("РЅРµРѕРїР°СЃРЅС‹С…"), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[6], h, getAmountString(value[0][4], 2), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[7], h, getAmountString(value[1][4], 2), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
 	Cell(w[8], h, getAmountString(value[2][4], 2), wxPDF_BORDER_FRAME, 0, wxPDF_ALIGN_CENTER);
@@ -200,15 +200,15 @@ void PDF_Journal::drawResultRow(const std::array<std::array<double, 5>, 4>& valu
 
 void PDF_Journal::createJournal(const wxString& startDate, const wxString& endDate, const wxString& orgName)
 {
-	if (!wxDirExists(Settings::GetPdfSavePath() + "\\" + orgName))
-		wxFileName::Mkdir(Settings::GetPdfSavePath() + "\\" + orgName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	if (!wxDirExists(Settings::GetPdfSavePath() + "/" + orgName))
+		wxFileName::Mkdir(Settings::GetPdfSavePath() + "/" + orgName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	m_dataBase->getJournalTableInfo(m_data, startDate, endDate);
 	if (m_data.date.empty())
 	{
-		wxMessageBox("Отсутствуют данные для создания журнала.");
+		wxMessageBox(wxString::FromUTF8("РћС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ РґР°РЅРЅС‹Рµ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ Р¶СѓСЂРЅР°Р»Р°."));
 		return;
 	}
 	drawTable();
-	SaveAsFile(Settings::GetPdfSavePath() + "\\" + orgName + wxS("\\Журнал паспортов.pdf"));
+	SaveAsFile(Settings::GetPdfSavePath() + "/" + orgName + wxS("/Р–СѓСЂРЅР°Р» РїР°СЃРїРѕСЂС‚РѕРІ.pdf"));
 }
 

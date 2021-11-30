@@ -2,16 +2,19 @@
 #include "Utility/CustomEvents.h"
 
 using namespace std;
-wxFileInputStream Settings::cfgInStream(Settings::GetCfgFile());
 wxString Settings::m_activeOrgName = "Default";
 int Settings::m_activeOrgID = -1;
 bool Settings::m_isInitialized = false;
-vector<organization> Settings::m_organizations{};
+vector<organization> Settings::m_organizations{}; 
 int Settings::m_activeUnitID = -1;
 int Settings::m_lastAddedOrgID = -1;
-wxFileConfig Settings::pConfig(Settings::cfgInStream);
-wxString Settings::m_pdfSavePath{ wxGetCwd() + "/Documents"};
+wxString Settings::m_pdfSavePath{""};
 std::int32_t Settings::m_gridActiveColumns = 0xffffffff;
+
+//we need to reinitialize our members since they can't be reassigned and we need to wait for wxwidgets to get initialized first
+void Settings::initAllVar()
+{
+}
 
 vector<organization>* Settings::GetOrgArrayPtr()
 {
@@ -20,6 +23,8 @@ vector<organization>* Settings::GetOrgArrayPtr()
 
 void Settings::SetPdfSavePath(const wxString& path)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	m_pdfSavePath = path;
 	pConfig.Write(wxS("pdfSavePath"), m_pdfSavePath);
 	pConfig.SetPath(wxS("/"));
@@ -39,6 +44,8 @@ std::int32_t Settings::GetGridActiveCol()
 
 void Settings::SaveGridActiveCol(std::int32_t activeCol)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	m_gridActiveColumns = activeCol;
 	pConfig.Write(wxS("activeColumns"), m_gridActiveColumns);
 	pConfig.SetPath(wxS("/"));
@@ -46,8 +53,10 @@ void Settings::SaveGridActiveCol(std::int32_t activeCol)
 	pConfig.Save(out);
 }
 
-bool Settings::setActiveOrg(int orgID,wxWindow* reciever)
+bool Settings::setActiveOrg(int orgID,wxWindow* receiver)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.SetPath(wxS("/organizations"));
 	if (!pConfig.Exists(wxString::Format("%i", orgID)))
 	{
@@ -61,7 +70,7 @@ bool Settings::setActiveOrg(int orgID,wxWindow* reciever)
 	pConfig.SetPath(wxS("/"));
 	wxFileOutputStream out(Settings::GetCfgFile());
 	pConfig.Save(out);
-	SendEventActiveOrgChanged(reciever);
+	SendEventActiveOrgChanged(receiver);
 	return true;
 }
 
@@ -70,14 +79,16 @@ int Settings::getActiveOrg()
 	return m_activeOrgID;
 }
 
-bool Settings::setActiveUnit(int unitID,wxWindow* reciever)
+bool Settings::setActiveUnit(int unitID,wxWindow* receiver)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	if (!pConfig.Exists((wxS("/organizations/" + wxString::Format("%i", m_activeOrgID) + "/units/" + wxString::Format("%i", unitID)))))
 		return false;
 	pConfig.SetPath(wxS("/organizations/" + wxString::Format("%i", m_activeOrgID)));
 	pConfig.Write(wxS("activeUnit"), unitID);
 	m_activeUnitID = unitID;
-	SendEventActiveUnitChanged(reciever);
+	SendEventActiveUnitChanged(receiver);
 	pConfig.SetPath(wxS("/"));
 	return true;
 }
@@ -110,6 +121,8 @@ wxString Settings::getActiveOrgName()
 
 void Settings::addNewOrg(const organization& org)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.SetPath(wxS("/organizations"));
 	pConfig.Write(wxS("lastAddedID"), org.id);
 	pConfig.SetPath(wxS("/organizations/" + wxString::Format("%i", org.id)));
@@ -132,6 +145,8 @@ void Settings::addNewOrg(const organization& org)
 
 void Settings::deleteOrg(const organization& org)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.SetPath(wxS("/organizations/"));
 	pConfig.DeleteGroup(wxString::Format("%i", org.id));
 	size_t count{ 0 };
@@ -147,26 +162,28 @@ void Settings::deleteOrg(const organization& org)
 	pConfig.Save(out);
 }
 
-void Settings::addNewOrgAndNotify(const organization& org, wxWindow* reciever)
+void Settings::addNewOrgAndNotify(const organization& org, wxWindow* receiver)
 {
 	addNewOrg(org);
-	SendEventOrgChanged(reciever);
+	SendEventOrgChanged(receiver);
 }
 
-void Settings::editOrgAndNotify(const organization& org, wxWindow* reciever)
+void Settings::editOrgAndNotify(const organization& org, wxWindow* receiver)
 {
 	editOrg(org);
-	SendEventOrgChanged(reciever);
+	SendEventOrgChanged(receiver);
 }
 
-void Settings::deleteOrgAndNotify(const organization& org, wxWindow* reciever)
+void Settings::deleteOrgAndNotify(const organization& org, wxWindow* receiver)
 {
 	deleteOrg(org);
-	SendEventOrgChanged(reciever);
+	SendEventOrgChanged(receiver);
 }
 
 void Settings::editOrg(const organization& org)
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.SetPath(wxS("/organizations/" + wxString::Format("%i", org.id)));
 	pConfig.Write(wxS("name"), org.name);
 	pConfig.Write(wxS("address"), org.address);
@@ -197,10 +214,11 @@ void Settings::editOrg(const organization& org)
 
 void Settings::LoadState()
 {
-
 	if (m_isInitialized)
 		return;
-		
+	
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.Read(wxS("pdfSavePath"), &m_pdfSavePath, wxGetCwd() + "/Documents");
 	pConfig.Read(wxS("activeColumns"), &m_gridActiveColumns, 0xffffffff);
 	m_organizations = Settings::getAllOrgAndUnitNames();
@@ -208,7 +226,7 @@ void Settings::LoadState()
 	pConfig.Read(wxS("active"), &m_activeOrgID, -1);
 	pConfig.Read(wxS("lastAddedID"), &m_lastAddedOrgID, -1);
 	pConfig.SetPath("/organizations/" + wxString::Format("%i", m_activeOrgID));
-	pConfig.Read(wxS("activeUnit"), &m_activeUnitID,-1);
+	pConfig.Read(wxS("activeUnit"), &m_activeUnitID,0);
 	pConfig.Read(wxS("name"), &m_activeOrgName, "");
 	pConfig.SetPath(wxS("/"));
 	m_isInitialized = true;
@@ -216,6 +234,8 @@ void Settings::LoadState()
 
 void Settings::SaveState()
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.Write(wxS("pdfSavePath"), m_pdfSavePath);
 	pConfig.SetPath(wxS("/"));
 	wxFileOutputStream out(Settings::GetCfgFile());
@@ -229,6 +249,8 @@ int Settings::getLastAddedOrgID()
 
 void Settings::DeleteAllSaveData()
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.DeleteAll();
 	wxFileOutputStream out(Settings::GetCfgFile());
 	pConfig.Save(out);
@@ -261,11 +283,13 @@ wxString Settings::GetCfgFile()
 		wxFile temp;
 		temp.Create(wxGetCwd() + "/config.cfg");
 	}
-	return wxGetCwd() + "/config.cfg";
+	return (wxGetCwd() + "/config.cfg");
 }
 
 vector<organization> Settings::getAllOrgAndUnitNames()
 {
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
 	pConfig.SetPath(wxS("/organizations"));
 	if (pConfig.GetNumberOfGroups() == 0)
 		return vector<organization>();

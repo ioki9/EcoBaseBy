@@ -1,7 +1,7 @@
 #pragma once
 #include <wx/wx.h>
 #include <cstdint>
-
+#include "../GUI_parameters.h"
 class MaterialButton : public wxPanel
 {
 public:
@@ -29,12 +29,12 @@ private:
 	struct rectInfo rectInfo = { 1, 4 };
 	const wxSize m_size;
 
-	std::string m_text;
+	wxString m_text;
 
 	wxColour m_colourText = *wxBLACK;
 	wxColour m_colourBtnBrush = *wxWHITE;
 	wxColour m_colourBtnPen = *wxBLACK;
-	wxFont m_txtFont = wxFontInfo(12).FaceName("Segoe UI").Bold();
+	wxFont m_txtFont {wxFontInfo(13).FaceName("Segoe UI Semibold").Bold()};
 	
 	void OnPaint(wxPaintEvent& evt);
 	void OnLeftDown(wxMouseEvent& evt);

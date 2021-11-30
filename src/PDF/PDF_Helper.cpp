@@ -1,8 +1,7 @@
-#pragma once
 #include "PDF_Helper.h"
 #include <wx/tokenzr.h>
 #include <wx/hashmap.h>
-
+#include <wx/unichar.h>
 
 PDF_Helper::~PDF_Helper()
 {
@@ -126,7 +125,6 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
     wxStringTokenizer tokens(text,wxDEFAULT_DELIMITERS);
     wxArrayString wordsArray{};
     wxString hyphenatedString{};
-
     bool haveHyphens{ false };
     size_t pos{ 0 };
     double spaceWidth{ GetStringWidth(' ') };
@@ -203,7 +201,7 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
                 haveHyphens = false;
                 for (size_t i{ 0 }, offset{ c_hyphString.size() - 1 }; i != minOffset + 1; ++i, --offset)
                 {
-                    if (c_hyphString.at(offset) == '\u00AD')
+                    if (c_hyphString.at(offset).GetValue() == '\u00AD')
                     {
                         haveHyphens = true;
                         ++minOffset;
@@ -213,9 +211,9 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
 
                 for (size_t k{ c_hyphString.size() - minOffset - 1 }; k > 0; --k)
                 {
-                    if (k > c_hyphString.size() - 3 && c_hyphString[k] == '\u00AD')
+                    if (k > c_hyphString.size() - 3 && c_hyphString[k].GetValue() == '\u00AD')
                         continue;
-                    if (c_hyphString[k] == '\u00AD' || c_hyphString[k] == '-')
+                    if (c_hyphString[k].GetValue() == '\u00AD' || c_hyphString[k] == '-')
                     {
                         pos = k;
                         break;
@@ -240,7 +238,7 @@ wxString PDF_Helper::autoCellHyphenation(double w, const wxString& text)
                         wordsArray[word].insert(posNoHyph, '\n');
 
                         if(wordsArray[word][posNoHyph-1] != '-')
-                            wordsArray[word].insert(posNoHyph, '\u00AD');
+                            wordsArray[word].insert(posNoHyph, '-');
                     }
 
                 }
@@ -270,7 +268,7 @@ size_t PDF_Helper::removeUnwantedHyphens(wxString& word, unsigned int pos)
 
     for (size_t ch{ 1 }; ch < wordSize; ++ch)
     {
-        if (word[ch] == '\u00AD')
+        if (word[ch].GetValue() == '\u00AD')
         {
         word.erase(ch, 1);;
         --ch;

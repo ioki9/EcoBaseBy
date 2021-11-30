@@ -8,8 +8,8 @@
 class Dialog_ask : public wxDialog
 {
 public:
-	Dialog_ask(wxWindow* parent, const wxString& title, const wxString& text, const wxString& acptBtnLabel = "”‰‡ÎËÚ¸",
-		const wxColour& acptBtnColour = wxColour(165, 42, 42), const wxString& cancelBtnLabel = "ŒÚÏÂÌ‡", 
+	Dialog_ask(wxWindow* parent, const wxString& title, const wxString& text, const wxString& acptBtnLabel = "–£–¥–∞–ª–∏—Ç—å",
+		const wxColour& acptBtnColour = wxColour(165, 42, 42), const wxString& cancelBtnLabel = "–û—Ç–º–µ–Ω–∞", 
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400,220), long style = wxDEFAULT_DIALOG_STYLE & ~(wxDEFAULT_DIALOG_STYLE), 
 		const wxString& name = wxDialogNameStr);
 	~Dialog_ask();
@@ -27,4 +27,6 @@ private:
 	void OnPaint(wxPaintEvent& evt);
 
 };
+
+
 

@@ -1,4 +1,3 @@
-#pragma once
 #include "DBMain.h"
 #include "DBColumnEnums.h"
 #include <stdlib.h>
@@ -212,21 +211,21 @@ wxString DBMain::GetMovmStringFromDepend(const wxString& dependency)
 	}
 
 	if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_BURIAL])!="")
-		movm = "Çàõîðîíåíî";
+		movm = "Ð—Ð°Ñ…Ð¾Ñ€Ð¾Ð½ÐµÐ½Ð¾";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_USED]) != "")
-		movm = "Èñïîëüçîâàíî";
+		movm = "Ð˜ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¾";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_DEFUSED]) != "")
-		movm = "Îáåçâðåæåíî";
+		movm = "ÐžÐ±ÐµÐ·Ð²Ñ€ÐµÐ¶ÐµÐ½Ð¾";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]) != "")
-		movm = "Íàïðàâëåíî íà õðàíåíèå";
+		movm = "ÐÐ°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð¾ Ð½Ð° Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]) != "")
-		movm = "Ïåðåäàíî íà çàõîðîíåíèå";
+		movm = "ÐŸÐµÑ€ÐµÐ´Ð°Ð½Ð¾ Ð½Ð° Ð·Ð°Ñ…Ð¾Ñ€Ð¾Ð½ÐµÐ½Ð¸Ðµ";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]) != "")
-		movm = "Ïåðåäàíî íà èñïîëüçîâàíèå";
+		movm = "ÐŸÐµÑ€ÐµÐ´Ð°Ð½Ð¾ Ð½Ð° Ð¸ÑÐ¿Ð¾Ð»ÑŒÐ·Ð¾Ð²Ð°Ð½Ð¸Ðµ";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]) != "")
-		movm = "Ïåðåäàíî íà îáåçâðåæèâàíèå";
+		movm = "ÐŸÐµÑ€ÐµÐ´Ð°Ð½Ð¾ Ð½Ð° Ð¾Ð±ÐµÐ·Ð²Ñ€ÐµÐ¶Ð¸Ð²Ð°Ð½Ð¸Ðµ";
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]) != "")
-		movm = "Ïåðåäàíî íà õðàíåíèå";
+		movm = "ÐŸÐµÑ€ÐµÐ´Ð°Ð½Ð¾ Ð½Ð° Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ";
 	m_rs.Finalize();
 	return movm;
 }
@@ -463,8 +462,8 @@ wxString DBMain::checkFullStorage(const wxString& code)
 	}
 	else
 	{
-		wxString string{ "Êîä îòõîäà: " + m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]) 
-			+ "\nÄàòà: " + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + "\nÇíà÷åíèå: " 
+		wxString string{ "ÐšÐ¾Ð´ Ð¾Ñ‚Ñ…Ð¾Ð´Ð°: " + m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]) 
+			+ "\nÐ”Ð°Ñ‚Ð°: " + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + "\nÐ—Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ: " 
 			+ m_rs.GetAsString(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) };
 		m_rs.Finalize();
 		return string;
@@ -916,7 +915,7 @@ bool DBMain::editEntry(const addPageInfo& info, bool willHaveDepend)
 					+ info.tamountUsedUnit + "', '" + info.tamountDefusedUnit + "', '" + info.tamountStorageUnit
 					+ "', '" + info.tamountBurialUnit + "', '" + info.structUnit10 + "', '" + info.wasteNorm + "', '" + amountStorageFull + "', '" + info.codeDngLvl + "')"));
 				int idTemp = ExecuteScalar(wxS("SELECT max(ROWID) FROM " + GetActiveStrgTable()));
-				storageId = wxString::Format("%i", idTemp);
+				storageId = wxString::Format("%ld", idTemp);
 				break;
 			}
 			else
@@ -937,7 +936,7 @@ bool DBMain::editEntry(const addPageInfo& info, bool willHaveDepend)
 					+ info.tamountUsed + "', '" + info.tamountDefused + "', '" + info.tamountStorage
 					+ "', '" + info.tamountBurial + "', '" + info.structUnit10 + "', '" + info.wasteNorm + "', '" + amountStorageFull + "', '" + info.codeDngLvl + "')"));
 				int idTemp = ExecuteScalar(wxS("SELECT max(ROWID) FROM " + GetActiveStrgTable()));
-				storageId = wxString::Format("%i", idTemp);
+				storageId = wxString::Format("%ld", idTemp);
 				break;
 			}
 
@@ -1077,7 +1076,7 @@ bool DBMain::editEntry(const addPageInfo& info, bool willHaveDepend)
 				+ "', '" + amountStorageFull + "', '" + info.actveRecieverUnitID + "', '2/" + info.id + "', '" + storageId + "')"));
 
 			int idTemp = ExecuteScalar(wxS("SELECT max(ROWID) FROM " + GetActivePasspTable()));
-			wxString currentRowId = wxString::Format("%i", idTemp);
+			wxString currentRowId = wxString::Format("%ld", idTemp);
 
 			ExecuteUpdate(wxS("UPDATE " + GetActivePasspTable() + " SET "
 				+ m_passpColumns[DB_COLUMN_OWNER] + " = '" + info.owner + "', "
@@ -1292,7 +1291,7 @@ bool DBMain::insertNewEntry(const addPageInfo& info)
 				+ info.tamountUsed + "', '" + info.tamountDefused + "', '" + info.tamountStorage
 				+ "', '" + info.tamountBurial + "', '" + info.structUnit10 + "', '" + info.wasteNorm + "', '" + amountStorageFull + "', '" + info.codeDngLvl + "')"));
 			idTemp = ExecuteScalar(wxS("SELECT max(ROWID) FROM " + GetActiveStrgTable()));
-			storageId = wxString::Format("%i", idTemp);
+			storageId = wxString::Format("%ld", idTemp);
 			this->updateSubsqPOD10Strg(info.code, info.date, wxString::Format("%f", diffrAm), storageId);
 			break;
 		}
@@ -1450,7 +1449,7 @@ bool DBMain::insertNewDoubleEntry(const addPageInfo& info)
 
 
 	idTemp = ExecuteScalar(wxS("SELECT max(ROWID) FROM " + GetActivePasspTable()));
-	wxString passpId = wxString::Format("%i", idTemp + 2);
+	wxString passpId = wxString::Format("%ld", idTemp + 2);
 	//inserting two new entries for each structural unit
 	ExecuteUpdate(wxS("INSERT INTO " + GetActivePasspTable() + " ("
 		+ m_passpColumns[DB_COLUMN_REGNUM] + ", " + m_passpColumns[DB_COLUMN_DATE] +
@@ -1470,7 +1469,7 @@ bool DBMain::insertNewDoubleEntry(const addPageInfo& info)
 		+ "', '" + info.tamountBurialUnit + "', '" + info.structUnit10 + "', '" + info.entryDate + "', '" + info.wasteNorm
 		+ "', '" + amountStorageFull + "', '" + info.actveRecieverUnitID + "', '2/" + passpId + "', '" + storageId + "', '" + info.codeDngLvl + "')"));
 
-	passpId = wxString::Format("%i", idTemp + 1);
+	passpId = wxString::Format("%ld", idTemp + 1);
 	ExecuteUpdate(wxS("INSERT INTO " + GetActivePasspTable() + " ("
 		+ m_passpColumns[DB_COLUMN_REGNUM] + ", " + m_passpColumns[DB_COLUMN_DATE] +
 		", " + m_passpColumns[DB_COLUMN_OWNER] + ", " + m_passpColumns[DB_COLUMN_TRANSPORT] +
@@ -1735,40 +1734,44 @@ void DBMain::getPod10TableInfo(pod10Info &data, const wxString &date)
 		count++;
 	}
 	m_rs.Finalize();
-	//we gather all previous entrys that have sotrage amount
-	wxString query = "SELECT MAX("+ m_storageColumns[DB_COLUMN_DATE] +"),* FROM " + GetActiveStrgTable() 
-		+ " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " IN (";
-	for (const auto& it : distinctCodes)
+	if(!distinctCodes.empty())
 	{
-		query += it + ", ";
-	}
-	query.RemoveLast(2);
-	query += ") AND " + m_storageColumns[DB_COLUMN_DATE] + " < '" + date + "' GROUP BY " + m_storageColumns[DB_COLUMN_CODE];
-	m_rs = ExecuteQuery(query);
-	while (m_rs.NextRow())
-	{
-		if (m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) > 0)
+				//we gather all previous entrys that have sotrage amount
+		wxString query = "SELECT MAX("+ m_storageColumns[DB_COLUMN_DATE] +"),* FROM " + GetActiveStrgTable() 
+			+ " WHERE " + m_storageColumns[DB_COLUMN_CODE] + " IN (";
+		for (const auto& it : distinctCodes)
 		{
-			data.code.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]));
-			data.codeDangerLVL.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DNG_LVL]));
-			data.amountSelfstorageFull.Add(m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
-			data.amountFormed.Add(0.0);
-			data.amountReOrg.Add(0.0);
-			data.amountRePhys.Add(0.0);
-			data.amountUsed.Add(0.0);
-			data.amountDefused.Add(0.0);
-			data.amountSelfstorage.Add(0.0);
-			data.amountBurial.Add(0.0);
-			data.amountTransferUsed.Add(0.0);
-			data.amountTransferDefused.Add(0.0);
-			data.amountTransferStorage.Add(0.0);
-			data.amountTransferBurial.Add(0.0);
-			data.wasteNorm.Add(0.0);
-			data.structuralUnit.Add("");
-			++count;
+			query += it + ", ";
 		}
+		query.RemoveLast(2);
+		query += ") AND " + m_storageColumns[DB_COLUMN_DATE] + " < '" + date + "' GROUP BY " + m_storageColumns[DB_COLUMN_CODE];
+		m_rs = ExecuteQuery(query);
+		while (m_rs.NextRow())
+		{
+			if (m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) > 0)
+			{
+				data.code.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]));
+				data.codeDangerLVL.Add(m_rs.GetAsString(m_storageColumns[DB_COLUMN_DNG_LVL]));
+				data.amountSelfstorageFull.Add(m_rs.GetDouble(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]));
+				data.amountFormed.Add(0.0);
+				data.amountReOrg.Add(0.0);
+				data.amountRePhys.Add(0.0);
+				data.amountUsed.Add(0.0);
+				data.amountDefused.Add(0.0);
+				data.amountSelfstorage.Add(0.0);
+				data.amountBurial.Add(0.0);
+				data.amountTransferUsed.Add(0.0);
+				data.amountTransferDefused.Add(0.0);
+				data.amountTransferStorage.Add(0.0);
+				data.amountTransferBurial.Add(0.0);
+				data.wasteNorm.Add(0.0);
+				data.structuralUnit.Add("");
+				++count;
+			}
+		}
+		m_rs.Finalize();
 	}
-	m_rs.Finalize();
+
 	data.rowCount = std::move(count);
 	data.sortByCode(0, data.code.size()-1);
 	m_rs.Finalize();
@@ -2123,19 +2126,20 @@ bool DBMain::AskToEnterAllEntryDates(const wxString& startDate, const wxString& 
 		
 		if (m_rs.GetAsString(m_storageColumns[DB_COLUMN_ENTRYDATE]) == "")
 		{
-			wxDialog dlg(nullptr, wxID_ANY, "Äîáàâèòü äàòó âíåñåíèÿ ó÷åòíîé çàïèñè", wxDefaultPosition, wxSize(370, 200), wxDEFAULT_DIALOG_STYLE);
+			wxDialog dlg(nullptr, wxID_ANY, wxString::FromUTF8("Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð´Ð°Ñ‚Ñƒ Ð²Ð½ÐµÑÐµÐ½Ð¸Ñ ÑƒÑ‡ÐµÑ‚Ð½Ð¾Ð¹ Ð·Ð°Ð¿Ð¸ÑÐ¸"), wxDefaultPosition, wxSize(370, 200), wxDEFAULT_DIALOG_STYLE);
 			wxPanel* main = new wxPanel(&dlg);
 			main->SetBackgroundColour(*wxWHITE);
 			main->SetFont(gui_MainFont);
-			wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Äàòà âíåñåíèÿ ó÷. çàïèñè â êíèãó ÏÎÄ10\n íà äàòó \"" + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + "\":");
+			wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, 
+			wxString::FromUTF8("Ð”Ð°Ñ‚Ð° Ð²Ð½ÐµÑÐµÐ½Ð¸Ñ ÑƒÑ‡. Ð·Ð°Ð¿Ð¸ÑÐ¸ Ð² ÐºÐ½Ð¸Ð³Ñƒ ÐŸÐžÐ”10\n Ð½Ð° Ð´Ð°Ñ‚Ñƒ \"") + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + "\":");
+			staticDate->SetForegroundColour(*wxBLACK);
 			wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY, wxDefaultDateTime, wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
-
-			MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Îòìåíà", true, wxDefaultPosition, wxSize(70, 35));
+			MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("ÐžÑ‚Ð¼ÐµÐ½Ð°"), true, wxDefaultPosition, wxSize(70, 35));
 			btnNO->SetButtonLineColour(*wxWHITE);
 			btnNO->SetLabelColour(wxColour(90, 90, 90));
 			btnNO->SetButtonShadow(false);
 			btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-			MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Äîáàâèòü", true, wxDefaultPosition, wxSize(80, 35));
+			MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ"), true, wxDefaultPosition, wxSize(80, 35));
 			btnYES->SetButtonLineColour(*wxWHITE);
 			btnYES->SetLabelColour(gui_MainColour);
 			btnYES->SetButtonShadow(false);

@@ -22,18 +22,18 @@ struct organization
 class Settings
 {
 public:
-	static bool setActiveOrg(int orgID, wxWindow* reciever);
+	static bool setActiveOrg(int orgID, wxWindow* receiver);
 	static int getActiveOrg();
-	static bool setActiveUnit(int unitID, wxWindow* reciever);
+	static bool setActiveUnit(int unitID, wxWindow* receiver);
 	static int getActiveUnitID();
 	static wxString getActiveUnitString();
 	static wxString getActiveOrgName();
 	static void addNewOrg(const organization& org);
 	static void editOrg(const organization& org);
 	static void deleteOrg(const organization& org);
-	static void addNewOrgAndNotify(const organization& org, wxWindow* reciever);
-	static void editOrgAndNotify(const organization& org, wxWindow* reciever);
-	static void deleteOrgAndNotify(const organization& org, wxWindow* reciever);
+	static void addNewOrgAndNotify(const organization& org, wxWindow* receiver);
+	static void editOrgAndNotify(const organization& org, wxWindow* receiver);
+	static void deleteOrgAndNotify(const organization& org, wxWindow* receiver);
 	static void LoadState();
 	static void SaveState();
 	static int getLastAddedOrgID();
@@ -43,21 +43,25 @@ public:
 	static wxString GetPdfSavePath();
 	static std::int32_t GetGridActiveCol();
 	static void SaveGridActiveCol(std::int32_t activeCol);
+	static void initAllVar();
+
 private:
+	static wxString GetCfgFile();
+	//static wxFileConfig* pConfig;
+	//static wxFileInputStream* cfgInStream;
+	static wxString m_pdfSavePath;
 	static wxString m_activeOrgName;
 	static int m_activeOrgID;
 	static bool m_isInitialized;
 	static int m_lastAddedOrgID;
 	static int m_activeUnitID;
-	static wxString m_pdfSavePath;
-	static void SendEventOrgChanged(wxWindow* reciever);
-	static void SendEventActiveOrgChanged(wxWindow* reciever);
-	static void SendEventActiveUnitChanged(wxWindow* reciever);
-	static wxString GetCfgFile();
+	static void SendEventOrgChanged(wxWindow* receiver);
+	static void SendEventActiveOrgChanged(wxWindow* receiver);
+	static void SendEventActiveUnitChanged(wxWindow* receiver);
+
 	static std::vector<organization> m_organizations;
 	static std::vector<organization> getAllOrgAndUnitNames();
-	static wxFileConfig pConfig;
-	static wxFileInputStream cfgInStream;
+
 	static std::int32_t m_gridActiveColumns;
 
 	Settings() {};

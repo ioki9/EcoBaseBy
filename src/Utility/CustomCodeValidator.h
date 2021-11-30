@@ -4,12 +4,6 @@
 #include "../Database/DBMain.h"
 #include "../Database/DBColumnEnums.h"
 
-namespace kek
-{
-	void onText(wxCommandEvent& evt);
-}
-
-
 class CustomCodeValidator : public wxValidator
 {
 

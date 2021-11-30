@@ -4,7 +4,7 @@ VirtualOrgList::VirtualOrgList(wxWindow* parent, const wxWindowID winid, const w
     : wxListCtrl(parent, winid, pos, size, wxLC_REPORT | wxLC_VIRTUAL), m_items{Settings::GetOrgArrayPtr()}
 {
 	SetItemCount(m_items->size());
-    this->InsertColumn(0, "Название организации", 0, 400);
+    this->InsertColumn(0, "РќР°Р·РІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё", 0, 400);
 }
 
 VirtualOrgList::~VirtualOrgList()

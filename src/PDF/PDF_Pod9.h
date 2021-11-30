@@ -22,7 +22,7 @@ public:
 	~PDF_Pod9() { };
 private:
 
-	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString, wxFONTENCODING_CP1251 };
+	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Times New Roman", wxFONTENCODING_CP1251 };
 	passportPod9Info m_data;
 	wxString m_codename;
 	int m_precision{};

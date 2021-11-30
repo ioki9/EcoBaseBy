@@ -1,5 +1,5 @@
 #pragma once
-#include <wx\wx.h>
+#include <wx/wx.h>
 #include <wx/datetime.h>
 #include "../Controls/MaterialButton.h"
 #include "../Structs.h"

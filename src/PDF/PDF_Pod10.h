@@ -17,7 +17,7 @@ public:
 	}
 	~PDF_Pod10() { delete m_dataBase; };
 private:
-	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, wxEmptyString, wxFONTENCODING_CP1251 };
+	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Times New Roman", wxFONTENCODING_CP1251 };
 	pod10Info m_data;
 	int m_precision{ };
 	bool m_tableLast{ 0 };

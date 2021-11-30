@@ -1,5 +1,4 @@
 #pragma once
-#include <wx\pdfdoc.h>
 #include <vector>
 #include <wx/font.h>
 #include <array>

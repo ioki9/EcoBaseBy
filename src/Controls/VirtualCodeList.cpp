@@ -5,8 +5,8 @@ VirtualCodeList::VirtualCodeList(wxWindow* parent, DBMain *db, const wxPoint& po
 {
 	m_db->getCodeInfoList(m_items);
 	SetItemCount(m_items.size());
-	this->InsertColumn(0, "Êîä îòõîäà",0, 214);
-	this->InsertColumn(1, "Íîðìà îáðàçîâàíèÿ",0,214);
+	this->InsertColumn(0, "ÐšÐ¾Ð´ Ð¾Ñ‚Ñ…Ð¾Ð´Ð°",0, 214);
+	this->InsertColumn(1, "ÐÐ¾Ñ€Ð¼Ð° Ð¾Ð±Ñ€Ð°Ð·Ð¾Ð²Ð°Ð½Ð¸Ñ",0,214);
 }
 
 VirtualCodeList::~VirtualCodeList()
@@ -63,7 +63,7 @@ bool VirtualCodeList::AddNewEntry(const wxString& code, const wxString& wasteNor
 
 bool VirtualCodeList::DeleteSelectedEntry()
 {
-	if (int selected{ GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED) }; selected != -1)
+	if (long selected{ GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED) }; selected != -1)
 	{
 		if (m_db->DeleteCodeInfoEntry(m_items[selected][0]))
 		{
@@ -78,7 +78,7 @@ bool VirtualCodeList::DeleteSelectedEntry()
 
 bool VirtualCodeList::EditSelectedEntry(const wxString& code, const wxString& wasteNorm)
 {
-	if (int selected{ GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED) }; selected != -1)
+	if (long selected{ GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED) }; selected != -1)
 	{
 		if (m_db->EditCodeInfoEntry(m_items[selected][0],code, wasteNorm))
 		{

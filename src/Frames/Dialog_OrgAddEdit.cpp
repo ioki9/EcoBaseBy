@@ -26,7 +26,7 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	wxString headerStr, unpStr, adressStr, nameStr;
 	if (!m_openedAsEdit)
 	{
-		headerStr = "Добавить организацию";
+		headerStr = wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ РѕСЂРіР°РЅРёР·Р°С†РёСЋ");
 		unpStr = "";
 		adressStr = "";
 		nameStr = "";
@@ -36,7 +36,7 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 
 	else
 	{
-		headerStr = "Измененить данные организации";
+		headerStr = wxString::FromUTF8("РР·РјРµРЅРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РѕСЂРіР°РЅРёР·Р°С†РёРё");
 		unpStr = org->unp;
 		adressStr = org->address;
 		nameStr = org->name;
@@ -59,30 +59,32 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 
 	m_1stPage = new wxScrolledWindow(m_mainPanel);
 	m_buttonPanel = new wxPanel(m_mainPanel);
+	m_buttonPanel->SetBackgroundColour(*wxWHITE);
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
-
-	wxStaticText* staticOrgName = new wxStaticText(m_1stPage, wxID_ANY, wxS("Название организации:"));
+	m_1stPage->SetBackgroundColour(*wxWHITE);
+	wxStaticText* staticOrgName = new wxStaticText(m_1stPage, wxID_ANY, wxS("РќР°Р·РІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё:"));
 	m_orgName = new wxTextCtrl(m_1stPage, wxID_ANY, nameStr);
-
-	wxStaticText* staticOrgAddress = new wxStaticText(m_1stPage, wxID_ANY, wxS("Адрес организации:"));
+	staticOrgName->SetForegroundColour(*wxBLACK);
+	wxStaticText* staticOrgAddress = new wxStaticText(m_1stPage, wxID_ANY, wxS("РђРґСЂРµСЃ РѕСЂРіР°РЅРёР·Р°С†РёРё:"));
 	m_orgAddress = new wxTextCtrl(m_1stPage, wxID_ANY, adressStr);
-
-	wxStaticText* staticOrgUnp = new wxStaticText(m_1stPage, wxID_ANY, wxS("УНП организации:"));
+	staticOrgAddress->SetForegroundColour(*wxBLACK);
+	wxStaticText* staticOrgUnp = new wxStaticText(m_1stPage, wxID_ANY, wxS("РЈРќРџ РѕСЂРіР°РЅРёР·Р°С†РёРё:"));
 	m_orgUnp = new wxTextCtrl(m_1stPage, wxID_ANY, unpStr);
+	staticOrgUnp->SetForegroundColour(*wxBLACK);
 
-
-	wxStaticText* staticNormList = new wxStaticText(m_1stPage, wxID_ANY, wxS("Нормы образования по видам отходов:"));
+	wxStaticText* staticNormList = new wxStaticText(m_1stPage, wxID_ANY, wxS("РќРѕСЂРјС‹ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ РїРѕ РІРёРґР°Рј РѕС‚С…РѕРґРѕРІ:"));
 	m_wasteNormList = new VirtualCodeList(m_1stPage, &m_db, wxDefaultPosition, wxSize(200, 200));
+	staticNormList->SetForegroundColour(*wxBLACK);
 
-	MaterialButton* btn_listAdd = new MaterialButton(m_1stPage, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listAdd = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_listAdd->SetButtonLineColour(gui_MainColour);
 	btn_listAdd->SetLabelColour(gui_MainColour);
 	btn_listAdd->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_listDelete = new MaterialButton(m_1stPage, wxID_ANY, "Удалить", false, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listDelete = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("РЈРґР°Р»РёС‚СЊ"), false, wxDefaultPosition, wxSize(80, 30));
 	btn_listDelete->SetButtonColour(wxColour(165, 42, 42));
 	btn_listDelete->SetLabelColour(*wxWHITE);
 	btn_listDelete->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_listChange = new MaterialButton(m_1stPage, wxID_ANY, "Изменить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listChange = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("РР·РјРµРЅРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_listChange->SetButtonLineColour(gui_MainColour);
 	btn_listChange->SetLabelColour(gui_MainColour);
 	btn_listChange->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
@@ -97,18 +99,19 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	wasteListSizer->Add(wasteBtnSizer, 0, wxRIGHT, 50);
 
 
-	wxStaticText* staticStrgList = new wxStaticText(m_1stPage, wxID_ANY, wxS("Начальные значения хранения отходов:"));
+	wxStaticText* staticStrgList = new wxStaticText(m_1stPage, wxID_ANY, wxS("РќР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ С…СЂР°РЅРµРЅРёСЏ РѕС‚С…РѕРґРѕРІ:"));
 	m_strgList = new VirtualStrgInitList(m_1stPage, &m_db, wxDefaultPosition, wxSize(200, 200));
+	staticStrgList->SetForegroundColour(*wxBLACK);
 
-	MaterialButton* btn_strgListAdd = new MaterialButton(m_1stPage, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_strgListAdd = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_strgListAdd->SetButtonLineColour(gui_MainColour);
 	btn_strgListAdd->SetLabelColour(gui_MainColour);
 	btn_strgListAdd->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_strgListDelete = new MaterialButton(m_1stPage, wxID_ANY, "Удалить", false, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_strgListDelete = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("РЈРґР°Р»РёС‚СЊ"), false, wxDefaultPosition, wxSize(80, 30));
 	btn_strgListDelete->SetButtonColour(wxColour(165, 42, 42));
 	btn_strgListDelete->SetLabelColour(*wxWHITE);
 	btn_strgListDelete->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_strgListEdit = new MaterialButton(m_1stPage, wxID_ANY, "Изменить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_strgListEdit = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("РР·РјРµРЅРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_strgListEdit->SetButtonLineColour(gui_MainColour);
 	btn_strgListEdit->SetLabelColour(gui_MainColour);
 	btn_strgListEdit->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
@@ -122,9 +125,10 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	strgListSizer->Add(m_strgList, 1, wxRIGHT, 10);
 	strgListSizer->Add(strgBtnSizer, 0, wxRIGHT, 50);
 
-	wxStaticText* staticUnitList = new wxStaticText(m_1stPage, wxID_ANY, wxS("Структурные подразделения организации:"));
+	wxStaticText* staticUnitList = new wxStaticText(m_1stPage, wxID_ANY, wxS("РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Рµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ РѕСЂРіР°РЅРёР·Р°С†РёРё:"));
+	staticUnitList->SetForegroundColour(*wxBLACK);
 	m_unitList = new wxListCtrl(m_1stPage, wxID_ANY, wxDefaultPosition, wxSize(200, 200), wxLC_REPORT);
-	m_unitList->AppendColumn("Название подразделения", wxLIST_FORMAT_LEFT, 428);
+	m_unitList->AppendColumn("РќР°Р·РІР°РЅРёРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ", wxLIST_FORMAT_LEFT, 428);
 	if (m_openedAsEdit)
 	{
 		for (size_t i{ 0 }; i < m_org.units.size(); ++i)
@@ -134,15 +138,15 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 		}
 	}
 
-	MaterialButton* btn_unitListAdd = new MaterialButton(m_1stPage, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_unitListAdd = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_unitListAdd->SetButtonLineColour(gui_MainColour);
 	btn_unitListAdd->SetLabelColour(gui_MainColour);
 	btn_unitListAdd->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_unitListDelete = new MaterialButton(m_1stPage, wxID_ANY, "Удалить", false, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_unitListDelete = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("РЈРґР°Р»РёС‚СЊ"), false, wxDefaultPosition, wxSize(80, 30));
 	btn_unitListDelete->SetButtonColour(wxColour(165, 42, 42));
 	btn_unitListDelete->SetLabelColour(*wxWHITE);
 	btn_unitListDelete->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_unitListEdit = new MaterialButton(m_1stPage, wxID_ANY, "Изменить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_unitListEdit = new MaterialButton(m_1stPage, wxID_ANY, wxString::FromUTF8("РР·РјРµРЅРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_unitListEdit->SetButtonLineColour(gui_MainColour);
 	btn_unitListEdit->SetLabelColour(gui_MainColour);
 	btn_unitListEdit->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
@@ -172,9 +176,9 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	m_1stPage->SetSizerAndFit(firstPageSizer);
 
 
-	MaterialButton* cancelBtn = new MaterialButton(m_buttonPanel, -1, "ОТМЕНА",
+	MaterialButton* cancelBtn = new MaterialButton(m_buttonPanel, -1, wxString::FromUTF8("РћРўРњР•РќРђ"),
 		1, wxDefaultPosition, wxSize(150, 55));
-	MaterialButton* applyBtn = new MaterialButton(m_buttonPanel, -1, "ПРИМЕНИТЬ",
+	MaterialButton* applyBtn = new MaterialButton(m_buttonPanel, -1, wxString::FromUTF8("РџР РРњР•РќРРўР¬"),
 		0, wxDefaultPosition, wxSize(150, 55));
 	wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
 	cancelBtn->SetTextFont(wxFontInfo(10).FaceName("Segoe UI").Bold());
@@ -236,7 +240,8 @@ void Dialog_OrgAddEdit::OnCancel(wxCommandEvent& evt)
 	}
 	else
 	{
-		Dialog_ask* ask = new Dialog_ask(this, "Выход из приложения", "Продолжить без добавления организации невозможно. Желаете выйти?", "Выйти");
+		Dialog_ask* ask = new Dialog_ask(this, wxString::FromUTF8("Р’С‹С…РѕРґ РёР· РїСЂРёР»РѕР¶РµРЅРёСЏ"),
+		wxString::FromUTF8("РџСЂРѕРґРѕР»Р¶РёС‚СЊ Р±РµР· РґРѕР±Р°РІР»РµРЅРёСЏ РѕСЂРіР°РЅРёР·Р°С†РёРё РЅРµРІРѕР·РјРѕР¶РЅРѕ. Р–РµР»Р°РµС‚Рµ РІС‹Р№С‚Рё?"), wxString::FromUTF8("Р’С‹Р№С‚Рё"));
 		Refresh();
 		wxSafeYield(this);
 		if (ask->GetReturnCode())
@@ -254,7 +259,7 @@ void Dialog_OrgAddEdit::OnApply(wxCommandEvent& evt)
 	
 
 	if (m_orgName->GetValue().IsEmpty())
-		wxMessageBox("Поле \"Название организации\" не может быть пустым.");
+		wxMessageBox(wxString::FromUTF8("РџРѕР»Рµ \"РќР°Р·РІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё\" РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј."));
 	else if (!m_openedAsEdit)
 	{
 		wxRemoveFile(wxGetCwd() + "/db.backup");
@@ -292,22 +297,24 @@ void Dialog_OrgAddEdit::OnWasteListEdit(wxCommandEvent& evt)
 {
 	if (m_wasteNormList->GetSelectedItemRef())
 	{
-		wxDialog dlg(this, wxID_ANY, "Изменить норму образования", wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
+		wxDialog dlg(this, wxID_ANY, "РР·РјРµРЅРёС‚СЊ РЅРѕСЂРјСѓ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ", wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
 		wxPanel* main = new wxPanel(&dlg);
 		main->SetBackgroundColour(*wxWHITE);
 		main->SetFont(gui_MainFont);
-		wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
+		wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "РљРѕРґ РѕС‚С…РѕРґР°:");
+		staticCode->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY, m_wasteNormList->GetSelectedItemRef()->get()[0]);
 		codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-		wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, "Норма образования:");
+		wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, "РќРѕСЂРјР° РѕР±СЂР°Р·РѕРІР°РЅРёСЏ:");
+		staticWaste->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY, m_wasteNormList->GetSelectedItemRef()->get()[1]);
 
-		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
+		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РћС‚РјРµРЅР°"), true, wxDefaultPosition, wxSize(70, 35));
 		btnNO->SetButtonLineColour(*wxWHITE);
 		btnNO->SetLabelColour(wxColour(90, 90, 90));
 		btnNO->SetButtonShadow(false);
 		btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-		MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Применить", true, wxDefaultPosition, wxSize(90, 35));
+		MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РџСЂРёРјРµРЅРёС‚СЊ"), true, wxDefaultPosition, wxSize(90, 35));
 		btnYES->SetButtonLineColour(*wxWHITE);
 		btnYES->SetLabelColour(gui_MainColour);
 		btnYES->SetButtonShadow(false);
@@ -328,13 +335,13 @@ void Dialog_OrgAddEdit::OnWasteListEdit(wxCommandEvent& evt)
 		btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 			[&dlg, this, codeCtrl, wasteCtrl](wxCommandEvent& evt) {
 				if (codeCtrl->GetValue().IsEmpty())
-					wxMessageBox("Код отхода не может быть пустым");
+					wxMessageBox(wxString::FromUTF8("РљРѕРґ РѕС‚С…РѕРґР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј"));
 				else
 				{
 					if (m_wasteNormList->EditSelectedEntry(codeCtrl->GetValue(), wasteCtrl->GetValue()))
 						dlg.Close();
 					else
-						wxMessageBox("Ошибка изменения данных...");
+						wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР° РёР·РјРµРЅРµРЅРёСЏ РґР°РЅРЅС‹С…..."));
 				}});
 
 		btnNO->Bind(wxEVT_MOTION, [](wxMouseEvent& evt) { wxSetCursor(wxCURSOR_HAND); });
@@ -347,12 +354,13 @@ void Dialog_OrgAddEdit::OnWasteListDelete(wxCommandEvent& evt)
 {
 	if (m_wasteNormList->GetSelectedItemRef())
 	{
-		Dialog_ask* dlg = new Dialog_ask(this, "Удаление записи", "Вы уверены, что хотите удалить выбранную запись? Это действие нельзя отменить.");
+		Dialog_ask* dlg = new Dialog_ask(this, wxString::FromUTF8("РЈРґР°Р»РµРЅРёРµ Р·Р°РїРёСЃРё"),
+		wxString::FromUTF8("Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅСѓСЋ Р·Р°РїРёСЃСЊ? Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµР»СЊР·СЏ РѕС‚РјРµРЅРёС‚СЊ."));
 		Refresh();
 		if (dlg->GetReturnCode())
 			if (!m_wasteNormList->DeleteSelectedEntry())
 			{
-				wxMessageBox("Возникла ошибка при удалении");
+				wxMessageBox(wxString::FromUTF8("Р’РѕР·РЅРёРєР»Р° РѕС€РёР±РєР° РїСЂРё СѓРґР°Р»РµРЅРёРё"));
 			}
 		dlg->Destroy();
 	}
@@ -361,23 +369,23 @@ void Dialog_OrgAddEdit::OnWasteListDelete(wxCommandEvent& evt)
 
 void Dialog_OrgAddEdit::OnWasteListAdd(wxCommandEvent& evt)
 {
-	wxDialog dlg(this, wxID_ANY, "Добавить норму образования", wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
+	wxDialog dlg(this, wxID_ANY, "Р”РѕР±Р°РІРёС‚СЊ РЅРѕСЂРјСѓ РѕР±СЂР°Р·РѕРІР°РЅРёСЏ", wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
 	wxPanel* main = new wxPanel(&dlg);
 	main->SetBackgroundColour(*wxWHITE);
 	main->SetFont(gui_MainFont);
-	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
-	
+	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "РљРѕРґ РѕС‚С…РѕРґР°:");
+	staticCode->SetForegroundColour(*wxBLACK);
 	wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY,wxEmptyString,wxDefaultPosition,wxDefaultSize,0L);
 	codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-	wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, "Норма образования:");
+	wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, "РќРѕСЂРјР° РѕР±СЂР°Р·РѕРІР°РЅРёСЏ:");
 	wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY);
-
-	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
+	staticWaste->SetForegroundColour(*wxBLACK);
+	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РћС‚РјРµРЅР°"), true, wxDefaultPosition, wxSize(70, 35));
 	btnNO->SetButtonLineColour(*wxWHITE);
 	btnNO->SetLabelColour(wxColour(90, 90, 90));
 	btnNO->SetButtonShadow(false);
 	btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-	MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 35));
+	MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 35));
 	btnYES->SetButtonLineColour(*wxWHITE);
 	btnYES->SetLabelColour(gui_MainColour);
 	btnYES->SetButtonShadow(false);
@@ -398,16 +406,16 @@ void Dialog_OrgAddEdit::OnWasteListAdd(wxCommandEvent& evt)
 	btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 		[&dlg, this, codeCtrl, wasteCtrl](wxCommandEvent& evt) {
 			if (codeCtrl->GetValue().IsEmpty())
-				wxMessageBox("Ошибка:код отхода не может быть пустым");
+				wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°:РєРѕРґ РѕС‚С…РѕРґР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РїСѓСЃС‚С‹Рј"));
 			else if (!m_db.IsCodeExists(codeCtrl->GetValue()))
-				wxMessageBox("Ошибка:введенного кода отхода не существует.");
+				wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°:РІРІРµРґРµРЅРЅРѕРіРѕ РєРѕРґР° РѕС‚С…РѕРґР° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚."));
 			else
 			{
 				if (m_wasteNormList->AddNewEntry(codeCtrl->GetValue(), wasteCtrl->GetValue()))
 					dlg.Close();
 
 				else
-					wxMessageBox("Значение для данного вида отхода уже существует.");
+					wxMessageBox(wxString::FromUTF8("Р—РЅР°С‡РµРЅРёРµ РґР»СЏ РґР°РЅРЅРѕРіРѕ РІРёРґР° РѕС‚С…РѕРґР° СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚."));
 			}});
 
 	btnNO->Bind(wxEVT_MOTION, [](wxMouseEvent& evt) { wxSetCursor(wxCURSOR_HAND); });
@@ -420,14 +428,16 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 {
 	if (m_strgList->GetSelectedItemRef())
 	{
-		wxDialog dlg(this, wxID_ANY, "Изменить начальные значения хранения", wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
+		wxDialog dlg(this, wxID_ANY, "РР·РјРµРЅРёС‚СЊ РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ С…СЂР°РЅРµРЅРёСЏ", wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
 		wxPanel* main = new wxPanel(&dlg);
 		main->SetBackgroundColour(*wxWHITE);
 		main->SetFont(gui_MainFont);
-		wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
+		wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "РљРѕРґ РѕС‚С…РѕРґР°:");
+		staticCode->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY, m_strgList->GetSelectedItemRef()->get()[1]);
 		codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-		wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Дата:");
+		wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Р”Р°С‚Р°:");
+		staticDate->SetForegroundColour(*wxBLACK);
 		wxDateTime currentDate;
 		currentDate.ParseFormat(m_strgList->GetSelectedItemRef()->get()[0], wxS("%d.%m.%Y"));
 		wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY,currentDate, wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
@@ -436,15 +446,16 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 		firstDate.ParseFormat(wxS("2000.01.01"), wxS("%Y.%m.%d"), wxDefaultDateTime);
 		wxDateTime lastDate = m_db.getFirstEntryByCodeNoInit(m_strgList->GetSelectedItemRef()->get()[1]);
 		dateCtrl->SetRange(firstDate, lastDate);
-		wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "Хранение:");
+		wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "РҐСЂР°РЅРµРЅРёРµ:");
+		staticStorage->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
 			wxDefaultPosition,wxDefaultSize,0L,utility::GetDoubleValidator(3,wxAtof(m_strgList->GetSelectedItemRef()->get()[2])));
-		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
+		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РћС‚РјРµРЅР°"), true, wxDefaultPosition, wxSize(70, 35));
 		btnNO->SetButtonLineColour(*wxWHITE);
 		btnNO->SetLabelColour(wxColour(90, 90, 90));
 		btnNO->SetButtonShadow(false);
 		btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-		MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Применить", true, wxDefaultPosition, wxSize(90, 35));
+		MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РџСЂРёРјРµРЅРёС‚СЊ"), true, wxDefaultPosition, wxSize(90, 35));
 		btnYES->SetButtonLineColour(*wxWHITE);
 		btnYES->SetLabelColour(gui_MainColour);
 		btnYES->SetButtonShadow(false);
@@ -468,15 +479,15 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 		btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 			[&dlg, this, codeCtrl, dateCtrl, storageCtrl](wxCommandEvent& evt) {
 				if (codeCtrl->GetValue().IsEmpty() || storageCtrl->GetValue().IsEmpty() )
-					wxMessageBox("Ошибка:все строки должны быть заполнены.");
+					wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°:РІСЃРµ СЃС‚СЂРѕРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅС‹."));
 				else if(!m_db.IsCodeExists(codeCtrl->GetValue()))
-					wxMessageBox("Ошибка:введенного кода отхода не существует.");
+					wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°:РІРІРµРґРµРЅРЅРѕРіРѕ РєРѕРґР° РѕС‚С…РѕРґР° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚."));
 				else
 				{
 					if (m_strgList->EditSelectedEntry(codeCtrl->GetValue(), dateCtrl->GetValue(), storageCtrl->GetValue()))
 						dlg.Close();
 					else
-						wxMessageBox("Ошибка изменения...");
+						wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР° РёР·РјРµРЅРµРЅРёСЏ..."));
 				}});
 
 		btnNO->Bind(wxEVT_MOTION, [](wxMouseEvent& evt) { wxSetCursor(wxCURSOR_HAND); });
@@ -490,11 +501,12 @@ void Dialog_OrgAddEdit::OnStorageListDelete(wxCommandEvent& evt)
 	if (m_strgList->GetSelectedItemRef())
 	{
 		wxSafeYield(this, false);
-		Dialog_ask* dlg = new Dialog_ask(this, "Удаление записи", "Вы уверены, что хотите удалить выбранную запись? Это действие нельзя отменить.");
+		Dialog_ask* dlg = new Dialog_ask(this, wxString::FromUTF8("РЈРґР°Р»РµРЅРёРµ Р·Р°РїРёСЃРё"),
+		 wxString::FromUTF8("Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅСѓСЋ Р·Р°РїРёСЃСЊ? Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµР»СЊР·СЏ РѕС‚РјРµРЅРёС‚СЊ."));
 		Refresh();
 		if (dlg->GetReturnCode())
 			if (!m_strgList->DeleteSelectedEntry())
-				wxMessageBox("Возникла ошибка при удалении");
+				wxMessageBox(wxString::FromUTF8("Р’РѕР·РЅРёРєР»Р° РѕС€РёР±РєР° РїСЂРё СѓРґР°Р»РµРЅРёРё"));
 
 		dlg->Destroy();
 	}
@@ -502,26 +514,29 @@ void Dialog_OrgAddEdit::OnStorageListDelete(wxCommandEvent& evt)
 
 void Dialog_OrgAddEdit::OnStorageListAdd(wxCommandEvent& evt)
 {
-	wxDialog dlg(this, wxID_ANY, "Добавить начальные значения хранения", wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
+	wxDialog dlg(this, wxID_ANY, "Р”РѕР±Р°РІРёС‚СЊ РЅР°С‡Р°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ С…СЂР°РЅРµРЅРёСЏ", wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
 	wxPanel* main = new wxPanel(&dlg);
 	main->SetBackgroundColour(*wxWHITE);
 	main->SetFont(gui_MainFont);
-	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
+	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "РљРѕРґ РѕС‚С…РѕРґР°:");
+	staticCode->SetForegroundColour(*wxBLACK);
 	wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY);
 	codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-	wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Дата:");
+	wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Р”Р°С‚Р°:");
+	staticDate->SetForegroundColour(*wxBLACK);
 	wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY, wxDateTime::Today(), wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "Хранение:");
+	wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "РҐСЂР°РЅРµРЅРёРµ:");
+	staticStorage->SetForegroundColour(*wxBLACK);
 	wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
 		wxDefaultPosition, wxDefaultSize, 0L, utility::GetDoubleValidator(3));
 
 
-	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
+	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РћС‚РјРµРЅР°"), true, wxDefaultPosition, wxSize(70, 35));
 	btnNO->SetButtonLineColour(*wxWHITE);
 	btnNO->SetLabelColour(wxColour(90, 90, 90));
 	btnNO->SetButtonShadow(false);
 	btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-	MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 35));
+	MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 35));
 	btnYES->SetButtonLineColour(*wxWHITE);
 	btnYES->SetLabelColour(gui_MainColour);
 	btnYES->SetButtonShadow(false);
@@ -545,16 +560,16 @@ void Dialog_OrgAddEdit::OnStorageListAdd(wxCommandEvent& evt)
 	btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 		[&dlg, this, codeCtrl, dateCtrl,storageCtrl](wxCommandEvent& evt) {
 			if (codeCtrl->GetValue().IsEmpty() || storageCtrl->GetValue().IsEmpty())
-				wxMessageBox("Все строки должны быть заполнены.");
+				wxMessageBox(wxString::FromUTF8("Р’СЃРµ СЃС‚СЂРѕРєРё РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅС‹."));
 			else if(!m_db.isInitStorageViable(codeCtrl->GetValue(), dateCtrl->GetValue().Format(wxS("%Y.%m.%d") )))
-				wxMessageBox("Ошибка: В выбраном или предыдущих месяцах есть внесенные записи.");
+				wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: Р’ РІС‹Р±СЂР°РЅРѕРј РёР»Рё РїСЂРµРґС‹РґСѓС‰РёС… РјРµСЃСЏС†Р°С… РµСЃС‚СЊ РІРЅРµСЃРµРЅРЅС‹Рµ Р·Р°РїРёСЃРё."));
 			else
 			{
 				
 				if (m_strgList->AddNewEntry(codeCtrl->GetValue(), dateCtrl->GetValue(),storageCtrl->GetValue()))
 					dlg.Close();
 				else
-					wxMessageBox("Значение уже существует.");
+					wxMessageBox(wxString::FromUTF8("Р—РЅР°С‡РµРЅРёРµ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚."));
 			}});
 
 	btnNO->Bind(wxEVT_MOTION, [](wxMouseEvent& evt) { wxSetCursor(wxCURSOR_HAND); });
@@ -567,20 +582,20 @@ void Dialog_OrgAddEdit::OnUnitListEdit(wxCommandEvent& evt)
 {
 	if (int selected = m_unitList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED); selected != -1)
 	{
-		wxDialog dlg(this, wxID_ANY, "Изменить структурное подразделение", wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
+		wxDialog dlg(this, wxID_ANY, "РР·РјРµРЅРёС‚СЊ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ", wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
 		wxPanel* main = new wxPanel(&dlg);
 		main->SetBackgroundColour(*wxWHITE);
 		main->SetFont(gui_MainFont);
-		wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, "Название структурного подразделения:");
+		wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, "РќР°Р·РІР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРіРѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ:");
 		wxTextCtrl* unitCtrl = new wxTextCtrl(main, wxID_ANY,m_unitList->GetItemText(selected));
+		staticUnit->SetForegroundColour(*wxBLACK);
 
-
-		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
+		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РћС‚РјРµРЅР°"), true, wxDefaultPosition, wxSize(70, 35));
 		btnNO->SetButtonLineColour(*wxWHITE);
 		btnNO->SetLabelColour(wxColour(90, 90, 90));
 		btnNO->SetButtonShadow(false);
 		btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-		MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Изменить", true, wxDefaultPosition, wxSize(80, 35));
+		MaterialButton* btnYES = new MaterialButton(main, wxID_ANY,wxString::FromUTF8("РР·РјРµРЅРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 35));
 		btnYES->SetButtonLineColour(*wxWHITE);
 		btnYES->SetLabelColour(gui_MainColour);
 		btnYES->SetButtonShadow(false);
@@ -600,7 +615,7 @@ void Dialog_OrgAddEdit::OnUnitListEdit(wxCommandEvent& evt)
 		btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 			[&dlg, this, unitCtrl,selected](wxCommandEvent& evt) {
 				if (m_unitList->FindItem(-1, unitCtrl->GetValue(), false) > -1 && m_unitList->FindItem(-1, unitCtrl->GetValue(), false) != selected)
-					wxMessageBox("Структурное подразделение с таким названием уже существует");
+					wxMessageBox(wxString::FromUTF8("РЎС‚СЂСѓРєС‚СѓСЂРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚"));
 				else if (!m_openedAsEdit)
 				{
 					m_unitList->SetItem(selected, 0, unitCtrl->GetValue());
@@ -628,7 +643,8 @@ void Dialog_OrgAddEdit::OnUnitListDelete(wxCommandEvent& evt)
 		if (!m_openedAsEdit)
 		{
 			wxSafeYield(this, false);
-			Dialog_ask* dlg = new Dialog_ask(this, "Удаление структурного подразделения", "Вы уверены, что хотите удалить выбранное подразделение?");
+			Dialog_ask* dlg = new Dialog_ask(this, wxString::FromUTF8("РЈРґР°Р»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРіРѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ"),
+			 wxString::FromUTF8("Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ?"));
 			Refresh();
 			if (dlg->GetReturnCode())
 			{
@@ -640,13 +656,14 @@ void Dialog_OrgAddEdit::OnUnitListDelete(wxCommandEvent& evt)
 		else
 		{
 			wxSafeYield(this, false);
-			Dialog_ask* dlg = new Dialog_ask(this, "Удаление структурного подразделения", "Вы уверены, что хотите удалить выбранное подразделение?"
-				"Все записи связанные с этим подразделением будут удалены. Это действие нельзя отменить.");
+			Dialog_ask* dlg = new Dialog_ask(this, wxString::FromUTF8("РЈРґР°Р»РµРЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРіРѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ"),
+			wxString::FromUTF8("Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ РІС‹Р±СЂР°РЅРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ?"
+				"Р’СЃРµ Р·Р°РїРёСЃРё СЃРІСЏР·Р°РЅРЅС‹Рµ СЃ СЌС‚РёРј РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµРј Р±СѓРґСѓС‚ СѓРґР°Р»РµРЅС‹. Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµР»СЊР·СЏ РѕС‚РјРµРЅРёС‚СЊ."));
 			Refresh();
 			if (dlg->GetReturnCode())
 			{
 				if (!m_unitList->DeleteItem(selected) || !m_db.DeleteAllUnitEntrys(m_org.units[selected].id))
-					wxMessageBox("Возникла ошибка при удалении");
+					wxMessageBox(wxString::FromUTF8("Р’РѕР·РЅРёРєР»Р° РѕС€РёР±РєР° РїСЂРё СѓРґР°Р»РµРЅРёРё"));
 				else
 					m_org.units.erase(m_org.units.begin() + selected);
 			}
@@ -658,20 +675,20 @@ void Dialog_OrgAddEdit::OnUnitListDelete(wxCommandEvent& evt)
 
 void Dialog_OrgAddEdit::OnUnitListAdd(wxCommandEvent& evt)
 {
-	wxDialog dlg(this, wxID_ANY, "Добавить структурное подразделение", wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
+	wxDialog dlg(this, wxID_ANY, "Р”РѕР±Р°РІРёС‚СЊ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ", wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
 	wxPanel* main = new wxPanel(&dlg);
 	main->SetBackgroundColour(*wxWHITE);
 	main->SetFont(gui_MainFont);
-	wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, "Название структурного подразделения:");
+	wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, "РќР°Р·РІР°РЅРёРµ СЃС‚СЂСѓРєС‚СѓСЂРЅРѕРіРѕ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ:");
 	wxTextCtrl* unitCtrl = new wxTextCtrl(main, wxID_ANY);
-	
+	staticUnit->SetForegroundColour(*wxBLACK);
 
-	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, "Отмена", true, wxDefaultPosition, wxSize(70, 35));
+	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("РћС‚РјРµРЅР°"), true, wxDefaultPosition, wxSize(70, 35));
 	btnNO->SetButtonLineColour(*wxWHITE);
 	btnNO->SetLabelColour(wxColour(90, 90, 90));
 	btnNO->SetButtonShadow(false);
 	btnNO->SetTextFont(wxFontInfo(12).FaceName("Segoe UI").Bold());
-	MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 35));
+	MaterialButton* btnYES = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Р”РѕР±Р°РІРёС‚СЊ"), true, wxDefaultPosition, wxSize(80, 35));
 	btnYES->SetButtonLineColour(*wxWHITE);
 	btnYES->SetLabelColour(gui_MainColour);
 	btnYES->SetButtonShadow(false);
@@ -691,7 +708,7 @@ void Dialog_OrgAddEdit::OnUnitListAdd(wxCommandEvent& evt)
 	btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED,
 		[&dlg, this, unitCtrl](wxCommandEvent& evt) {
 			if (m_unitList->FindItem(-1, unitCtrl->GetValue(), false) > -1)
-				wxMessageBox("Структурное подразделение с таким названием уже существует");
+				wxMessageBox(wxString::FromUTF8("РЎС‚СЂСѓРєС‚СѓСЂРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚"));
 			else if(!m_openedAsEdit)
 			{
 				if (!m_unitList->GetItemCount())

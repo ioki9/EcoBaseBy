@@ -3,6 +3,7 @@
 #include <wx/textfile.h>
 #include <wx/graphics.h>
 #include <string>
+
 #include "../Database/DBColumnEnums.h"
 
 
@@ -84,13 +85,16 @@ namespace {
 		}
 	};
 	
-	const u_pattern_list pattern_list{};
+	const u_pattern_list* pattern_list;
 
 }
 
 
 wxString utility::Hyphenate(const wxString &word)
 {
+	if(!pattern_list)
+		pattern_list = new u_pattern_list();
+
 	wxString word_string{ "." + word + "." };
 	wxString word_levels{};
 	
@@ -98,7 +102,7 @@ wxString utility::Hyphenate(const wxString &word)
 
 	for (size_t ch{ 1 }; ch < word_string.size() - 2; ++ch) //word
 	{
-		std::vector<u_pattern*>::const_iterator pattern_iter = pattern_list.list.begin();
+		std::vector<u_pattern*>::const_iterator pattern_iter = pattern_list->list.begin();
 
 		for (size_t count{ 1 }; count <= word_string.size() - ch; ++count) //word pattern
 		{
@@ -107,8 +111,8 @@ wxString utility::Hyphenate(const wxString &word)
 			
 			if (pattern_compare(&word_pattern, *pattern_iter))
 				continue;
-			pattern_iter = std::lower_bound(pattern_iter, pattern_list.list.end(), &word_pattern, pattern_compare);
-			if (pattern_iter == pattern_list.list.end())
+			pattern_iter = std::lower_bound(pattern_iter, pattern_list->list.end(), &word_pattern, pattern_compare);
+			if (pattern_iter == pattern_list->list.end())
 				break;
 			if (!pattern_compare(&word_pattern, *pattern_iter))
 			{
@@ -142,7 +146,7 @@ wxString utility::Hyphenate(const wxString &word)
 
 			if (mask[k] == 1)
 			{
-				word_string.insert(k + offset, '\u00AD');
+				word_string.insert(k + offset, wxUniChar('\u00AD'));
 				++offset;
 			}
 

@@ -21,7 +21,8 @@ myGridTable::myGridTable(wxWindow* parent, wxWindowID id, const wxPoint& pos = w
 	this->SetDefaultCellFont(wxFontInfo(11).FaceName("Segoe UI"));
 	this->SetLabelFont(wxFontInfo(10).FaceName("Segoe UI"));
 	this->AutoSizeAllColLabelSize();
-
+	this->SetCellHighlightColour(*wxBLUE);
+	this->SetDefaultCellTextColour(*wxBLACK);
 
 	this->SetDefaultCellAlignment(wxALIGN_CENTRE, wxALIGN_BOTTOM);
 	this->SetLabelTextColour(wxColour(40, 40, 40));
@@ -111,26 +112,26 @@ void myGridTable::AutoSizeAllColLabelSize()
 
 void myGridTable::initGridLabels()
 {
-	m_gridLabels[Grid_label::grid_regnum] = "Рег. №";
-	m_gridLabels[Grid_label::grid_date] = "Дата";
-	m_gridLabels[Grid_label::grid_code] = "Код отхода";
-	m_gridLabels[Grid_label::grid_owner] = "Поступило от орг.";
-	m_gridLabels[Grid_label::grid_receiver] = "Получатель орг.";
-	m_gridLabels[Grid_label::grid_transporter] = "Перевозчик орг.";
-	m_gridLabels[Grid_label::grid_amount_formed] = "Образовалось";
-	m_gridLabels[Grid_label::grid_amount_received_phys] = "Поступило от физ. лиц";
-	m_gridLabels[Grid_label::grid_amount_received_org] = "Поступило от др. орг.";
-	m_gridLabels[Grid_label::grid_amount_used] = "Использовано";
-	m_gridLabels[Grid_label::grid_amount_defused] = "Обезврежено";
-	m_gridLabels[Grid_label::grid_amount_burial] = "Захоронено";
-	m_gridLabels[Grid_label::grid_amount_storage] = "Направлено на\n хранение";
-	m_gridLabels[Grid_label::grid_amount_tUsed] = "Передано на\n использование";
-	m_gridLabels[Grid_label::grid_amount_tDefused] = "Передано на\n обезвреживание";
-	m_gridLabels[Grid_label::grid_amount_tBurial] = "Передано на\n захоронение";
-	m_gridLabels[Grid_label::grid_amount_tStorage] = "Передано на\n хранение";
-	m_gridLabels[Grid_label::grid_amount_storageFull] = "Всего на хранении";
-	m_gridLabels[Grid_label::grid_struct_unitPOD9] = "Структурное подразделение\n ПОД9";
-	m_gridLabels[Grid_label::grid_waste_norm] = "Норматив\n образования отхода";
+	m_gridLabels[Grid_label::grid_regnum] = "Р РµРі. в„–";
+	m_gridLabels[Grid_label::grid_date] = "Р”Р°С‚Р°";
+	m_gridLabels[Grid_label::grid_code] = "РљРѕРґ РѕС‚С…РѕРґР°";
+	m_gridLabels[Grid_label::grid_owner] = "РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ РѕСЂРі.";
+	m_gridLabels[Grid_label::grid_receiver] = "РџРѕР»СѓС‡Р°С‚РµР»СЊ РѕСЂРі.";
+	m_gridLabels[Grid_label::grid_transporter] = "РџРµСЂРµРІРѕР·С‡РёРє РѕСЂРі.";
+	m_gridLabels[Grid_label::grid_amount_formed] = "РћР±СЂР°Р·РѕРІР°Р»РѕСЃСЊ";
+	m_gridLabels[Grid_label::grid_amount_received_phys] = "РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ С„РёР·. Р»РёС†";
+	m_gridLabels[Grid_label::grid_amount_received_org] = "РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ РґСЂ. РѕСЂРі.";
+	m_gridLabels[Grid_label::grid_amount_used] = "РСЃРїРѕР»СЊР·РѕРІР°РЅРѕ";
+	m_gridLabels[Grid_label::grid_amount_defused] = "РћР±РµР·РІСЂРµР¶РµРЅРѕ";
+	m_gridLabels[Grid_label::grid_amount_burial] = "Р—Р°С…РѕСЂРѕРЅРµРЅРѕ";
+	m_gridLabels[Grid_label::grid_amount_storage] = "РќР°РїСЂР°РІР»РµРЅРѕ РЅР°\n С…СЂР°РЅРµРЅРёРµ";
+	m_gridLabels[Grid_label::grid_amount_tUsed] = "РџРµСЂРµРґР°РЅРѕ РЅР°\n РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ";
+	m_gridLabels[Grid_label::grid_amount_tDefused] = "РџРµСЂРµРґР°РЅРѕ РЅР°\n РѕР±РµР·РІСЂРµР¶РёРІР°РЅРёРµ";
+	m_gridLabels[Grid_label::grid_amount_tBurial] = "РџРµСЂРµРґР°РЅРѕ РЅР°\n Р·Р°С…РѕСЂРѕРЅРµРЅРёРµ";
+	m_gridLabels[Grid_label::grid_amount_tStorage] = "РџРµСЂРµРґР°РЅРѕ РЅР°\n С…СЂР°РЅРµРЅРёРµ";
+	m_gridLabels[Grid_label::grid_amount_storageFull] = "Р’СЃРµРіРѕ РЅР° С…СЂР°РЅРµРЅРёРё";
+	m_gridLabels[Grid_label::grid_struct_unitPOD9] = "РЎС‚СЂСѓРєС‚СѓСЂРЅРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ\n РџРћР”9";
+	m_gridLabels[Grid_label::grid_waste_norm] = "РќРѕСЂРјР°С‚РёРІ\n РѕР±СЂР°Р·РѕРІР°РЅРёСЏ РѕС‚С…РѕРґР°";
 }
 
 void myGridTable::SetActiveColumns()

@@ -14,9 +14,9 @@ Dialog_ListColumnSelect::Dialog_ListColumnSelect(wxWindow* parent, const std::ma
 	wxFont colFont(wxFontInfo(12).FaceName("Segoe UI"));
 	checkBoxPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(400, 600));
 	checkBoxPanel->SetBackgroundColour(*wxWHITE);
-	MaterialButton* cancelBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, "ОТМЕНА", 
+	MaterialButton* cancelBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, "РћРўРњР•РќРђ", 
 													1, wxPoint(GetSize().x-140, 510), wxSize(100, 40));
-	MaterialButton* applyBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, "ПРИМЕНИТЬ", 
+	MaterialButton* applyBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, "РџР РРњР•РќРРўР¬", 
 													0, wxPoint(25, 510), wxSize(100, 40));
 	wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
 	cancelBtn->SetTextFont(wxFont(wxFontInfo(10).FaceName("Segoe UI").Bold()));
@@ -60,26 +60,26 @@ Dialog_ListColumnSelect::~Dialog_ListColumnSelect()
 //void Dialog_ListColumnSelect::initLabels()
 //{
 //	m_labels.reserve(20);
-//	m_labels.push_back( "Регистрационный номер");
-//	m_labels.push_back("Дата");
-//	m_labels.push_back("Поступило от орг.");
-//	m_labels.push_back("Получатель отходов");
-//	m_labels.push_back("Перевозчик отходов");
-//	m_labels.push_back("Код отходов");
-//	m_labels.push_back("Образовалось, т.(шт.)");
-//	m_labels.push_back("Поступило от физ. лиц, т.(шт.)");
-//	m_labels.push_back("Поступило от др. орг., т.(шт.)");
-//	m_labels.push_back("Использовано, т.(шт.)");
-//	m_labels.push_back("Обезврежено, т.(шт.)");
-//	m_labels.push_back("Направлено на хранение, т.(шт.)");
-//	m_labels.push_back("Захоронено, т.(шт.)");
-//	m_labels.push_back("Передано на использование, т.(шт.)");
-//	m_labels.push_back("Передано на обезвреживание, т.(шт.)");
-//	m_labels.push_back("Передано на хранение, т.(шт.)");
-//	m_labels.push_back("Передано на захоронение, т.(шт.)");
-//	m_labels.push_back("Хранится суммарно, т.(шт.)");
-//	m_labels.push_back("Структурные подразделения (ПОД 10)");
-//	m_labels.push_back("Структурные подразделения (ПОД 9)");
+//	m_labels.push_back( "Р РµРіРёСЃС‚СЂР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ");
+//	m_labels.push_back("Р”Р°С‚Р°");
+//	m_labels.push_back("РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ РѕСЂРі.");
+//	m_labels.push_back("РџРѕР»СѓС‡Р°С‚РµР»СЊ РѕС‚С…РѕРґРѕРІ");
+//	m_labels.push_back("РџРµСЂРµРІРѕР·С‡РёРє РѕС‚С…РѕРґРѕРІ");
+//	m_labels.push_back("РљРѕРґ РѕС‚С…РѕРґРѕРІ");
+//	m_labels.push_back("РћР±СЂР°Р·РѕРІР°Р»РѕСЃСЊ, С‚.(С€С‚.)");
+//	m_labels.push_back("РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ С„РёР·. Р»РёС†, С‚.(С€С‚.)");
+//	m_labels.push_back("РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ РґСЂ. РѕСЂРі., С‚.(С€С‚.)");
+//	m_labels.push_back("РСЃРїРѕР»СЊР·РѕРІР°РЅРѕ, С‚.(С€С‚.)");
+//	m_labels.push_back("РћР±РµР·РІСЂРµР¶РµРЅРѕ, С‚.(С€С‚.)");
+//	m_labels.push_back("РќР°РїСЂР°РІР»РµРЅРѕ РЅР° С…СЂР°РЅРµРЅРёРµ, С‚.(С€С‚.)");
+//	m_labels.push_back("Р—Р°С…РѕСЂРѕРЅРµРЅРѕ, С‚.(С€С‚.)");
+//	m_labels.push_back("РџРµСЂРµРґР°РЅРѕ РЅР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ, С‚.(С€С‚.)");
+//	m_labels.push_back("РџРµСЂРµРґР°РЅРѕ РЅР° РѕР±РµР·РІСЂРµР¶РёРІР°РЅРёРµ, С‚.(С€С‚.)");
+//	m_labels.push_back("РџРµСЂРµРґР°РЅРѕ РЅР° С…СЂР°РЅРµРЅРёРµ, С‚.(С€С‚.)");
+//	m_labels.push_back("РџРµСЂРµРґР°РЅРѕ РЅР° Р·Р°С…РѕСЂРѕРЅРµРЅРёРµ, С‚.(С€С‚.)");
+//	m_labels.push_back("РҐСЂР°РЅРёС‚СЃСЏ СЃСѓРјРјР°СЂРЅРѕ, С‚.(С€С‚.)");
+//	m_labels.push_back("РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Рµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ (РџРћР” 10)");
+//	m_labels.push_back("РЎС‚СЂСѓРєС‚СѓСЂРЅС‹Рµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЏ (РџРћР” 9)");
 //}
 
 void Dialog_ListColumnSelect::OnCancel(wxMouseEvent& evt)
@@ -103,7 +103,7 @@ void Dialog_ListColumnSelect::OnApply(wxMouseEvent& evt)
 	}
 	if (dlg_activeColFlags == 0x000000000)
 	{
-		wxMessageBox("Ошибка: хотя бы 1 столбец должен быть активным.");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: С…РѕС‚СЏ Р±С‹ 1 СЃС‚РѕР»Р±РµС† РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ Р°РєС‚РёРІРЅС‹Рј."));
 		return;
 	}
 	wxCommandEvent sndEvet(EVT_GRID_ACTIVE_COL_CHANGE);

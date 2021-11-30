@@ -7,6 +7,7 @@ Dialog_ask::Dialog_ask(wxWindow* parent, const wxString& title,const wxString& t
 	m_mainPanel = new wxPanel(this);
 	m_mainPanel->SetBackgroundColour(*wxWHITE);
 	m_mainPanel->SetFont(gui_MainFont);
+	
 	wxPanel* topGreenPanel = new wxPanel(m_mainPanel);
 	topGreenPanel->SetBackgroundColour(gui_MainColour);
 	wxStaticText *topText = new wxStaticText(topGreenPanel, wxID_ANY,title ,wxDefaultPosition,wxDefaultSize, wxALIGN_CENTRE_HORIZONTAL);
@@ -17,6 +18,7 @@ Dialog_ask::Dialog_ask(wxWindow* parent, const wxString& title,const wxString& t
 	topGreenPanel->SetSizerAndFit(topTextSizer);
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxStaticText* mainText = new wxStaticText(m_mainPanel, wxID_ANY, text, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTRE_VERTICAL);
+	mainText->SetForegroundColour(*wxBLACK);
 	wxBoxSizer* mainTextSizer = new wxBoxSizer(wxHORIZONTAL);
 	mainTextSizer->Add(mainText, 1,wxEXPAND | wxTOP | wxLEFT, 10);
 	

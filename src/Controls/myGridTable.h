@@ -60,7 +60,7 @@ private:
 		strg_full = 1ul << 20,
 		waste_norm = 1ul << 21,
 
-		activate_all = ~0ul // activate all columns
+		activate_all = ~0u // activate all columns
 	};
 };
 

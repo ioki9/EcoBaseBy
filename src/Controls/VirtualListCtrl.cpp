@@ -4,10 +4,7 @@
 VirtualListCtrl::VirtualListCtrl(wxWindow* parent, const wxWindowID winid, const wxPoint& pos, const wxSize& size)
 	:wxListCtrl(parent, winid, pos, size, wxLC_REPORT | wxLC_VIRTUAL), m_parent{ parent }
 {
-	wxBitmap bmp(wxBITMAP_PNG(ICON_LIST_LINE));
-	m_imageList = new wxImageList(32, 32, false);
-	m_imageList->Add(bmp);
-	this->SetImageList(m_imageList, wxIMAGE_LIST_SMALL);
+
 	this->initHeaderList();
 
 	int k{ 0 };

@@ -1,14 +1,20 @@
 #include "MaterialButton.h"
 #include <wx/dcgraph.h>
-
+#include <wx/gdicmn.h>
+#include <wx/platinfo.h>
 
 MaterialButton::MaterialButton(wxWindow* parent, wxWindowID id, const wxString& text,bool isOutlined,
 	const wxPoint& pos, const wxSize& size) :wxPanel(parent, id, pos, size), m_size{ size }, m_text{ text }
 {
 	this->SetDoubleBuffered(true);
+	this->SetBackgroundColour(parent->GetBackgroundColour());
 	if (isOutlined)
 		status |= flag_outlined;
 	status |= flag_shadowDrawn;
+	if(wxPlatformInfo::Get().GetOperatingSystemId() != wxOS_WINDOWS)
+	{	
+		SetButtonShadow(false);
+	}
 	this->Bind(wxEVT_LEAVE_WINDOW, &MaterialButton::OnMotionOUT, this);
 	this->Bind(wxEVT_LEFT_DOWN, &MaterialButton::OnLeftDown, this);
 	this->Bind(wxEVT_MOTION, &MaterialButton::OnMotionIN, this);
@@ -99,7 +105,6 @@ void MaterialButton::OnPaint(wxPaintEvent& evt)
 {
 	wxPaintDC dc(this);
 	wxGCDC gcdc(dc);
-
 	wxColour shadow(wxColour(210, 210, 210));
 
 
@@ -151,13 +156,15 @@ void MaterialButton::OnPaint(wxPaintEvent& evt)
 	
 	
 		
-	
-	gcdc.DrawRoundedRectangle(0, 0, m_size.x, m_size.y-3, rectInfo.Radius);
+	if(status & flag_shadowDrawn)
+		gcdc.DrawRoundedRectangle(0, 0, m_size.x, m_size.y-3, rectInfo.Radius);
+	else
+		gcdc.DrawRoundedRectangle(0, 0, m_size.x, m_size.y, rectInfo.Radius);
 	gcdc.SetFont(m_txtFont);
 	gcdc.SetTextForeground(m_colourText);
 	wxSize txtSize{ gcdc.GetTextExtent(m_text) };
 	gcdc.DrawText(m_text, wxPoint((m_size.x - txtSize.x) / 2, (m_size.y - txtSize.y) / 2));
-
+	
 }
 
 void MaterialButton::OnLeftDown(wxMouseEvent& evt)

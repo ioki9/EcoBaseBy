@@ -17,25 +17,28 @@ Settings_page::Settings_page(wxWindow* parent, wxChoice* orgChoice) : wxPanel(pa
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* mainSizerH = new wxBoxSizer(wxHORIZONTAL);
 
-	wxStaticText* listTitle = new wxStaticText(m_mainPanel, wxID_ANY, "Îðãàíèçàöèè:");
+	wxStaticText* listTitle = new wxStaticText(m_mainPanel, wxID_ANY, "ÐžÑ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸Ð¸:");
+	listTitle->SetForegroundColour(*wxBLACK);
 	listTitle->SetFont(gui_MainFont);
 
 	m_orgList = new VirtualOrgList(m_mainPanel, wxID_ANY,wxDefaultPosition,wxSize(350,150));
-	MaterialButton* btn_listAdd = new MaterialButton(m_mainPanel, wxID_ANY, "Äîáàâèòü", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listAdd = new MaterialButton(m_mainPanel, wxID_ANY, "Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ", true, wxDefaultPosition, wxSize(80, 30));
 	btn_listAdd->SetButtonLineColour(gui_MainColour);
 	btn_listAdd->SetLabelColour(gui_MainColour);
 	btn_listAdd->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_listDelete = new MaterialButton(m_mainPanel, wxID_ANY, "Óäàëèòü", false,wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listDelete = new MaterialButton(m_mainPanel, wxID_ANY, "Ð£Ð´Ð°Ð»Ð¸Ñ‚ÑŒ", false,wxDefaultPosition, wxSize(80, 30));
 	btn_listDelete->SetButtonColour(wxColour(165, 42, 42));
 	btn_listDelete->SetLabelColour(*wxWHITE);
 	btn_listDelete->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_listChange = new MaterialButton(m_mainPanel, wxID_ANY, "Èçìåíèòü", true, wxDefaultPosition, wxSize(80,30));
+	MaterialButton* btn_listChange = new MaterialButton(m_mainPanel, wxID_ANY, "Ð˜Ð·Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ", true, wxDefaultPosition, wxSize(80,30));
 	btn_listChange->SetButtonLineColour(gui_MainColour);
 	btn_listChange->SetLabelColour(gui_MainColour);
 	btn_listChange->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
 
-	wxStaticText* dirPickerLabel = new wxStaticText(m_mainPanel, wxID_ANY, "Ïóòü ñîõðàíåíèÿ äîêóìåíòîâ:");
-	m_dir = new myDirPicker(m_mainPanel , wxID_ANY, Settings::GetPdfSavePath(), "Ïàïêà äëÿ ñîõðàíåíèÿ äîêóìåíòîâ", wxDefaultPosition, wxSize(460, 30));
+	wxStaticText* dirPickerLabel = new wxStaticText(m_mainPanel, wxID_ANY, "ÐŸÑƒÑ‚ÑŒ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð¾Ð²:");
+	dirPickerLabel->SetForegroundColour(*wxBLACK);
+	m_dir = new myDirPicker(m_mainPanel , wxID_ANY, Settings::GetPdfSavePath(), "ÐŸÐ°Ð¿ÐºÐ° Ð´Ð»Ñ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð´Ð¾ÐºÑƒÐ¼ÐµÐ½Ñ‚Ð¾Ð²", wxDefaultPosition, wxSize(460, 30));
+	m_dir->SetBackgroundColour(*wxWHITE);
 	dirPickerLabel->SetFont(gui_MainFont);
 
 	wxBoxSizer* btnSizer = new wxBoxSizer(wxVERTICAL);
@@ -90,11 +93,12 @@ void Settings_page::OnListDeleteBtn(wxCommandEvent& evt)
 	if (m_orgList->GetSelectedItemRef())
 	{
 		if (m_orgList->GetItemCount() < 2)
-			wxMessageBox("Îøèáêà: â ïðèëîæåííèè äîëæíà áûòü õîòÿ áû îäíà îðãàíèçàöèÿ.");
+			wxMessageBox(wxString::FromUTF8("ÐžÑˆÐ¸Ð±ÐºÐ°: Ð² Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð½Ð¸Ð¸ Ð´Ð¾Ð»Ð¶Ð½Ð° Ð±Ñ‹Ñ‚ÑŒ Ñ…Ð¾Ñ‚Ñ Ð±Ñ‹ Ð¾Ð´Ð½Ð° Ð¾Ñ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸Ñ."));
 		else
 		{
 			wxSafeYield(this, false);
-			Dialog_ask* ask = new Dialog_ask(m_parent, "Óäàëåíèå îðãàíèçàöèè", "Âû óâåðåíû, ÷òî õîòèòå óäàëèòü âûáðàííóþ îðãàíèçàöèþ? Âñå äàííûå ñâÿçàííûå ñ ýòîé îðãàíèçàöèåé áóäóò óòåðÿíû.");
+			Dialog_ask* ask = new Dialog_ask(m_parent, wxString::FromUTF8("Ð£Ð´Ð°Ð»ÐµÐ½Ð¸Ðµ Ð¾Ñ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸Ð¸")
+			, wxString::FromUTF8("Ð’Ñ‹ ÑƒÐ²ÐµÑ€ÐµÐ½Ñ‹, Ñ‡Ñ‚Ð¾ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½ÑƒÑŽ Ð¾Ñ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸ÑŽ? Ð’ÑÐµ Ð´Ð°Ð½Ð½Ñ‹Ðµ ÑÐ²ÑÐ·Ð°Ð½Ð½Ñ‹Ðµ Ñ ÑÑ‚Ð¾Ð¹ Ð¾Ñ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸ÐµÐ¹ Ð±ÑƒÐ´ÑƒÑ‚ ÑƒÑ‚ÐµÑ€ÑÐ½Ñ‹."));
 			m_parent->Refresh();
 			if (ask->GetReturnCode())
 			{

@@ -1,6 +1,7 @@
 #pragma once
 #include <wx/wx.h>
 #include <wx/datectrl.h>
+#include <wx/platinfo.h>
 #include "../Controls/MaterialButton.h"
 #include "../Structs.h"
 #include "../Controls/CustomCheckBox.h"
@@ -18,11 +19,11 @@ public:
 
 private:
 
-    wxSize txtCtrlSize = wxSize(420, 30);
+    wxSize txtCtrlSize{};
     bool VerifyValues();
     //___________PAGE1____________
     void initPage1();
-    wxArrayString GetUnitChoicesArr(const wxString& exclusion = '\u00AD');
+    wxArrayString GetUnitChoicesArr(const wxString& exclusion = "\u00AD");
     wxPanel* m_page1;
     wxTextCtrl* m_receiverCtrl;
     wxTextCtrl* m_transporterCtrl;

@@ -5,9 +5,9 @@ VirtualStrgInitList::VirtualStrgInitList(wxWindow* parent, DBMain* db, const wxP
 {
 	m_db->getInitStorageList(m_items);
 	SetItemCount(m_items.size());
-	this->InsertColumn(0, "Äàòà", 0, 142);
-	this->InsertColumn(1, "Êîä îòõîäà", 0, 143);
-	this->InsertColumn(2, "Õðàíåíèå", 0, 143);
+	this->InsertColumn(0, "Ð”Ð°Ñ‚Ð°", 0, 142);
+	this->InsertColumn(1, "ÐšÐ¾Ð´ Ð¾Ñ‚Ñ…Ð¾Ð´Ð°", 0, 143);
+	this->InsertColumn(2, "Ð¥Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ", 0, 143);
 }
 
 VirtualStrgInitList::~VirtualStrgInitList()

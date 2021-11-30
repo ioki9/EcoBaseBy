@@ -1,4 +1,3 @@
-#pragma once
 #include "cMain.h"
 #include <chrono>
 #include <wx/pdfdoc.h>
@@ -20,7 +19,7 @@
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSize(1024,600))
 {
-	SetIcons(wxIconBundle(wxGetCwd() + "\\EcoIcon.ico"));
+	SetIcons(wxIconBundle(wxGetCwd() + "/EcoIcon.ico"));
 	Settings::LoadState();
 	if (Settings::getLastAddedOrgID() == -1)
 	{
@@ -57,12 +56,13 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSi
 	this->Bind(EVT_DATABASE_CHANGED, &cMain::OnDbChange, this);
 	this->Bind(wxEVT_CLOSE_WINDOW, [&](wxCloseEvent& evt)
 		{
-			Dialog_ask* ask = new Dialog_ask(this, "Ñîõðàíåíèå áàçû äàííûõ", 
-				"Æåëàåòå ñîõðàíèòü êîïèþ áàçû äàííûõ?", "Ñîõðàíèòü", gui_MainColour, "Íåò",wxDefaultPosition,wxSize(400,150));
+			Dialog_ask* ask = new Dialog_ask(this, wxString::FromUTF8("Ð¡Ð¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ðµ Ð±Ð°Ð·Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ñ…"), 
+				wxString::FromUTF8("Ð–ÐµÐ»Ð°ÐµÑ‚Ðµ ÑÐ¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ ÐºÐ¾Ð¿Ð¸ÑŽ Ð±Ð°Ð·Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ñ…?"), wxString::FromUTF8("Ð¡Ð¾Ñ…Ñ€Ð°Ð½Ð¸Ñ‚ÑŒ"), gui_MainColour, wxString::FromUTF8("ÐÐµÑ‚")
+				,wxDefaultPosition,wxSize(400,150));
 			Refresh();
 			if (ask->GetReturnCode())
 			{
-				wxDirDialog* dirDlg = new wxDirDialog(this, "Ïóòü ñîõðàíåíèÿ áàçû äàííûõ", wxGetCwd(),
+				wxDirDialog* dirDlg = new wxDirDialog(this, wxString::FromUTF8("ÐŸÑƒÑ‚ÑŒ ÑÐ¾Ñ…Ñ€Ð°Ð½ÐµÐ½Ð¸Ñ Ð±Ð°Ð·Ñ‹ Ð´Ð°Ð½Ð½Ñ‹Ñ…"), wxGetCwd(),
 					wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
 				dirDlg->ShowModal();
 				wxCopyFile(wxGetCwd() + "/passport_data.db", dirDlg->GetPath() + "/passport_data.db");
@@ -91,11 +91,11 @@ void cMain::initListPanel()
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
 
-	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ÈÇÌÅÍÈÒÜ", true,wxDefaultPosition, wxSize(100, 35));
+	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "Ð˜Ð—ÐœÐ•ÐÐ˜Ð¢Ð¬", true,wxDefaultPosition, wxSize(100, 35));
 	editButton->SetButtonLineColour(gui_MainColour);
 	editButton->SetLabelColour(gui_MainColour);
 
-	m_deleteButton = new MaterialButton(m_listPanel, wxID_ANY, "ÓÄÀËÈÒÜ", false,wxDefaultPosition,wxSize(100, 35));
+	m_deleteButton = new MaterialButton(m_listPanel, wxID_ANY, "Ð£Ð”ÐÐ›Ð˜Ð¢Ð¬", false,wxDefaultPosition,wxSize(100, 35));
 	m_deleteButton->SetButtonColour(wxColour(165, 42, 42));
 	m_deleteButton->SetLabelColour(*wxWHITE);
 	buttonSizer->AddStretchSpacer(1);
@@ -138,19 +138,19 @@ void cMain::initMainMenu()
 	m_mainMenu->SetBackgroundColour(gui_MainColour);
 	m_mainMenu->SetFont(wxFontInfo(10.5).FaceName("Segoe UI"));
 
-	m_menuButtonList = new MainMenuTabButton(m_mainMenu, "Òàáëèöà", ID_MAINMENU_LIST_BUTTON,false,wxSize(m_mainMenuWidth,50),wxPoint(0,150));
+	m_menuButtonList = new MainMenuTabButton(m_mainMenu, "Ð¢Ð°Ð±Ð»Ð¸Ñ†Ð°", ID_MAINMENU_LIST_BUTTON,false,wxSize(m_mainMenuWidth,50),wxPoint(0,150));
 	m_menuButtonList->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonList);
 
-	m_menuButtonAdd = new MainMenuTabButton(m_mainMenu, "Äîáàâèòü çàïèñü", ID_MAINMENU_ADD_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 200));
+	m_menuButtonAdd = new MainMenuTabButton(m_mainMenu, "Ð”Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð·Ð°Ð¿Ð¸ÑÑŒ", ID_MAINMENU_ADD_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 200));
 	m_menuButtonAdd->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonAdd);
 
-	m_menuButtonForm = new MainMenuTabButton(m_mainMenu, "Ñôîðìèðîâàòü", ID_MAINMENU_FORM_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 250));
+	m_menuButtonForm = new MainMenuTabButton(m_mainMenu, "Ð¡Ñ„Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ", ID_MAINMENU_FORM_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 250));
 	m_menuButtonForm->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonForm);
 
-	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "Íàñòðîéêè", ID_MAINMENU_SETTINGS_BUTTON, false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
+	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "ÐÐ°ÑÑ‚Ñ€Ð¾Ð¹ÐºÐ¸", ID_MAINMENU_SETTINGS_BUTTON, false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
 	m_menuButtonSetting->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_menuButtonSetting->setDropArrowtSize(wxSize(14, 30));
 	m_allMenuButtons.push_back(m_menuButtonSetting);
@@ -172,9 +172,9 @@ void cMain::initMainMenu()
 	m_orgChoice = new wxChoice(m_mainMenu, -1, wxPoint(120, 42), wxSize(140, 30), orgNames);
 	m_orgChoice->SetStringSelection(activeOrg);
 	m_orgChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
-	m_orgText = new wxStaticText(m_mainMenu, -1, "Îðãàíèçàöèÿ:", wxPoint(8, 42));
+	m_orgText = new wxStaticText(m_mainMenu, -1, "ÐžÑ€Ð³Ð°Ð½Ð¸Ð·Ð°Ñ†Ð¸Ñ:", wxPoint(8, 42));
 	m_orgText->SetForegroundColour(*wxWHITE);
-	m_unitText = new wxStaticText(m_mainMenu, -1, "Ïîäðàçäåëåíèå:", wxPoint(8, 82));
+	m_unitText = new wxStaticText(m_mainMenu, -1, "ÐŸÐ¾Ð´Ñ€Ð°Ð·Ð´ÐµÐ»ÐµÐ½Ð¸Ðµ:", wxPoint(8, 82));
 	m_unitText->SetForegroundColour(*wxWHITE);
 	m_unitChoice = new wxChoice(m_mainMenu, -1, wxPoint(120, 82), wxSize(140, 30), unitNames);
 
@@ -203,7 +203,7 @@ void  cMain::initFormPDFPage()
 	m_formPDFPanel = new wxScrolledWindow(this,wxID_ANY,wxPoint(0,0),wxSize(600,600));
 	m_formPDFPanel->Hide();
 	m_formPDFPanel->SetBackgroundColour(*wxWHITE);
-	m_formPDFPanel->SetFont(wxFontInfo(14).FaceName("Segoe UI").Bold(false));
+	m_formPDFPanel->SetFont(wxFontInfo(14).FaceName("Segoe UI"));
 	m_formPDFPanel->SetDoubleBuffered(true);
 
 	m_firstDate = m_dataBase->getFirstEntryDate();
@@ -211,18 +211,21 @@ void  cMain::initFormPDFPage()
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	// _____________POD9_____________
-	wxStaticText* labelPOD9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÏÎÄ 9");
+	wxStaticText* labelPOD9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÐŸÐžÐ” 9");
+	labelPOD9->SetForegroundColour(*wxBLACK);
 	labelPOD9->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
-	wxStaticText* txtFirstDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ñôîðìèðîâàòü ñ:");
+	wxStaticText* txtFirstDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ð¡Ñ„Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ñ:");
+	txtFirstDatePod9->SetForegroundColour(*wxBLACK);
 	m_date1_pod9 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, m_firstDate,wxPoint(300,200),wxDefaultSize,wxDP_DROPDOWN);
-	wxStaticText* txtSecondDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ïî:");
+	wxStaticText* txtSecondDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÐŸÐ¾:");
+	txtSecondDatePod9->SetForegroundColour(*wxBLACK);
 	m_date2_pod9 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
 	wxBoxSizer* sizerPod9Row1 = new wxBoxSizer(wxHORIZONTAL);
 	sizerPod9Row1->Add(txtFirstDatePod9,0,wxLEFT,20);
 	sizerPod9Row1->Add(m_date1_pod9,0, wxLEFT, 15);
 	sizerPod9Row1->Add(txtSecondDatePod9, 0, wxLEFT, 50);
 	sizerPod9Row1->Add(m_date2_pod9, 0, wxLEFT, 15);
-	MaterialButton* btnFormPOD9 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD9_BUTTON, "ÑÔÎÐÌÈÐÎÂÀÒÜ", true, wxDefaultPosition, wxSize(155, 40));
+	MaterialButton* btnFormPOD9 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD9_BUTTON, "Ð¡Ð¤ÐžÐ ÐœÐ˜Ð ÐžÐ’ÐÐ¢Ð¬", true, wxDefaultPosition, wxSize(155, 40));
 	btnFormPOD9->SetButtonLineColour(gui_MainColour);
 	btnFormPOD9->SetButtonFillColour(*wxWHITE);
 	btnFormPOD9->SetLabelColour(gui_MainColour);
@@ -230,11 +233,14 @@ void  cMain::initFormPDFPage()
 	m_date2_pod9->SetRange(m_firstDate, m_lastDate);
 
 	//______________POD10_____________
-	wxStaticText* labelPOD10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÏÎÄ 10");
+	wxStaticText* labelPOD10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÐŸÐžÐ” 10");
+	labelPOD10->SetForegroundColour(*wxBLACK);
 	labelPOD10->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
-	wxStaticText* txtFirstDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ñôîðìèðîâàòü ñ:");
+	wxStaticText* txtFirstDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ð¡Ñ„Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ñ:");
+	txtFirstDatePod10->SetForegroundColour(*wxBLACK);
 	m_date1_pod10 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, m_firstDate, wxPoint(300, 200), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* txtSecondDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ïî:");
+	wxStaticText* txtSecondDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÐŸÐ¾:");
+	txtSecondDatePod10->SetForegroundColour(*wxBLACK);
 	m_date2_pod10 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
 	wxBoxSizer* sizerPod10Row1 = new wxBoxSizer(wxHORIZONTAL);
 	sizerPod10Row1->Add(txtFirstDatePod10, 0, wxLEFT, 20);
@@ -242,7 +248,7 @@ void  cMain::initFormPDFPage()
 	sizerPod10Row1->Add(txtSecondDatePod10, 0, wxLEFT, 50);
 	sizerPod10Row1->Add(m_date2_pod10, 0, wxLEFT, 15);
 
-	MaterialButton* btnFormPOD10 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD10_BUTTON, "ÑÔÎÐÌÈÐÎÂÀÒÜ", true, wxDefaultPosition, wxSize(155, 40));
+	MaterialButton* btnFormPOD10 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD10_BUTTON, "Ð¡Ð¤ÐžÐ ÐœÐ˜Ð ÐžÐ’ÐÐ¢Ð¬", true, wxDefaultPosition, wxSize(155, 40));
 	btnFormPOD10->SetButtonLineColour(gui_MainColour);
 	btnFormPOD10->SetButtonFillColour(*wxWHITE);
 	btnFormPOD10->SetLabelColour(gui_MainColour);
@@ -250,11 +256,14 @@ void  cMain::initFormPDFPage()
 	m_date1_pod10->SetRange(m_firstDate, m_lastDate);
 	m_date2_pod10->SetRange(m_firstDate, m_lastDate);
 	//______________JOURNAL_____________
-	wxStaticText* labelJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÆÓÐÍÀË");
+	wxStaticText* labelJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ð–Ð£Ð ÐÐÐ›");
+	labelJournal->SetForegroundColour(*wxBLACK);
 	labelJournal->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
-	wxStaticText* txtFirstDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ñôîðìèðîâàòü ñ:");
+	wxStaticText* txtFirstDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ð¡Ñ„Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ Ñ:");
+	txtFirstDateJournal->SetForegroundColour(*wxBLACK);
 	m_date1_journal = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, m_firstDate, wxPoint(300, 200), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* txtSecondDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Ïî:");
+	wxStaticText* txtSecondDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "ÐŸÐ¾:");
+	txtSecondDateJournal->SetForegroundColour(*wxBLACK);
 	m_date2_journal = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
 	wxBoxSizer* sizerJournalRow1 = new wxBoxSizer(wxHORIZONTAL);
 
@@ -262,7 +271,7 @@ void  cMain::initFormPDFPage()
 	sizerJournalRow1->Add(m_date1_journal, 0, wxLEFT, 15);
 	sizerJournalRow1->Add(txtSecondDateJournal, 0, wxLEFT, 50);
 	sizerJournalRow1->Add(m_date2_journal, 0, wxLEFT, 15);
-	MaterialButton* btnFormJournal = new MaterialButton(m_formPDFPanel, ID_FORMPDF_JOURNAL_BUTTON, "ÑÔÎÐÌÈÐÎÂÀÒÜ", true, wxDefaultPosition, wxSize(155, 40));
+	MaterialButton* btnFormJournal = new MaterialButton(m_formPDFPanel, ID_FORMPDF_JOURNAL_BUTTON, "Ð¡Ð¤ÐžÐ ÐœÐ˜Ð ÐžÐ’ÐÐ¢Ð¬", true, wxDefaultPosition, wxSize(155, 40));
 	btnFormJournal->SetButtonLineColour(gui_MainColour);
 	btnFormJournal->SetButtonFillColour(*wxWHITE);
 	btnFormJournal->SetLabelColour(gui_MainColour);
@@ -343,7 +352,7 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 		{
 			wxWindowDisabler* disabler = new wxWindowDisabler(true);
 			
-			MyBusyInfo wait(this,"Ïîæàëóéñòà, ïîäîæäèòå... ýòî ìîæåò çàíÿòü íåñêîëüêî ìèíóò.");
+			MyBusyInfo wait(this,wxString::FromUTF8("ÐŸÐ¾Ð¶Ð°Ð»ÑƒÐ¹ÑÑ‚Ð°, Ð¿Ð¾Ð´Ð¾Ð¶Ð´Ð¸Ñ‚Ðµ... ÑÑ‚Ð¾ Ð¼Ð¾Ð¶ÐµÑ‚ Ð·Ð°Ð½ÑÑ‚ÑŒ Ð½ÐµÑÐºÐ¾Ð»ÑŒÐºÐ¾ Ð¼Ð¸Ð½ÑƒÑ‚."));
 			int temp{ Settings::getActiveUnitID() };
 			for (const auto& it : *Settings::GetOrgArrayPtr())
 			{
@@ -371,7 +380,7 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 		{
 			if (!m_dataBase->AskToEnterAllEntryDates(m_date1_pod10->GetValue().Format("%Y.%m.%d"), m_date2_pod10->GetValue().Format("%Y.%m.%d")))
 			{
-				wxMessageBox("ÏÎÄ 10 íå ìîæåò áûòü ñôîðìèðîâàí áåç \"äàòû âíåñåíèÿ\"");
+				wxMessageBox(wxString::FromUTF8("ÐŸÐžÐ” 10 Ð½Ðµ Ð¼Ð¾Ð¶ÐµÑ‚ Ð±Ñ‹Ñ‚ÑŒ ÑÑ„Ð¾Ñ€Ð¼Ð¸Ñ€Ð¾Ð²Ð°Ð½ Ð±ÐµÐ· \"Ð´Ð°Ñ‚Ñ‹ Ð²Ð½ÐµÑÐµÐ½Ð¸Ñ\""));
 				return;
 			}
 
@@ -474,7 +483,8 @@ void cMain::OnListDeleteButton(wxCommandEvent& evt)
 	if (m_grid->isRowSelected())
 	{
 		wxSafeYield(this, false);
-		Dialog_ask* askDlg = new Dialog_ask(this, "Óäàëåíèå çàïèñè", "Âû óâåðåíû, ÷òî õîòèòå óäàëèòü âûáðàííóþ çàïèñü? Ýòî äåéñòâèå íåëüçÿ îòìåíèòü.");
+		Dialog_ask* askDlg = new Dialog_ask(this, wxString::FromUTF8("Ð£Ð´Ð°Ð»ÐµÐ½Ð¸Ðµ Ð·Ð°Ð¿Ð¸ÑÐ¸"),
+		 wxString::FromUTF8("Ð’Ñ‹ ÑƒÐ²ÐµÑ€ÐµÐ½Ñ‹, Ñ‡Ñ‚Ð¾ Ñ…Ð¾Ñ‚Ð¸Ñ‚Ðµ ÑƒÐ´Ð°Ð»Ð¸Ñ‚ÑŒ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½ÑƒÑŽ Ð·Ð°Ð¿Ð¸ÑÑŒ? Ð­Ñ‚Ð¾ Ð´ÐµÐ¹ÑÑ‚Ð²Ð¸Ðµ Ð½ÐµÐ»ÑŒÐ·Ñ Ð¾Ñ‚Ð¼ÐµÐ½Ð¸Ñ‚ÑŒ."));
 		if (askDlg->GetReturnCode())
 		{
 			addPageInfo m_record;

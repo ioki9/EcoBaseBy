@@ -19,6 +19,10 @@ Add_panel::Add_panel(wxWindow* parent)
 	:wxPanel(parent,wxID_ANY)
 {
 	SetDoubleBuffered(true);
+	if(wxPlatformInfo::Get().GetOperatingSystemId() != wxOS_WINDOWS)
+		txtCtrlSize = wxSize(420, 40);
+	else
+		txtCtrlSize = wxSize(420, 30);
 	this->initPage1();
 
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
@@ -62,7 +66,7 @@ void Add_panel::initPage1()
 
 	m_page1 = new wxPanel(this);
 	m_page1->SetFont(gui_MainFont);
-
+	m_page1->SetBackgroundColour(*wxWHITE);
 	wxBoxSizer* midVertSizerLeft = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* midVertSizerRight = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* mainMidSiz = new wxBoxSizer(wxHORIZONTAL);
@@ -70,82 +74,105 @@ void Add_panel::initPage1()
 	wxPanel* rightMidPanel = new wxPanel(m_page1);
 	mainMidSiz->Add(leftMidPanel, 1, wxEXPAND | wxLEFT,20);
 	mainMidSiz->Add(rightMidPanel, 1, wxEXPAND);
-	
-	wxStaticText* label = new wxStaticText(m_page1, wxID_ANY, "ВНЕСЕНИЕ ЗАПИСИ", wxPoint(30, 30), wxDefaultSize, wxALIGN_LEFT);
+	leftMidPanel->SetBackgroundColour(*wxWHITE);
+	rightMidPanel->SetBackgroundColour(*wxWHITE);
+
+	wxStaticText* label = new wxStaticText(m_page1, wxID_ANY, "Р’РќР•РЎР•РќРР• Р—РђРџРРЎР", wxPoint(30, 30), wxDefaultSize, wxALIGN_LEFT);
+	label->SetForegroundColour(*wxBLACK);
 	label->SetFont(wxFontInfo(18).FaceName("Segoe UI Semibold"));
 
 	//LEFT SIDE
-	wxStaticText* regnum = new wxStaticText(leftMidPanel, wxID_ANY, "Регистрационный номер:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	m_regnumCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, 30));
-	wxStaticText* receiver = new wxStaticText(leftMidPanel, wxID_ANY, "Получатель отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* regnum = new wxStaticText(leftMidPanel, wxID_ANY, "Р РµРіРёСЃС‚СЂР°С†РёРѕРЅРЅС‹Р№ РЅРѕРјРµСЂ:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	regnum->SetForegroundColour(*wxBLACK);
+	m_regnumCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(120,txtCtrlSize.GetHeight()));
+	
+	wxStaticText* receiver = new wxStaticText(leftMidPanel, wxID_ANY, "РџРѕР»СѓС‡Р°С‚РµР»СЊ РѕС‚С…РѕРґР°:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	receiver->SetForegroundColour(*wxBLACK);
 	m_receiverCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_receiverCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_RECEIVER));
-	wxStaticText* transport = new wxStaticText(leftMidPanel, wxID_ANY, "Перевозчик отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* transport = new wxStaticText(leftMidPanel, wxID_ANY, "РџРµСЂРµРІРѕР·С‡РёРє РѕС‚С…РѕРґР°:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	transport->SetForegroundColour(*wxBLACK);
 	m_transporterCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_transporterCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_TRANSPORT));
-	wxStaticText* calendar = new wxStaticText(leftMidPanel, wxID_ANY, "Дата рейса:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* calendar = new wxStaticText(leftMidPanel, wxID_ANY, "Р”Р°С‚Р° СЂРµР№СЃР°:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	calendar->SetForegroundColour(*wxBLACK);
+	
 	m_date = new wxDatePickerCtrl(leftMidPanel, wxID_ANY, wxDateTime::Today(), wxPoint(600, 230), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* code = new wxStaticText(leftMidPanel, wxID_ANY, "Код отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	wxStaticText* codeDng = new wxStaticText(leftMidPanel, wxID_ANY, "Класс опасности:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* code = new wxStaticText(leftMidPanel, wxID_ANY, "РљРѕРґ РѕС‚С…РѕРґР°:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	code->SetForegroundColour(*wxBLACK);
+	wxStaticText* codeDng = new wxStaticText(leftMidPanel, wxID_ANY, "РљР»Р°СЃСЃ РѕРїР°СЃРЅРѕСЃС‚Рё:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	codeDng->SetForegroundColour(*wxBLACK);
 	wxArrayString dngLvlStr;
-	dngLvlStr.Add("н/о");
-	dngLvlStr.Add("1-го класса");
-	dngLvlStr.Add("2-го класса");
-	dngLvlStr.Add("3-го класса");
-	dngLvlStr.Add("4-го класса");
-	m_dngLvlCtrl = new wxChoice(leftMidPanel, wxID_ANY, wxDefaultPosition, wxSize(120, 30), dngLvlStr);
+	dngLvlStr.Add("РЅ/Рѕ");
+	dngLvlStr.Add("1-РіРѕ РєР»Р°СЃСЃР°");
+	dngLvlStr.Add("2-РіРѕ РєР»Р°СЃСЃР°");
+	dngLvlStr.Add("3-РіРѕ РєР»Р°СЃСЃР°");
+	dngLvlStr.Add("4-РіРѕ РєР»Р°СЃСЃР°");
+	m_dngLvlCtrl = new wxChoice(leftMidPanel, wxID_ANY, wxDefaultPosition, wxSize(120, txtCtrlSize.GetHeight()), dngLvlStr);
 	m_dngLvlCtrl->Enable(0);
-	m_codeCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, 30), 0L, CustomCodeValidator());
+	m_codeCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, txtCtrlSize.GetHeight()), 0L, CustomCodeValidator());
 	m_codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
 
 	//RIGHT SIDE
-	m_owner = new wxStaticText(rightMidPanel, wxID_ANY, "Наименование организации:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	m_owner = new wxStaticText(rightMidPanel, wxID_ANY, "РќР°РёРјРµРЅРѕРІР°РЅРёРµ РѕСЂРіР°РЅРёР·Р°С†РёРё:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	m_owner->SetForegroundColour(*wxBLACK);
 	m_owner->Hide();
 	m_ownerCtrl = new wxTextCtrl(rightMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_ownerCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_OWNER));
 	m_ownerCtrl->Hide();
-	wxStaticText* amountStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Количество отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
-	m_amountReceivedCtrl = new wxTextCtrl(rightMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, 30),0L,utility::GetDoubleValidator(3));
-	wxStaticText* amountRecStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Поступило от/образовалось:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* amountStatic = new wxStaticText(rightMidPanel, wxID_ANY, "РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚С…РѕРґР°:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	amountStatic->SetForegroundColour(*wxBLACK);
+	m_amountReceivedCtrl = new wxTextCtrl(rightMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, txtCtrlSize.GetHeight()),0L,utility::GetDoubleValidator(3));
+	wxStaticText* amountRecStatic = new wxStaticText(rightMidPanel, wxID_ANY, "РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚/РѕР±СЂР°Р·РѕРІР°Р»РѕСЃСЊ:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	amountRecStatic->SetForegroundColour(*wxBLACK);
 	wxArrayString amRecChoiceStr;
 	amRecChoiceStr.Add("-");
-	amRecChoiceStr.Add("Образовалось");
-	amRecChoiceStr.Add("Поступило от физ. лиц.");
-	amRecChoiceStr.Add("Поступило от др. орг.");
+	amRecChoiceStr.Add("РћР±СЂР°Р·РѕРІР°Р»РѕСЃСЊ");
+	amRecChoiceStr.Add("РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ С„РёР·. Р»РёС†.");
+	amRecChoiceStr.Add("РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚ РґСЂ. РѕСЂРі.");
 	m_amRecCtrl = new wxChoice(rightMidPanel,wxID_ANY, wxDefaultPosition, txtCtrlSize, amRecChoiceStr);
 	m_amRecCtrl->SetSelection(1);
-	m_unit10Static = new wxStaticText(rightMidPanel, wxID_ANY, "Подразделение, в котором образовался данный вид отхода:");
+	m_unit10Static = new wxStaticText(rightMidPanel, wxID_ANY, "РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ, РІ РєРѕС‚РѕСЂРѕРј РѕР±СЂР°Р·РѕРІР°Р»СЃСЏ РґР°РЅРЅС‹Р№ РІРёРґ РѕС‚С…РѕРґР°:");
+	m_unit10Static->SetForegroundColour(*wxBLACK);
 	m_structUnit10Ctrl = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, GetUnitChoicesArr());
-	wxStaticText* amountTrnsprtStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Движение отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* amountTrnsprtStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Р”РІРёР¶РµРЅРёРµ РѕС‚С…РѕРґР°:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	amountTrnsprtStatic->SetForegroundColour(*wxBLACK);
 	wxArrayString amMovmChoiceStr;
-	amMovmChoiceStr.Add("Использовано");
-	amMovmChoiceStr.Add("Обезврежено");
-	amMovmChoiceStr.Add("Направлено на хранение");
-	amMovmChoiceStr.Add("Захоронено");
-	amMovmChoiceStr.Add("Передано на использование");
-	amMovmChoiceStr.Add("Передано на обезвреживание");
-	amMovmChoiceStr.Add("Передано на хранение");
-	amMovmChoiceStr.Add("Передано на захоронение");
+	amMovmChoiceStr.Add("РСЃРїРѕР»СЊР·РѕРІР°РЅРѕ");
+	amMovmChoiceStr.Add("РћР±РµР·РІСЂРµР¶РµРЅРѕ");
+	amMovmChoiceStr.Add("РќР°РїСЂР°РІР»РµРЅРѕ РЅР° С…СЂР°РЅРµРЅРёРµ");
+	amMovmChoiceStr.Add("Р—Р°С…РѕСЂРѕРЅРµРЅРѕ");
+	amMovmChoiceStr.Add("РџРµСЂРµРґР°РЅРѕ РЅР° РёСЃРїРѕР»СЊР·РѕРІР°РЅРёРµ");
+	amMovmChoiceStr.Add("РџРµСЂРµРґР°РЅРѕ РЅР° РѕР±РµР·РІСЂРµР¶РёРІР°РЅРёРµ");
+	amMovmChoiceStr.Add("РџРµСЂРµРґР°РЅРѕ РЅР° С…СЂР°РЅРµРЅРёРµ");
+	amMovmChoiceStr.Add("РџРµСЂРµРґР°РЅРѕ РЅР° Р·Р°С…РѕСЂРѕРЅРµРЅРёРµ");
 	m_amMovmCtrl = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, amMovmChoiceStr);
-	m_orgTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_ORG_TRANSPORT,"Передано организации:",wxDefaultPosition,wxDefaultSize, wxRB_GROUP);
+	m_orgTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_ORG_TRANSPORT,"РџРµСЂРµРґР°РЅРѕ РѕСЂРіР°РЅРёР·Р°С†РёРё:",wxDefaultPosition,wxDefaultSize, wxRB_GROUP);
+	m_orgTransRadio->SetForegroundColour(*wxBLACK);
+	m_orgTransRadio->SetBackgroundColour(*wxWHITE);
 	m_orgTransRadio->Enable(0);
-	wxStaticText* orgTransText = new wxStaticText(rightMidPanel, wxID_ANY, "Организация:");
-	m_selfTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_SELF_TRANSPORT, "Передано своему подразделению:");
+	wxStaticText* orgTransText = new wxStaticText(rightMidPanel, wxID_ANY, "РћСЂРіР°РЅРёР·Р°С†РёСЏ:");
+	orgTransText->SetForegroundColour(*wxBLACK);
+	m_selfTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_SELF_TRANSPORT, "РџРµСЂРµРґР°РЅРѕ СЃРІРѕРµРјСѓ РїРѕРґСЂР°Р·РґРµР»РµРЅРёСЋ:");
 	m_selfTransRadio->Enable(0);
-	wxStaticText* selfTransText= new wxStaticText(rightMidPanel, wxID_ANY, "Подразделение:");
+	wxStaticText* selfTransText= new wxStaticText(rightMidPanel, wxID_ANY, "РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ:");
+	selfTransText->SetForegroundColour(*wxBLACK);
 	m_structUnit9Ctrl = new wxTextCtrl(rightMidPanel, wxID_ANY,wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_structUnit9Ctrl->Enable(0);
-	wxStaticText* unit9GoalText = new wxStaticText(rightMidPanel, wxID_ANY, "Цель:");
+	wxStaticText* unit9GoalText = new wxStaticText(rightMidPanel, wxID_ANY, "Р¦РµР»СЊ:");
+	unit9GoalText->SetForegroundColour(*wxBLACK);
 	m_structUnitChoice = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, GetUnitChoicesArr());
 	m_structUnitChoice->Enable(0);
 	m_amMovmStructCtrl = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, amMovmChoiceStr);
 	m_amMovmStructCtrl->Enable(0);
-	m_recievedPhysText = new wxStaticText(rightMidPanel, wxID_ANY, "ФИО физ лица:");
+	m_recievedPhysText = new wxStaticText(rightMidPanel, wxID_ANY, "Р¤РРћ С„РёР· Р»РёС†Р°:");
+	m_recievedPhysText->SetForegroundColour(*wxBLACK);
 	m_recievedPhysText->Hide();
-
-
+	
+	
 	wxPanel* btnPanel = new wxPanel(m_page1);
-	m_applyButton = new MaterialButton(btnPanel, wxID_ANY, wxS("ВНЕСТИ ЗАПИСЬ"),false,wxDefaultPosition,wxSize(200,55));
+	btnPanel->SetBackgroundColour(*wxWHITE);
+	m_applyButton = new MaterialButton(btnPanel, wxID_ANY, wxS("Р’РќР•РЎРўР Р—РђРџРРЎР¬"),false,wxDefaultPosition,wxSize(200,55));
 	m_applyButton->SetButtonColour(gui_MainColour);
 	m_applyButton->SetLabelColour(*wxWHITE);
 	wxBoxSizer* btnSzr = new wxBoxSizer(wxHORIZONTAL);
@@ -380,7 +407,7 @@ void Add_panel::OnRadioButton(wxCommandEvent& evt)
 	}
 	else if(m_selfTransRadio->GetValue() && m_structUnit10Ctrl->GetCount() < 2)
 	{
-		wxMessageBox("невозможно передать в другое подразделение, количество существующих подразделений меньше 2.");
+		wxMessageBox("РЅРµРІРѕР·РјРѕР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РІ РґСЂСѓРіРѕРµ РїРѕРґСЂР°Р·РґРµР»РµРЅРёРµ, РєРѕР»РёС‡РµСЃС‚РІРѕ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёС… РїРѕРґСЂР°Р·РґРµР»РµРЅРёР№ РјРµРЅСЊС€Рµ 2.");
 		m_orgTransRadio->SetValue(1);
 		return;
 	}
@@ -391,34 +418,35 @@ bool Add_panel::VerifyValues()
 	DBMain db;
 	if (!db.IsCodeExists(m_codeCtrl->GetValue()))
 	{
-		wxMessageBox("Ошибка: введенное значение в поле \"Код отходов\" не существует");
+		
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ РІ РїРѕР»Рµ \"РљРѕРґ РѕС‚С…РѕРґРѕРІ\" РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚"));
 		return false;
 	}
 	if (m_codeCtrl->GetValue().IsEmpty())
 	{
-		wxMessageBox("Ошибка: поле \"Код отходов\" должно быть заполнено");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"РљРѕРґ РѕС‚С…РѕРґРѕРІ\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 		return false;
 	}
 	if (m_dngLvlCtrl->GetSelection() == -1)
 	{
-		wxMessageBox("Ошибка: поле \"Класс опосности\" должно быть заполнено");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"РљР»Р°СЃСЃ РѕРїРѕСЃРЅРѕСЃС‚Рё\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 		return false;
 	}
 	if (m_amountReceivedCtrl->GetValue().IsEmpty())
 	{
-		wxMessageBox("Ошибка: поле \"Количество отходов\" должно быть заполнено");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"РљРѕР»РёС‡РµСЃС‚РІРѕ РѕС‚С…РѕРґРѕРІ\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 		return false;
 	}
 	if (m_amRecCtrl->GetSelection() == -1)
 	{
-		wxMessageBox("Ошибка: поле \"Поступло от/образовалось\" должно быть заполнено");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"РџРѕСЃС‚СѓРїР»Рѕ РѕС‚/РѕР±СЂР°Р·РѕРІР°Р»РѕСЃСЊ\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 		return false;
 	}
 	if (m_amRecCtrl->GetSelection() == 1 && m_structUnit10Ctrl->GetSelection() == -1)
 	{
 		if (m_structUnit10Ctrl->GetCount() != 1)
 		{
-			wxMessageBox("Ошибка: поле \"Подразделение, в котором образовался данный вид отхода\" должно быть заполнено");
+			wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ, РІ РєРѕС‚РѕСЂРѕРј РѕР±СЂР°Р·РѕРІР°Р»СЃСЏ РґР°РЅРЅС‹Р№ РІРёРґ РѕС‚С…РѕРґР°\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 			return false;
 		}
 		else
@@ -430,21 +458,21 @@ bool Add_panel::VerifyValues()
 	}
 	if (m_amMovmCtrl->GetSelection() == -1)
 	{
-		wxMessageBox("Ошибка: поле \"Движение отхода\" должно быть заполнено");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"Р”РІРёР¶РµРЅРёРµ РѕС‚С…РѕРґР°\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 		return false;
 	}
 	if (m_amMovmCtrl->GetSelection() > 3 && m_selfTransRadio->GetValue())
 	{
 		if (m_amMovmStructCtrl->GetSelection() == -1)
 		{
-			wxMessageBox("Ошибка: поле \"Цель\" должно быть заполнено");
+			wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"Р¦РµР»СЊ\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 			return false;
 		}
 		if (m_structUnitChoice->GetSelection() == -1)
 		{
 			if (m_structUnitChoice->GetCount() != 1)
 			{
-				wxMessageBox("Ошибка: поле \"Подразделение\" должно быть заполнено");
+				wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РїРѕР»Рµ \"РџРѕРґСЂР°Р·РґРµР»РµРЅРёРµ\" РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ Р·Р°РїРѕР»РЅРµРЅРѕ"));
 				return false;
 			}
 			else
@@ -457,7 +485,7 @@ bool Add_panel::VerifyValues()
 	}
 	if (m_amRecCtrl->GetSelection() == 0 && m_amMovmCtrl->GetSelection() == 2)
 	{
-		wxMessageBox("Ошибка: выбранная комбинация полей \"Поступило от/образовалось\" и \"Движение отхода\" невозможна.");
+		wxMessageBox(wxString::FromUTF8("РћС€РёР±РєР°: РІС‹Р±СЂР°РЅРЅР°СЏ РєРѕРјР±РёРЅР°С†РёСЏ РїРѕР»РµР№ \"РџРѕСЃС‚СѓРїРёР»Рѕ РѕС‚/РѕР±СЂР°Р·РѕРІР°Р»РѕСЃСЊ\" Рё \"Р”РІРёР¶РµРЅРёРµ РѕС‚С…РѕРґР°\" РЅРµРІРѕР·РјРѕР¶РЅР°."));
 		return false;
 	}
 	return true;

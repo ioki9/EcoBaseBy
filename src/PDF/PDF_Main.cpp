@@ -14,11 +14,11 @@ wxString PDF_Main::formatToYMD(wxDateTime date)
 
 void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate, const wxString& orgName, const wxString& unitName, const wxString& unitID)
 {
-	wxString BSunitName{ '\\'+ unitName  };
+	wxString BSunitName{ '/'+ unitName  };
 	if (unitName.IsEmpty())
 		BSunitName = "";
-	if (!wxDirExists(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName))
-		wxFileName::Mkdir(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	if (!wxDirExists(Settings::GetPdfSavePath() + "/" + orgName + "/п÷п·п■9" + BSunitName))
+		wxFileName::Mkdir(Settings::GetPdfSavePath() + "/" + orgName + "/п÷п·п■9" + BSunitName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
 	passportPod9Info passData;
 	wxString codename;
 	int unique{ m_dataBase->getUniqueCodes(passData,unitID,formatToYMD(startDate),formatToYMD(endDate)) };
@@ -30,7 +30,7 @@ void PDF_Main::formPod9(const wxDateTime& startDate, const wxDateTime& endDate, 
 		pdf.AddPage();
 		pdf.drawTable();
 
-		pdf.SaveAsFile(Settings::GetPdfSavePath() + "\\" + orgName + "\\онд9" + BSunitName + '\\' + passData.uniqueCodes[i] + ".pdf");
+		pdf.SaveAsFile(Settings::GetPdfSavePath() + "/" + orgName + "/п÷п·п■9" + BSunitName + '/' + passData.uniqueCodes[i] + ".pdf");
 	}
 
 }
