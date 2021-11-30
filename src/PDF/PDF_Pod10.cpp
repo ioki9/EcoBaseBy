@@ -5,7 +5,7 @@
 void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate, const wxString& orgName)
 {
     
-    if (!wxDirExists(Settings::GetPdfSavePath() + "/" + orgName))
+    if (!wxDirExists(Settings::GetPdfSavePath() + "/" + wxString::FromUTF8(orgName)))
         wxFileName::Mkdir(Settings::GetPdfSavePath() + "/" + orgName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
     m_dataBase = new DBMain();
     m_dataBase->getPod10TableCount(m_data, startDate, endDate);
@@ -27,7 +27,7 @@ void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate, co
             drawTable();
     }
 
-    SaveAsFile(Settings::GetPdfSavePath() + "/" + orgName + wxS("/ПОД10.pdf"));
+    SaveAsFile(Settings::GetPdfSavePath() + "/" + orgName + wxString::FromUTF8("/ПОД10.pdf"));
 }
 
 void PDF_Pod10::Footer()
@@ -61,51 +61,51 @@ void PDF_Pod10::drawTableHeader(const std::vector<double> &w)
     SetFont(font);
     Cell(w[0], 36.5, wxS(""), wxPDF_BORDER_FRAME);
     SetXY(GetX() - w[0], GetY() + 2.25);
-    MultiCell(w[0], 4, wxS("Дата внесения учетной записи в книгу обшего\n учета\n отходов"), 0, wxPDF_ALIGN_CENTER);
+    MultiCell(w[0], 4, wxString::FromUTF8("Дата внесения учетной записи в книгу обшего\n учета\n отходов"), 0, wxPDF_ALIGN_CENTER);
     SetXY(GetX() + w[0], GetY() - 34.25);
     Cell(w[1], 36.5, wxS(""), wxPDF_BORDER_FRAME);
     SetXY(GetX() - w[1], GetY() + 14.25);
-    MultiCell(w[1], 4, wxS("Наименование отхода"), 0, wxPDF_ALIGN_MIDDLE);
+    MultiCell(w[1], 4, wxString::FromUTF8("Наименование отхода"), 0, wxPDF_ALIGN_MIDDLE);
     SetXY(GetX() + w[1] + w[0], GetY() - 22.25);
     Cell(w[2], 36.5, wxS(""), wxPDF_BORDER_FRAME);
     SetXY(GetX() - w[2], GetY() + 14.25);
-    MultiCell(w[2], 4, wxS("Код отхода"), 0, wxPDF_ALIGN_MIDDLE);
+    MultiCell(w[2], 4, wxString::FromUTF8("Код отхода"), 0, wxPDF_ALIGN_MIDDLE);
     SetXY(GetX() + w[1] + w[0] + w[2], GetY() - 22.25);
     Cell(w[3], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[3], 36.5, wxS("Степень опасности"), wxS("или класс"));
+    centerRotatedText(w[3], 36.5, wxString::FromUTF8("Степень опасности"), wxS("или класс"));
     Cell(w[4], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[4], 36.5, wxS("Норматив"), wxS("образования отходов"));
+    centerRotatedText(w[4], 36.5, wxString::FromUTF8("Норматив"), wxString::FromUTF8("образования отходов"));
     Cell(w[5], 36.5, wxS(""), wxPDF_BORDER_FRAME);
     SetXY(GetX() - w[5], GetY() + 6.25);
-    MultiCell(w[5], 4, wxS("Структурные подразделения, в которых образовался данный вид отхода"), 0, wxPDF_ALIGN_CENTER);
+    MultiCell(w[5], 4, wxString::FromUTF8("Структурные подразделения, в которых образовался данный вид отхода"), 0, wxPDF_ALIGN_CENTER);
     SetXY(GetX() + w[0] + w[1] + w[2] + w[3] + w[4] + w[5], GetY() - 30.25);
     Cell(w[6], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[6], 36.5, wxS("Образовалось, т. (шт.)"));
+    centerRotatedText(w[6], 36.5, wxString::FromUTF8("Образовалось, т. (шт.)"));
     Cell(w[7], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[7], 36.5, wxS("Поступило от других"), wxS("организаций, т. (шт.)"));
+    centerRotatedText(w[7], 36.5, wxString::FromUTF8("Поступило от других"), wxString::FromUTF8("организаций, т. (шт.)"));
     Cell(w[8], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[8], 36.5, wxS("Поступило отх"), wxS("физических лиц, т."), wxS("(шт.)"));
+    centerRotatedText(w[8], 36.5, wxString::FromUTF8("Поступило отх"), wxString::FromUTF8("физических лиц, т."), wxString::FromUTF8("(шт.)"));
     Cell(w[9], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[9], 36.5, wxS("Использовано, т. (шт.)"));
+    centerRotatedText(w[9], 36.5, wxString::FromUTF8("Использовано, т. (шт.)"));
     Cell(w[10], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[10], 36.5, wxS("Обезврежено, т. (шт.)"));
+    centerRotatedText(w[10], 36.5, wxString::FromUTF8("Обезврежено, т. (шт.)"));
     Cell(w[11], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[11], 36.5, wxS("Направлено на"), wxS("хранение, т. (шт.)"));
+    centerRotatedText(w[11], 36.5, wxString::FromUTF8("Направлено на"), wxString::FromUTF8("хранение, т. (шт.)"));
     Cell(w[12], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[12], 36.5, wxS("Захоронено, т. (шт.)"));
-    Cell(w[13] + w[14] + w[15] + w[16], 6, wxS("Передано, т. (шт.)"), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
+    centerRotatedText(w[12], 36.5, wxString::FromUTF8("Захоронено, т. (шт.)"));
+    Cell(w[13] + w[14] + w[15] + w[16], 6, wxString::FromUTF8("Передано, т. (шт.)"), wxPDF_BORDER_FRAME, 1, wxPDF_ALIGN_CENTER);
     SetXY(GetX() + w[12] + w[11] + w[10] + w[9] + w[8] + w[7] + w[6] + w[5] + w[4] + w[3] + w[2] + w[1] + w[0], GetY());
     Cell(w[13], 30.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[13], 30.5, wxS("на"), wxS("использование"));
+    centerRotatedText(w[13], 30.5, wxString::FromUTF8("на"), wxString::FromUTF8("использование"));
     Cell(w[14], 30.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[14], 30.5, wxS("на"), wxS("обезвреживание"));
+    centerRotatedText(w[14], 30.5, wxString::FromUTF8("на"), wxString::FromUTF8("обезвреживание"));
     Cell(w[15], 30.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[15], 30.5, wxS("на хранение"));
+    centerRotatedText(w[15], 30.5, wxString::FromUTF8("на хранение"));
     Cell(w[16], 30.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[16], 30.5, wxS(" на захоронение"));
+    centerRotatedText(w[16], 30.5, wxString::FromUTF8(" на захоронение"));
     SetXY(GetX(), GetY() - 6);
     Cell(w[17], 36.5, wxS(""), wxPDF_BORDER_FRAME);
-    centerRotatedText(w[17], 36.5, wxS("Хранится, т. (шт.)"));
+    centerRotatedText(w[17], 36.5, wxString::FromUTF8("Хранится, т. (шт.)"));
     Ln();
     int i;
     for (i = 0; i < 18; i++)
@@ -137,7 +137,7 @@ void PDF_Pod10::drawMulticellRows(const std::vector<double> &w)
         }
         if (m_data.codeDangerLVL[row].empty())
             m_precision = 3;
-        else if (m_data.codeDangerLVL[row][0] == '4' || m_data.codeDangerLVL[row][0] == 'н')
+        else if (m_data.codeDangerLVL[row][0] == '4' || m_data.codeDangerLVL[row][0] == wxString::FromUTF8("н"))
             m_precision = 2;
         else
             m_precision = 3;
@@ -190,7 +190,7 @@ void PDF_Pod10::drawTableSignature()
    
     // 1st row
     Cell(indentL);
-    Cell(60, 3, wxS("Ответственный за ведение книги"));
+    Cell(60, 3, wxString::FromUTF8("Ответственный за ведение книги"));
     Line(GetX() + 1, GetY() + 3.5, GetX() + 57, GetY() + 3.5);
     Line(GetX() + 59, GetY() + 3.5, GetX() + 85, GetY() + 3.5);
     Line(GetX() + 87, GetY() + 3.5, GetX() + 137, GetY() + 3.5);
@@ -198,45 +198,45 @@ void PDF_Pod10::drawTableSignature()
     SetFont(font);
     Ln(6);
     Cell(indentL + 60.0);
-    Cell(57, 1, wxS("(должность)"), 0, 0, wxPDF_ALIGN_CENTER);
+    Cell(57, 1, wxString::FromUTF8("(должность)"), 0, 0, wxPDF_ALIGN_CENTER);
     Cell(2);
-    Cell(26, 1, wxS("(подпись)"), 0, 0, wxPDF_ALIGN_CENTER);
+    Cell(26, 1, wxString::FromUTF8("(подпись)"), 0, 0, wxPDF_ALIGN_CENTER);
     Cell(2);
-    Cell(50, 1, wxS("(инициалы, фамилия)"), 0, 0, wxPDF_ALIGN_CENTER);
+    Cell(50, 1, wxString::FromUTF8("(инициалы, фамилия)"), 0, 0, wxPDF_ALIGN_CENTER);
     Ln(3);
     //2nd row
     Cell(indentL);
     font.SetPointSize(12);
     SetFont(font);
-    Cell(57, 3, wxS("Распорядительный документ №"));
+    Cell(57, 3, wxString::FromUTF8("Распорядительный документ №"));
     Line(GetX() + 3, GetY() + 3.5, GetX() + 35, GetY() + 3.5);
-    Cell(42.5, 3, wxS("от"), 0, 0, wxPDF_ALIGN_RIGHT);
-    Cell(1, 3, wxS("«"));
+    Cell(42.5, 3, wxString::FromUTF8("от"), 0, 0, wxPDF_ALIGN_RIGHT);
+    Cell(1, 3, wxString::FromUTF8("«"));
     Line(GetX() + 2.5, GetY() + 3.5, GetX() + 10, GetY() + 3.5);
-    Cell(13.5, 3, wxS("»"), 0, 0, wxPDF_ALIGN_RIGHT);
+    Cell(13.5, 3, wxString::FromUTF8("»"), 0, 0, wxPDF_ALIGN_RIGHT);
     Line(GetX() + 0.7, GetY() + 3.5, GetX() + 36.7, GetY() + 3.5);
-    Cell(42, 3, wxS("г."), 0, 0, wxPDF_ALIGN_RIGHT);
+    Cell(42, 3, wxString::FromUTF8("г."), 0, 0, wxPDF_ALIGN_RIGHT);
     Ln(5);
     //3rd row
     Cell(indentL);
-    Cell(17.5, 3, wxS("Проверил"));
+    Cell(17.5, 3, wxString::FromUTF8("Проверил"));
     Line(GetX() + 2, GetY() + 3.5, GetX() + 74.5, GetY() + 3.5);
     Line(GetX() + 76.5, GetY() + 3.5, GetX() + 119, GetY() + 3.5);
-    Cell(124, 3, wxS("«"), 0, 0, wxPDF_ALIGN_RIGHT);
+    Cell(124, 3, wxString::FromUTF8("«"), 0, 0, wxPDF_ALIGN_RIGHT);
     Line(GetX(), GetY() + 3.5, GetX() + 5, GetY() + 3.5);
-    Cell(9, 3, wxS("»"), 0, 0, wxPDF_ALIGN_RIGHT);
+    Cell(9, 3, wxString::FromUTF8("»"), 0, 0, wxPDF_ALIGN_RIGHT);
     Line(GetX(), GetY() + 3.5, GetX() + 15, GetY() + 3.5);
-    Cell(22, 3, wxS("20"), 0, 0, wxPDF_ALIGN_RIGHT);
+    Cell(22, 3, wxString::FromUTF8("20"), 0, 0, wxPDF_ALIGN_RIGHT);
     Line(GetX(), GetY() + 3.5, GetX() + 5, GetY() + 3.5);
     Cell(5.3);
-    Cell(50, 3, wxS("г."));
+    Cell(50, 3, wxString::FromUTF8("г."));
     Ln(5);
     font.SetPointSize(8);
     SetFont(font);
     Cell(indentL + 19.5);
-    Cell(72.5, 3, wxS("(должность, подпись)"), 0, 0, wxPDF_ALIGN_CENTER);
+    Cell(72.5, 3, wxString::FromUTF8("(должность, подпись)"), 0, 0, wxPDF_ALIGN_CENTER);
     Cell(2);
-    Cell(42.5, 3, wxS("(инициалы, фамилия)"), 0, 0, wxPDF_ALIGN_CENTER);
+    Cell(42.5, 3, wxString::FromUTF8("(инициалы, фамилия)"), 0, 0, wxPDF_ALIGN_CENTER);
 
     if (m_tableLast != true)
     {
@@ -254,52 +254,52 @@ wxString PDF_Pod10::convertDateToMonthString(const wxString &date)
     wxString newDate;
     if (month == "01")
     {
-        newDate = wxS("Январь " + year + "г.");
+        newDate = wxString::FromUTF8("Январь " + year + "г.");
     }
     else if (month == "02")
     {
-        newDate = wxS("Февраль " + year + "г.");
+        newDate = wxString::FromUTF8("Февраль " + year + "г.");
     }
     else if (month == "03")
     {
-        newDate = wxS("Март " + year + "г.");
+        newDate = wxString::FromUTF8("Март " + year + "г.");
     }
     else if (month == "04")
     {
-        newDate = wxS("Апрель " + year + "г.");
+        newDate = wxString::FromUTF8("Апрель " + year + "г.");
     }
     else if (month == "05")
     {
-        newDate = wxS("Май " + year + "г.");
+        newDate = wxString::FromUTF8("Май " + year + "г.");
     }
     else if (month == "06")
     {
-        newDate = wxS("Июнь " + year + "г.");
+        newDate = wxString::FromUTF8("Июнь " + year + "г.");
     }
     else if (month == "07")
     {
-        newDate = wxS("Июль " + year + "г.");
+        newDate = wxString::FromUTF8("Июль " + year + "г.");
     }
     else if (month == "08")
     {
-        newDate = wxS("Август " + year + "г.");
+        newDate = wxString::FromUTF8("Август " + year + "г.");
     }
     else if (month == "09")
     {
-        newDate = wxS("Сентябрь " + year + "г.");
+        newDate = wxString::FromUTF8("Сентябрь " + year + "г.");
 
     }
     else if (month == "10")
     {
-        newDate = wxS("Октябрь " + year + "г.");
+        newDate = wxString::FromUTF8("Октябрь " + year + "г.");
     }
     else if (month == "11")
     {
-        newDate = wxS("Ноябрь " + year + "г.");
+        newDate = wxString::FromUTF8("Ноябрь " + year + "г.");
     }
     else if (month == "12")
     {
-        newDate = wxS("Декабрь " + year + "г.");
+        newDate = wxString::FromUTF8("Декабрь " + year + "г.");
     }
     return newDate;
 }

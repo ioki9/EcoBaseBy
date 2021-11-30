@@ -5,8 +5,8 @@ VirtualCodeList::VirtualCodeList(wxWindow* parent, DBMain *db, const wxPoint& po
 {
 	m_db->getCodeInfoList(m_items);
 	SetItemCount(m_items.size());
-	this->InsertColumn(0, "Код отхода",0, 214);
-	this->InsertColumn(1, "Норма образования",0,214);
+	this->InsertColumn(0, wxString::FromUTF8("Код отхода"),0, 214);
+	this->InsertColumn(1, wxString::FromUTF8("Норма образования"),0,214);
 }
 
 VirtualCodeList::~VirtualCodeList()

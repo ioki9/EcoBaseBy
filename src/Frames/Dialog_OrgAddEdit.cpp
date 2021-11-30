@@ -62,17 +62,17 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	m_buttonPanel->SetBackgroundColour(*wxWHITE);
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
 	m_1stPage->SetBackgroundColour(*wxWHITE);
-	wxStaticText* staticOrgName = new wxStaticText(m_1stPage, wxID_ANY, wxS("Название организации:"));
+	wxStaticText* staticOrgName = new wxStaticText(m_1stPage, wxID_ANY, wxString::FromUTF8("Название организации:"));
 	m_orgName = new wxTextCtrl(m_1stPage, wxID_ANY, nameStr);
 	staticOrgName->SetForegroundColour(*wxBLACK);
-	wxStaticText* staticOrgAddress = new wxStaticText(m_1stPage, wxID_ANY, wxS("Адрес организации:"));
+	wxStaticText* staticOrgAddress = new wxStaticText(m_1stPage, wxID_ANY, wxString::FromUTF8("Адрес организации:"));
 	m_orgAddress = new wxTextCtrl(m_1stPage, wxID_ANY, adressStr);
 	staticOrgAddress->SetForegroundColour(*wxBLACK);
-	wxStaticText* staticOrgUnp = new wxStaticText(m_1stPage, wxID_ANY, wxS("УНП организации:"));
+	wxStaticText* staticOrgUnp = new wxStaticText(m_1stPage, wxID_ANY, wxString::FromUTF8("УНП организации:"));
 	m_orgUnp = new wxTextCtrl(m_1stPage, wxID_ANY, unpStr);
 	staticOrgUnp->SetForegroundColour(*wxBLACK);
 
-	wxStaticText* staticNormList = new wxStaticText(m_1stPage, wxID_ANY, wxS("Нормы образования по видам отходов:"));
+	wxStaticText* staticNormList = new wxStaticText(m_1stPage, wxID_ANY, wxString::FromUTF8("Нормы образования по видам отходов:"));
 	m_wasteNormList = new VirtualCodeList(m_1stPage, &m_db, wxDefaultPosition, wxSize(200, 200));
 	staticNormList->SetForegroundColour(*wxBLACK);
 
@@ -99,7 +99,7 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	wasteListSizer->Add(wasteBtnSizer, 0, wxRIGHT, 50);
 
 
-	wxStaticText* staticStrgList = new wxStaticText(m_1stPage, wxID_ANY, wxS("Начальные значения хранения отходов:"));
+	wxStaticText* staticStrgList = new wxStaticText(m_1stPage, wxID_ANY, wxString::FromUTF8("Начальные значения хранения отходов:"));
 	m_strgList = new VirtualStrgInitList(m_1stPage, &m_db, wxDefaultPosition, wxSize(200, 200));
 	staticStrgList->SetForegroundColour(*wxBLACK);
 
@@ -125,10 +125,10 @@ Dialog_OrgAddEdit::Dialog_OrgAddEdit(wxWindow* parent, organization* org, wxWind
 	strgListSizer->Add(m_strgList, 1, wxRIGHT, 10);
 	strgListSizer->Add(strgBtnSizer, 0, wxRIGHT, 50);
 
-	wxStaticText* staticUnitList = new wxStaticText(m_1stPage, wxID_ANY, wxS("Структурные подразделения организации:"));
+	wxStaticText* staticUnitList = new wxStaticText(m_1stPage, wxID_ANY, wxString::FromUTF8("Структурные подразделения организации:"));
 	staticUnitList->SetForegroundColour(*wxBLACK);
 	m_unitList = new wxListCtrl(m_1stPage, wxID_ANY, wxDefaultPosition, wxSize(200, 200), wxLC_REPORT);
-	m_unitList->AppendColumn("Название подразделения", wxLIST_FORMAT_LEFT, 428);
+	m_unitList->AppendColumn(wxString::FromUTF8("Название подразделения"), wxLIST_FORMAT_LEFT, 428);
 	if (m_openedAsEdit)
 	{
 		for (size_t i{ 0 }; i < m_org.units.size(); ++i)
@@ -297,15 +297,15 @@ void Dialog_OrgAddEdit::OnWasteListEdit(wxCommandEvent& evt)
 {
 	if (m_wasteNormList->GetSelectedItemRef())
 	{
-		wxDialog dlg(this, wxID_ANY, "Изменить норму образования", wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
+		wxDialog dlg(this, wxID_ANY, wxString::FromUTF8("Изменить норму образования"), wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
 		wxPanel* main = new wxPanel(&dlg);
 		main->SetBackgroundColour(*wxWHITE);
 		main->SetFont(gui_MainFont);
-		wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
+		wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Код отхода:"));
 		staticCode->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY, m_wasteNormList->GetSelectedItemRef()->get()[0]);
 		codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-		wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, "Норма образования:");
+		wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Норма образования:"));
 		staticWaste->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY, m_wasteNormList->GetSelectedItemRef()->get()[1]);
 
@@ -369,15 +369,15 @@ void Dialog_OrgAddEdit::OnWasteListDelete(wxCommandEvent& evt)
 
 void Dialog_OrgAddEdit::OnWasteListAdd(wxCommandEvent& evt)
 {
-	wxDialog dlg(this, wxID_ANY, "Добавить норму образования", wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
+	wxDialog dlg(this, wxID_ANY, wxString::FromUTF8("Добавить норму образования"), wxDefaultPosition, wxSize(300, 230), wxDEFAULT_DIALOG_STYLE);
 	wxPanel* main = new wxPanel(&dlg);
 	main->SetBackgroundColour(*wxWHITE);
 	main->SetFont(gui_MainFont);
-	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
+	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Код отхода:"));
 	staticCode->SetForegroundColour(*wxBLACK);
 	wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY,wxEmptyString,wxDefaultPosition,wxDefaultSize,0L);
 	codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-	wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, "Норма образования:");
+	wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Норма образования:"));
 	wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY);
 	staticWaste->SetForegroundColour(*wxBLACK);
 	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Отмена"), true, wxDefaultPosition, wxSize(70, 35));
@@ -428,7 +428,7 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 {
 	if (m_strgList->GetSelectedItemRef())
 	{
-		wxDialog dlg(this, wxID_ANY, "Изменить начальные значения хранения", wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
+		wxDialog dlg(this, wxID_ANY, wxString::FromUTF8("Изменить начальные значения хранения"), wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
 		wxPanel* main = new wxPanel(&dlg);
 		main->SetBackgroundColour(*wxWHITE);
 		main->SetFont(gui_MainFont);
@@ -446,7 +446,7 @@ void Dialog_OrgAddEdit::OnStorageListEdit(wxCommandEvent& evt)
 		firstDate.ParseFormat(wxS("2000.01.01"), wxS("%Y.%m.%d"), wxDefaultDateTime);
 		wxDateTime lastDate = m_db.getFirstEntryByCodeNoInit(m_strgList->GetSelectedItemRef()->get()[1]);
 		dateCtrl->SetRange(firstDate, lastDate);
-		wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "Хранение:");
+		wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Хранение:"));
 		staticStorage->SetForegroundColour(*wxBLACK);
 		wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
 			wxDefaultPosition,wxDefaultSize,0L,utility::GetDoubleValidator(3,wxAtof(m_strgList->GetSelectedItemRef()->get()[2])));
@@ -514,18 +514,18 @@ void Dialog_OrgAddEdit::OnStorageListDelete(wxCommandEvent& evt)
 
 void Dialog_OrgAddEdit::OnStorageListAdd(wxCommandEvent& evt)
 {
-	wxDialog dlg(this, wxID_ANY, "Добавить начальные значения хранения", wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
+	wxDialog dlg(this, wxID_ANY, wxString::FromUTF8("Добавить начальные значения хранения"), wxDefaultPosition, wxSize(300, 320), wxDEFAULT_DIALOG_STYLE);
 	wxPanel* main = new wxPanel(&dlg);
 	main->SetBackgroundColour(*wxWHITE);
 	main->SetFont(gui_MainFont);
-	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, "Код отхода:");
+	wxStaticText* staticCode = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Код отхода:"));
 	staticCode->SetForegroundColour(*wxBLACK);
 	wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY);
 	codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
-	wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, "Дата:");
+	wxStaticText* staticDate = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Дата:"));
 	staticDate->SetForegroundColour(*wxBLACK);
 	wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(main, wxID_ANY, wxDateTime::Today(), wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, "Хранение:");
+	wxStaticText* staticStorage = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Хранение:"));
 	staticStorage->SetForegroundColour(*wxBLACK);
 	wxTextCtrl* storageCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
 		wxDefaultPosition, wxDefaultSize, 0L, utility::GetDoubleValidator(3));
@@ -582,11 +582,11 @@ void Dialog_OrgAddEdit::OnUnitListEdit(wxCommandEvent& evt)
 {
 	if (int selected = m_unitList->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED); selected != -1)
 	{
-		wxDialog dlg(this, wxID_ANY, "Изменить структурное подразделение", wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
+		wxDialog dlg(this, wxID_ANY, wxString::FromUTF8("Изменить структурное подразделение"), wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
 		wxPanel* main = new wxPanel(&dlg);
 		main->SetBackgroundColour(*wxWHITE);
 		main->SetFont(gui_MainFont);
-		wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, "Название структурного подразделения:");
+		wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Название структурного подразделения:"));
 		wxTextCtrl* unitCtrl = new wxTextCtrl(main, wxID_ANY,m_unitList->GetItemText(selected));
 		staticUnit->SetForegroundColour(*wxBLACK);
 
@@ -675,11 +675,11 @@ void Dialog_OrgAddEdit::OnUnitListDelete(wxCommandEvent& evt)
 
 void Dialog_OrgAddEdit::OnUnitListAdd(wxCommandEvent& evt)
 {
-	wxDialog dlg(this, wxID_ANY, "Добавить структурное подразделение", wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
+	wxDialog dlg(this, wxID_ANY, wxString::FromUTF8("Добавить структурное подразделение"), wxDefaultPosition, wxSize(370, 180), wxDEFAULT_DIALOG_STYLE);
 	wxPanel* main = new wxPanel(&dlg);
 	main->SetBackgroundColour(*wxWHITE);
 	main->SetFont(gui_MainFont);
-	wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, "Название структурного подразделения:");
+	wxStaticText* staticUnit = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Название структурного подразделения:"));
 	wxTextCtrl* unitCtrl = new wxTextCtrl(main, wxID_ANY);
 	staticUnit->SetForegroundColour(*wxBLACK);
 

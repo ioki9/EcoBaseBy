@@ -112,26 +112,26 @@ void myGridTable::AutoSizeAllColLabelSize()
 
 void myGridTable::initGridLabels()
 {
-	m_gridLabels[Grid_label::grid_regnum] = "Рег. №";
-	m_gridLabels[Grid_label::grid_date] = "Дата";
-	m_gridLabels[Grid_label::grid_code] = "Код отхода";
-	m_gridLabels[Grid_label::grid_owner] = "Поступило от орг.";
-	m_gridLabels[Grid_label::grid_receiver] = "Получатель орг.";
-	m_gridLabels[Grid_label::grid_transporter] = "Перевозчик орг.";
-	m_gridLabels[Grid_label::grid_amount_formed] = "Образовалось";
-	m_gridLabels[Grid_label::grid_amount_received_phys] = "Поступило от физ. лиц";
-	m_gridLabels[Grid_label::grid_amount_received_org] = "Поступило от др. орг.";
-	m_gridLabels[Grid_label::grid_amount_used] = "Использовано";
-	m_gridLabels[Grid_label::grid_amount_defused] = "Обезврежено";
-	m_gridLabels[Grid_label::grid_amount_burial] = "Захоронено";
-	m_gridLabels[Grid_label::grid_amount_storage] = "Направлено на\n хранение";
-	m_gridLabels[Grid_label::grid_amount_tUsed] = "Передано на\n использование";
-	m_gridLabels[Grid_label::grid_amount_tDefused] = "Передано на\n обезвреживание";
-	m_gridLabels[Grid_label::grid_amount_tBurial] = "Передано на\n захоронение";
-	m_gridLabels[Grid_label::grid_amount_tStorage] = "Передано на\n хранение";
-	m_gridLabels[Grid_label::grid_amount_storageFull] = "Всего на хранении";
-	m_gridLabels[Grid_label::grid_struct_unitPOD9] = "Структурное подразделение\n ПОД9";
-	m_gridLabels[Grid_label::grid_waste_norm] = "Норматив\n образования отхода";
+	m_gridLabels[Grid_label::grid_regnum] = wxString::FromUTF8("Рег. №");
+	m_gridLabels[Grid_label::grid_date] = wxString::FromUTF8("Дата");
+	m_gridLabels[Grid_label::grid_code] = wxString::FromUTF8("Код отхода");
+	m_gridLabels[Grid_label::grid_owner] = wxString::FromUTF8("Поступило от орг.");
+	m_gridLabels[Grid_label::grid_receiver] = wxString::FromUTF8("Получатель орг.");
+	m_gridLabels[Grid_label::grid_transporter] = wxString::FromUTF8("Перевозчик орг.");
+	m_gridLabels[Grid_label::grid_amount_formed] = wxString::FromUTF8("Образовалось");
+	m_gridLabels[Grid_label::grid_amount_received_phys] = wxString::FromUTF8("Поступило от физ. лиц");
+	m_gridLabels[Grid_label::grid_amount_received_org] = wxString::FromUTF8("Поступило от др. орг.");
+	m_gridLabels[Grid_label::grid_amount_used] = wxString::FromUTF8("Использовано");
+	m_gridLabels[Grid_label::grid_amount_defused] = wxString::FromUTF8("Обезврежено");
+	m_gridLabels[Grid_label::grid_amount_burial] = wxString::FromUTF8("Захоронено");
+	m_gridLabels[Grid_label::grid_amount_storage] = wxString::FromUTF8("Направлено на\n хранение");
+	m_gridLabels[Grid_label::grid_amount_tUsed] = wxString::FromUTF8("Передано на\n использование");
+	m_gridLabels[Grid_label::grid_amount_tDefused] = wxString::FromUTF8("Передано на\n обезвреживание");
+	m_gridLabels[Grid_label::grid_amount_tBurial] = wxString::FromUTF8("Передано на\n захоронение");
+	m_gridLabels[Grid_label::grid_amount_tStorage] = wxString::FromUTF8("Передано на\n хранение");
+	m_gridLabels[Grid_label::grid_amount_storageFull] = wxString::FromUTF8("Всего на хранении");
+	m_gridLabels[Grid_label::grid_struct_unitPOD9] = wxString::FromUTF8("Структурное подразделение\n ПОД9");
+	m_gridLabels[Grid_label::grid_waste_norm] = wxString::FromUTF8("Норматив\n образования отхода");
 }
 
 void myGridTable::SetActiveColumns()

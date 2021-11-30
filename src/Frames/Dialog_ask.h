@@ -8,8 +8,8 @@
 class Dialog_ask : public wxDialog
 {
 public:
-	Dialog_ask(wxWindow* parent, const wxString& title, const wxString& text, const wxString& acptBtnLabel = "Удалить",
-		const wxColour& acptBtnColour = wxColour(165, 42, 42), const wxString& cancelBtnLabel = "Отмена", 
+	Dialog_ask(wxWindow* parent, const wxString& title, const wxString& text, const wxString& acptBtnLabel = wxString::FromUTF8("Удалить"),
+		const wxColour& acptBtnColour = wxColour(165, 42, 42), const wxString& cancelBtnLabel = wxString::FromUTF8("Отмена"),
 		const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize(400,220), long style = wxDEFAULT_DIALOG_STYLE & ~(wxDEFAULT_DIALOG_STYLE), 
 		const wxString& name = wxDialogNameStr);
 	~Dialog_ask();

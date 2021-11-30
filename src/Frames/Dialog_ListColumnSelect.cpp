@@ -14,9 +14,9 @@ Dialog_ListColumnSelect::Dialog_ListColumnSelect(wxWindow* parent, const std::ma
 	wxFont colFont(wxFontInfo(12).FaceName("Segoe UI"));
 	checkBoxPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(400, 600));
 	checkBoxPanel->SetBackgroundColour(*wxWHITE);
-	MaterialButton* cancelBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, "ОТМЕНА", 
+	MaterialButton* cancelBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, wxString::FromUTF8("ОТМЕНА"),
 													1, wxPoint(GetSize().x-140, 510), wxSize(100, 40));
-	MaterialButton* applyBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, "ПРИМЕНИТЬ", 
+	MaterialButton* applyBtn = new MaterialButton(checkBoxPanel, wxID_CANCEL, wxString::FromUTF8("ПРИМЕНИТЬ"),
 													0, wxPoint(25, 510), wxSize(100, 40));
 	wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
 	cancelBtn->SetTextFont(wxFont(wxFontInfo(10).FaceName("Segoe UI").Bold()));

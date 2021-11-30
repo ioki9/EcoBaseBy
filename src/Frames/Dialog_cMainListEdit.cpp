@@ -27,26 +27,26 @@ Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info, 
 
 
 
-	wxStaticText* regnum = new wxStaticText(m_mainPanel, wxID_ANY, "Регистрационный номер:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* regnum = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Регистрационный номер:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	m_regnumCtrl = new wxTextCtrl(m_mainPanel, wxID_ANY, info.regnum, wxDefaultPosition, wxSize(250, 30));
-	wxStaticText* receiver = new wxStaticText(m_mainPanel, wxID_ANY, "Получатель отхода:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* receiver = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Получатель отхода:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	m_receiverCtrl = new wxTextCtrl(m_mainPanel, wxID_ANY, info.receiver, wxDefaultPosition, wxSize(250, 30));
 	m_receiverCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_RECEIVER));
-	wxStaticText* transport = new wxStaticText(m_mainPanel, wxID_ANY, "Перевозчик отхода:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* transport = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Перевозчик отхода:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	m_transporterCtrl = new wxTextCtrl(m_mainPanel, wxID_ANY, info.transporter, wxDefaultPosition, wxSize(250, 30));
 	m_transporterCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_TRANSPORT));
-	wxStaticText* calendar = new wxStaticText(m_mainPanel, wxID_ANY, "Дата рейса:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* calendar = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Дата рейса:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	wxDateTime currentDate;
 	currentDate.ParseFormat(info.date, wxS("%Y.%m.%d"));
 	m_date = new wxDatePickerCtrl(m_mainPanel, wxID_ANY, currentDate, wxPoint(600, 230), wxSize(250, 30), wxDP_DROPDOWN);
-	wxStaticText* code = new wxStaticText(m_mainPanel, wxID_ANY, "Код отхода:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
-	wxStaticText* codeDng = new wxStaticText(m_mainPanel, wxID_ANY, "Класс опасности:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* code = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Код отхода:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* codeDng = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Класс опасности:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	wxArrayString dngLvlStr;
-	dngLvlStr.Add("н/о");
-	dngLvlStr.Add("1-го класса");
-	dngLvlStr.Add("2-го класса");
-	dngLvlStr.Add("3-го класса");
-	dngLvlStr.Add("4-го класса");
+	dngLvlStr.Add(wxString::FromUTF8("н/о"));
+	dngLvlStr.Add(wxString::FromUTF8("1-го класса"));
+	dngLvlStr.Add(wxString::FromUTF8("2-го класса"));
+	dngLvlStr.Add(wxString::FromUTF8("3-го класса"));
+	dngLvlStr.Add(wxString::FromUTF8("4-го класса"));
 	m_dngLvlCtrl = new wxChoice(m_mainPanel, wxID_ANY, wxDefaultPosition, wxSize(250, 30), dngLvlStr);
 	if(m_dngLvlCtrl->SetStringSelection(m_db.GetDngFromCode(info.code)))
 		m_dngLvlCtrl->Enable(0);
@@ -54,48 +54,48 @@ Dialog_cMainListEdit::Dialog_cMainListEdit(wxWindow* parent, addPageInfo& info, 
 	m_codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
 
 	//RIGHT SIDE
-	m_owner = new wxStaticText(m_mainPanel, wxID_ANY, "Наименование организации:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	m_owner = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Наименование организации:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	m_owner->Hide();
 	m_ownerCtrl = new wxTextCtrl(m_mainPanel, wxID_ANY, info.owner, wxDefaultPosition, wxSize(250, 30));
 	m_ownerCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_OWNER));
 	m_ownerCtrl->Hide();
-	wxStaticText* amountStatic = new wxStaticText(m_mainPanel, wxID_ANY, "Количество отхода:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* amountStatic = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Количество отхода:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	m_amountReceivedCtrl = new wxTextCtrl(m_mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(250, 30), 0L);
-	wxStaticText* amountRecStatic = new wxStaticText(m_mainPanel, wxID_ANY, "Поступило от/образовалось:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* amountRecStatic = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Поступило от/образовалось:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	wxArrayString amRecChoiceStr;
 	amRecChoiceStr.Add("-");
-	amRecChoiceStr.Add("Образовалось");
-	amRecChoiceStr.Add("Поступило от физ. лиц.");
-	amRecChoiceStr.Add("Поступило от др. орг.");
+	amRecChoiceStr.Add(wxString::FromUTF8("Образовалось"));
+	amRecChoiceStr.Add(wxString::FromUTF8("Поступило от физ. лиц."));
+	amRecChoiceStr.Add(wxString::FromUTF8("Поступило от др. орг."));
 	m_amRecCtrl = new wxChoice(m_mainPanel, wxID_ANY, wxDefaultPosition, wxSize(250, 30), amRecChoiceStr);
 	m_amRecCtrl->SetSelection(1);
-	m_unit10Static = new wxStaticText(m_mainPanel, wxID_ANY, "Подразделение, в котором образовался данный вид отхода:");
+	m_unit10Static = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Подразделение, в котором образовался данный вид отхода:"));
 	m_structUnit10Ctrl = new wxChoice(m_mainPanel, wxID_ANY, wxDefaultPosition, wxSize(250, 30), GetUnitChoicesArr());
-	wxStaticText* amountTrnsprtStatic = new wxStaticText(m_mainPanel, wxID_ANY, "Движение отхода:", wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
+	wxStaticText* amountTrnsprtStatic = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Движение отхода:"), wxDefaultPosition, wxSize(250, 30), wxALIGN_LEFT);
 	wxArrayString amMovmChoiceStr;
-	amMovmChoiceStr.Add("Использовано");
-	amMovmChoiceStr.Add("Обезврежено");
-	amMovmChoiceStr.Add("Направлено на хранение");
-	amMovmChoiceStr.Add("Захоронено");
-	amMovmChoiceStr.Add("Передано на использование");
-	amMovmChoiceStr.Add("Передано на обезвреживание");
-	amMovmChoiceStr.Add("Передано на хранение");
-	amMovmChoiceStr.Add("Передано на захоронение");
+	amMovmChoiceStr.Add(wxString::FromUTF8("Использовано"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Обезврежено"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Направлено на хранение"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Захоронено"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на использование"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на обезвреживание"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на хранение"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на захоронение"));
 	m_amMovmCtrl = new wxChoice(m_mainPanel, wxID_ANY, wxDefaultPosition, wxSize(250, 30), amMovmChoiceStr);
-	m_orgTransRadio = new wxRadioButton(m_mainPanel, wxID_ANY, "Передано организации:", wxDefaultPosition, wxSize(250, 30), wxRB_GROUP);
+	m_orgTransRadio = new wxRadioButton(m_mainPanel, wxID_ANY, wxString::FromUTF8("Передано организации:"), wxDefaultPosition, wxSize(250, 30), wxRB_GROUP);
 	m_orgTransRadio->Enable(0);
-	wxStaticText* orgTransText = new wxStaticText(m_mainPanel, wxID_ANY, "Организация:");
-	m_selfTransRadio = new wxRadioButton(m_mainPanel, wxID_ANY, "Передано своему подразделению:");
+	wxStaticText* orgTransText = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Организация:"));
+	m_selfTransRadio = new wxRadioButton(m_mainPanel, wxID_ANY, wxString::FromUTF8("Передано своему подразделению:"));
 	m_selfTransRadio->Enable(0);
-	wxStaticText* selfTransText = new wxStaticText(m_mainPanel, wxID_ANY, "Подразделение:");
+	wxStaticText* selfTransText = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Подразделение:"));
 	m_structUnit9Ctrl = new wxTextCtrl(m_mainPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(250, 30));
 	m_structUnit9Ctrl->Enable(0);
-	wxStaticText* unit9GoalText = new wxStaticText(m_mainPanel, wxID_ANY, "Цель:");
+	wxStaticText* unit9GoalText = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Цель:"));
 	m_structUnitChoice = new wxChoice(m_mainPanel, wxID_ANY, wxDefaultPosition, wxSize(250, 30), GetUnitChoicesArr());
 	m_structUnitChoice->Enable(0);
 	m_amMovmStructCtrl = new wxChoice(m_mainPanel, wxID_ANY, wxDefaultPosition, wxSize(250, 30), amMovmChoiceStr);
 	m_amMovmStructCtrl->Enable(0);
-	m_recievedPhysText = new wxStaticText(m_mainPanel, wxID_ANY, "ФИО физ лица:");
+	m_recievedPhysText = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("ФИО физ лица:"));
 	m_recievedPhysText->Hide();
 
 
@@ -688,49 +688,49 @@ wxString Dialog_cMainListEdit::GetMovementStringAndSetAmount()
 	if (m_record.amountBurial != "")
 	{
 		m_amountRecVal = wxAtof(m_record.amountBurial);
-		return "Захоронено";
+		return wxString::FromUTF8("Захоронено");
 	}
 		
 	if (m_record.amountDefused != "")
 	{
 		m_amountRecVal = wxAtof(m_record.amountDefused);
-		return "Обезврежено";
+		return wxString::FromUTF8("Обезврежено");
 	}
 		
 	if (m_record.amountStorage != "")
 	{
 		m_amountRecVal = wxAtof(m_record.amountStorage);
-		return "Направлено на хранение";
+		return wxString::FromUTF8("Направлено на хранение");
 	}
 	
 	if (m_record.amountUsed != "")
 	{
 		m_amountRecVal = wxAtof(m_record.amountUsed);
-		return "Использовано";
+		return wxString::FromUTF8("Использовано");
 	}
 		
 	if (m_record.tamountBurial != "")
 	{
 		m_amountRecVal = wxAtof(m_record.tamountBurial);
-		return "Передано на захоронение";
+		return wxString::FromUTF8("Передано на захоронение");
 	}
 		
 	if (m_record.tamountDefused != "")
 	{
 		m_amountRecVal=wxAtof(m_record.tamountDefused);
-		return "Передано на обезвреживание";
+		return wxString::FromUTF8("Передано на обезвреживание");
 	}
 	
 	if (m_record.tamountStorage != "")
 	{
 		m_amountRecVal = wxAtof(m_record.tamountStorage);
-		return "Передано на хранение";
+		return wxString::FromUTF8("Передано на хранение");
 	}
 	
 	if (m_record.tamountUsed != "")
 	{
 		m_amountRecVal = wxAtof(m_record.tamountUsed);
-		return "Передано на использование";
+		return wxString::FromUTF8("Передано на использование");
 	}
 
 	return wxString();

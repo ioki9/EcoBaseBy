@@ -5,7 +5,7 @@ set(wxWidgetsDllVerPrefix "314")
 set(wxWidgetsVendor "custom")
 
 
-find_package(wxWidgets REQUIRED COMPONENTS core base xml net html qa xrc aui propgrid ribbon richtext  stc OPTIONAL_COMPONENTS webview gl media scintilla )
+find_package(wxWidgets REQUIRED COMPONENTS core base xml net html qa xrc aui propgrid ribbon richtext stc OPTIONAL_COMPONENTS webview gl media scintilla)
 add_library(wxWidgets INTERFACE)
 set(wxWidgets_USE_UNICODE ON)
 if(WIN32)

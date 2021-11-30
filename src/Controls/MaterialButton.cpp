@@ -11,7 +11,7 @@ MaterialButton::MaterialButton(wxWindow* parent, wxWindowID id, const wxString& 
 	if (isOutlined)
 		status |= flag_outlined;
 	status |= flag_shadowDrawn;
-	if(wxPlatformInfo::Get().GetOperatingSystemId() != wxOS_WINDOWS)
+	if(wxPlatformInfo::Get().GetOperatingSystemId() == wxOS_UNIX)
 	{	
 		SetButtonShadow(false);
 	}

@@ -12,7 +12,7 @@ myDirPicker::myDirPicker(wxWindow* parent, wxWindowID id , const wxString& initP
 	m_pathTxt = new wxTextCtrl(this, wxID_ANY, initPath, wxDefaultPosition,wxSize(size.GetX(),size.GetY()-3));
 	m_pathTxt->SetFont(m_fontTxtCtrl);
 	m_pathTxt->SetEditable(false);
-	MaterialButton* browseBtn = new MaterialButton(this, wxID_ANY, wxS("Обзор..."), false,wxDefaultPosition,wxSize(75, size.GetY()));
+	MaterialButton* browseBtn = new MaterialButton(this, wxID_ANY, wxString::FromUTF8("Обзор..."), false,wxDefaultPosition,wxSize(75, size.GetY()));
 	browseBtn->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
 	browseBtn->SetButtonColour(gui_MainColour);
 	browseBtn->SetButtonRadius(0);

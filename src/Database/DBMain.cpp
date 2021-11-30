@@ -211,21 +211,21 @@ wxString DBMain::GetMovmStringFromDepend(const wxString& dependency)
 	}
 
 	if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_BURIAL])!="")
-		movm = "Захоронено";
+		movm = wxString::FromUTF8("Захоронено");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_USED]) != "")
-		movm = "Использовано";
+		movm = wxString::FromUTF8("Использовано");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_DEFUSED]) != "")
-		movm = "Обезврежено";
+		movm = wxString::FromUTF8("Обезврежено");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_SELFSTORAGE]) != "")
-		movm = "Направлено на хранение";
+		movm = wxString::FromUTF8("Направлено на хранение");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_BURIAL]) != "")
-		movm = "Передано на захоронение";
+		movm = wxString::FromUTF8("Передано на захоронение");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_USED]) != "")
-		movm = "Передано на использование";
+		movm = wxString::FromUTF8("Передано на использование");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_DEFUSED]) != "")
-		movm = "Передано на обезвреживание";
+		movm = wxString::FromUTF8("Передано на обезвреживание");
 	else if (m_rs.GetAsString(m_passpColumns[DB_COLUMN_AMOUNT_TRANSFER_STORAGE]) != "")
-		movm = "Передано на хранение";
+		movm = wxString::FromUTF8("Передано на хранение");
 	m_rs.Finalize();
 	return movm;
 }
@@ -462,8 +462,8 @@ wxString DBMain::checkFullStorage(const wxString& code)
 	}
 	else
 	{
-		wxString string{ "Код отхода: " + m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE]) 
-			+ "\nДата: " + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + "\nЗначение: " 
+		wxString string{ wxString::FromUTF8("Код отхода: ") + m_rs.GetAsString(m_storageColumns[DB_COLUMN_CODE])
+			+ wxString::FromUTF8("\nДата: ") + m_rs.GetAsString(m_storageColumns[DB_COLUMN_DATE]) + wxString::FromUTF8("\nЗначение: ")
 			+ m_rs.GetAsString(m_storageColumns[DB_COLUMN_AMOUNT_SELFSTORAGE_FULL]) };
 		m_rs.Finalize();
 		return string;

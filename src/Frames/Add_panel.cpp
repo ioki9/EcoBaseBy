@@ -19,7 +19,7 @@ Add_panel::Add_panel(wxWindow* parent)
 	:wxPanel(parent,wxID_ANY)
 {
 	SetDoubleBuffered(true);
-	if(wxPlatformInfo::Get().GetOperatingSystemId() != wxOS_WINDOWS)
+	if(wxPlatformInfo::Get().GetOperatingSystemId() == wxOS_UNIX)
 		txtCtrlSize = wxSize(420, 40);
 	else
 		txtCtrlSize = wxSize(420, 30);
@@ -77,102 +77,102 @@ void Add_panel::initPage1()
 	leftMidPanel->SetBackgroundColour(*wxWHITE);
 	rightMidPanel->SetBackgroundColour(*wxWHITE);
 
-	wxStaticText* label = new wxStaticText(m_page1, wxID_ANY, "ВНЕСЕНИЕ ЗАПИСИ", wxPoint(30, 30), wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* label = new wxStaticText(m_page1, wxID_ANY, wxString::FromUTF8("ВНЕСЕНИЕ ЗАПИСИ"), wxPoint(30, 30), wxDefaultSize, wxALIGN_LEFT);
 	label->SetForegroundColour(*wxBLACK);
 	label->SetFont(wxFontInfo(18).FaceName("Segoe UI Semibold"));
 
 	//LEFT SIDE
-	wxStaticText* regnum = new wxStaticText(leftMidPanel, wxID_ANY, "Регистрационный номер:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* regnum = new wxStaticText(leftMidPanel, wxID_ANY, wxString::FromUTF8("Регистрационный номер:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	regnum->SetForegroundColour(*wxBLACK);
 	m_regnumCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition,wxSize(120,txtCtrlSize.GetHeight()));
 	
-	wxStaticText* receiver = new wxStaticText(leftMidPanel, wxID_ANY, "Получатель отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* receiver = new wxStaticText(leftMidPanel, wxID_ANY, wxString::FromUTF8("Получатель отхода:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	receiver->SetForegroundColour(*wxBLACK);
 	m_receiverCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_receiverCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_RECEIVER));
-	wxStaticText* transport = new wxStaticText(leftMidPanel, wxID_ANY, "Перевозчик отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* transport = new wxStaticText(leftMidPanel, wxID_ANY, wxString::FromUTF8("Перевозчик отхода:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	transport->SetForegroundColour(*wxBLACK);
 	m_transporterCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_transporterCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_TRANSPORT));
-	wxStaticText* calendar = new wxStaticText(leftMidPanel, wxID_ANY, "Дата рейса:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* calendar = new wxStaticText(leftMidPanel, wxID_ANY, wxString::FromUTF8("Дата рейса:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	calendar->SetForegroundColour(*wxBLACK);
 	
 	m_date = new wxDatePickerCtrl(leftMidPanel, wxID_ANY, wxDateTime::Today(), wxPoint(600, 230), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* code = new wxStaticText(leftMidPanel, wxID_ANY, "Код отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* code = new wxStaticText(leftMidPanel, wxID_ANY, wxString::FromUTF8("Код отхода:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	code->SetForegroundColour(*wxBLACK);
-	wxStaticText* codeDng = new wxStaticText(leftMidPanel, wxID_ANY, "Класс опасности:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* codeDng = new wxStaticText(leftMidPanel, wxID_ANY, wxString::FromUTF8("Класс опасности:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	codeDng->SetForegroundColour(*wxBLACK);
 	wxArrayString dngLvlStr;
-	dngLvlStr.Add("н/о");
-	dngLvlStr.Add("1-го класса");
-	dngLvlStr.Add("2-го класса");
-	dngLvlStr.Add("3-го класса");
-	dngLvlStr.Add("4-го класса");
+	dngLvlStr.Add(wxString::FromUTF8("н/о"));
+	dngLvlStr.Add(wxString::FromUTF8("1-го класса"));
+	dngLvlStr.Add(wxString::FromUTF8("2-го класса"));
+	dngLvlStr.Add(wxString::FromUTF8("3-го класса"));
+	dngLvlStr.Add(wxString::FromUTF8("4-го класса"));
 	m_dngLvlCtrl = new wxChoice(leftMidPanel, wxID_ANY, wxDefaultPosition, wxSize(120, txtCtrlSize.GetHeight()), dngLvlStr);
 	m_dngLvlCtrl->Enable(0);
 	m_codeCtrl = new wxTextCtrl(leftMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(120, txtCtrlSize.GetHeight()), 0L, CustomCodeValidator());
 	m_codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
 
 	//RIGHT SIDE
-	m_owner = new wxStaticText(rightMidPanel, wxID_ANY, "Наименование организации:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	m_owner = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Наименование организации:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	m_owner->SetForegroundColour(*wxBLACK);
 	m_owner->Hide();
 	m_ownerCtrl = new wxTextCtrl(rightMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_ownerCtrl->AutoComplete(new CustomAutoComplete(dbTables::passport, DB_COLUMN_OWNER));
 	m_ownerCtrl->Hide();
-	wxStaticText* amountStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Количество отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* amountStatic = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Количество отхода:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	amountStatic->SetForegroundColour(*wxBLACK);
 	m_amountReceivedCtrl = new wxTextCtrl(rightMidPanel, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize(100, txtCtrlSize.GetHeight()),0L,utility::GetDoubleValidator(3));
-	wxStaticText* amountRecStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Поступило от/образовалось:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* amountRecStatic = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Поступило от/образовалось:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	amountRecStatic->SetForegroundColour(*wxBLACK);
 	wxArrayString amRecChoiceStr;
 	amRecChoiceStr.Add("-");
-	amRecChoiceStr.Add("Образовалось");
-	amRecChoiceStr.Add("Поступило от физ. лиц.");
-	amRecChoiceStr.Add("Поступило от др. орг.");
+	amRecChoiceStr.Add(wxString::FromUTF8("Образовалось"));
+	amRecChoiceStr.Add(wxString::FromUTF8("Поступило от физ. лиц."));
+	amRecChoiceStr.Add(wxString::FromUTF8("Поступило от др. орг."));
 	m_amRecCtrl = new wxChoice(rightMidPanel,wxID_ANY, wxDefaultPosition, txtCtrlSize, amRecChoiceStr);
 	m_amRecCtrl->SetSelection(1);
-	m_unit10Static = new wxStaticText(rightMidPanel, wxID_ANY, "Подразделение, в котором образовался данный вид отхода:");
+	m_unit10Static = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Подразделение, в котором образовался данный вид отхода:"));
 	m_unit10Static->SetForegroundColour(*wxBLACK);
 	m_structUnit10Ctrl = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, GetUnitChoicesArr());
-	wxStaticText* amountTrnsprtStatic = new wxStaticText(rightMidPanel, wxID_ANY, "Движение отхода:", wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
+	wxStaticText* amountTrnsprtStatic = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Движение отхода:"), wxDefaultPosition, wxDefaultSize, wxALIGN_LEFT);
 	amountTrnsprtStatic->SetForegroundColour(*wxBLACK);
 	wxArrayString amMovmChoiceStr;
-	amMovmChoiceStr.Add("Использовано");
-	amMovmChoiceStr.Add("Обезврежено");
-	amMovmChoiceStr.Add("Направлено на хранение");
-	amMovmChoiceStr.Add("Захоронено");
-	amMovmChoiceStr.Add("Передано на использование");
-	amMovmChoiceStr.Add("Передано на обезвреживание");
-	amMovmChoiceStr.Add("Передано на хранение");
-	amMovmChoiceStr.Add("Передано на захоронение");
+	amMovmChoiceStr.Add(wxString::FromUTF8("Использовано"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Обезврежено"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Направлено на хранение"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Захоронено"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на использование"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на обезвреживание"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на хранение"));
+	amMovmChoiceStr.Add(wxString::FromUTF8("Передано на захоронение"));
 	m_amMovmCtrl = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, amMovmChoiceStr);
-	m_orgTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_ORG_TRANSPORT,"Передано организации:",wxDefaultPosition,wxDefaultSize, wxRB_GROUP);
+	m_orgTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_ORG_TRANSPORT, wxString::FromUTF8("Передано организации:"),wxDefaultPosition,wxDefaultSize, wxRB_GROUP);
 	m_orgTransRadio->SetForegroundColour(*wxBLACK);
 	m_orgTransRadio->SetBackgroundColour(*wxWHITE);
 	m_orgTransRadio->Enable(0);
-	wxStaticText* orgTransText = new wxStaticText(rightMidPanel, wxID_ANY, "Организация:");
+	wxStaticText* orgTransText = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Организация:"));
 	orgTransText->SetForegroundColour(*wxBLACK);
-	m_selfTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_SELF_TRANSPORT, "Передано своему подразделению:");
+	m_selfTransRadio = new wxRadioButton(rightMidPanel, ID_RADIO_SELF_TRANSPORT, wxString::FromUTF8("Передано своему подразделению:"));
 	m_selfTransRadio->Enable(0);
-	wxStaticText* selfTransText= new wxStaticText(rightMidPanel, wxID_ANY, "Подразделение:");
+	wxStaticText* selfTransText= new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Подразделение:"));
 	selfTransText->SetForegroundColour(*wxBLACK);
 	m_structUnit9Ctrl = new wxTextCtrl(rightMidPanel, wxID_ANY,wxEmptyString, wxDefaultPosition, txtCtrlSize);
 	m_structUnit9Ctrl->Enable(0);
-	wxStaticText* unit9GoalText = new wxStaticText(rightMidPanel, wxID_ANY, "Цель:");
+	wxStaticText* unit9GoalText = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("Цель:"));
 	unit9GoalText->SetForegroundColour(*wxBLACK);
 	m_structUnitChoice = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, GetUnitChoicesArr());
 	m_structUnitChoice->Enable(0);
 	m_amMovmStructCtrl = new wxChoice(rightMidPanel, wxID_ANY, wxDefaultPosition, txtCtrlSize, amMovmChoiceStr);
 	m_amMovmStructCtrl->Enable(0);
-	m_recievedPhysText = new wxStaticText(rightMidPanel, wxID_ANY, "ФИО физ лица:");
+	m_recievedPhysText = new wxStaticText(rightMidPanel, wxID_ANY, wxString::FromUTF8("ФИО физ лица:"));
 	m_recievedPhysText->SetForegroundColour(*wxBLACK);
 	m_recievedPhysText->Hide();
 	
 	
 	wxPanel* btnPanel = new wxPanel(m_page1);
 	btnPanel->SetBackgroundColour(*wxWHITE);
-	m_applyButton = new MaterialButton(btnPanel, wxID_ANY, wxS("ВНЕСТИ ЗАПИСЬ"),false,wxDefaultPosition,wxSize(200,55));
+	m_applyButton = new MaterialButton(btnPanel, wxID_ANY, wxString::FromUTF8("ВНЕСТИ ЗАПИСЬ"),false,wxDefaultPosition,wxSize(200,55));
 	m_applyButton->SetButtonColour(gui_MainColour);
 	m_applyButton->SetLabelColour(*wxWHITE);
 	wxBoxSizer* btnSzr = new wxBoxSizer(wxHORIZONTAL);

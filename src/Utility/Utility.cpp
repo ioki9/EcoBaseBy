@@ -173,6 +173,12 @@ wxFloatingPointValidator<double> utility::GetDoubleValidator(int precision, doub
 	return validDouble;
 }
 
+void utility::ClearVars()
+{
+	if (pattern_list)
+		delete pattern_list;
+}
+
 
 void utility::paintDarkBackground(wxWindowDC* dc,wxWindow* parent)
 {

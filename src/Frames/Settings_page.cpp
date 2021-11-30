@@ -17,27 +17,27 @@ Settings_page::Settings_page(wxWindow* parent, wxChoice* orgChoice) : wxPanel(pa
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	wxBoxSizer* mainSizerH = new wxBoxSizer(wxHORIZONTAL);
 
-	wxStaticText* listTitle = new wxStaticText(m_mainPanel, wxID_ANY, "Организации:");
+	wxStaticText* listTitle = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Организации:"));
 	listTitle->SetForegroundColour(*wxBLACK);
 	listTitle->SetFont(gui_MainFont);
 
 	m_orgList = new VirtualOrgList(m_mainPanel, wxID_ANY,wxDefaultPosition,wxSize(350,150));
-	MaterialButton* btn_listAdd = new MaterialButton(m_mainPanel, wxID_ANY, "Добавить", true, wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listAdd = new MaterialButton(m_mainPanel, wxID_ANY, wxString::FromUTF8("Добавить"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_listAdd->SetButtonLineColour(gui_MainColour);
 	btn_listAdd->SetLabelColour(gui_MainColour);
 	btn_listAdd->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_listDelete = new MaterialButton(m_mainPanel, wxID_ANY, "Удалить", false,wxDefaultPosition, wxSize(80, 30));
+	MaterialButton* btn_listDelete = new MaterialButton(m_mainPanel, wxID_ANY, wxString::FromUTF8("Удалить"), false,wxDefaultPosition, wxSize(80, 30));
 	btn_listDelete->SetButtonColour(wxColour(165, 42, 42));
 	btn_listDelete->SetLabelColour(*wxWHITE);
 	btn_listDelete->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
-	MaterialButton* btn_listChange = new MaterialButton(m_mainPanel, wxID_ANY, "Изменить", true, wxDefaultPosition, wxSize(80,30));
+	MaterialButton* btn_listChange = new MaterialButton(m_mainPanel, wxID_ANY, wxString::FromUTF8("Изменить"), true, wxDefaultPosition, wxSize(80,30));
 	btn_listChange->SetButtonLineColour(gui_MainColour);
 	btn_listChange->SetLabelColour(gui_MainColour);
 	btn_listChange->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
 
-	wxStaticText* dirPickerLabel = new wxStaticText(m_mainPanel, wxID_ANY, "Путь сохранения документов:");
+	wxStaticText* dirPickerLabel = new wxStaticText(m_mainPanel, wxID_ANY, wxString::FromUTF8("Путь сохранения документов:"));
 	dirPickerLabel->SetForegroundColour(*wxBLACK);
-	m_dir = new myDirPicker(m_mainPanel , wxID_ANY, Settings::GetPdfSavePath(), "Папка для сохранения документов", wxDefaultPosition, wxSize(460, 30));
+	m_dir = new myDirPicker(m_mainPanel , wxID_ANY, Settings::GetPdfSavePath(), wxString::FromUTF8("Папка для сохранения документов"), wxDefaultPosition, wxSize(460, 30));
 	m_dir->SetBackgroundColour(*wxWHITE);
 	dirPickerLabel->SetFont(gui_MainFont);
 

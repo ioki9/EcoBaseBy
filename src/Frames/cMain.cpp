@@ -78,6 +78,7 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSi
 cMain::~cMain()
 {
 	delete m_dataBase;
+	utility::ClearVars();
 	Settings::SaveState();
 
 }
@@ -91,11 +92,11 @@ void cMain::initListPanel()
 	wxBoxSizer* buttonSizer = new wxBoxSizer(wxHORIZONTAL);
 
 
-	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, "ИЗМЕНИТЬ", true,wxDefaultPosition, wxSize(100, 35));
+	MaterialButton* editButton = new MaterialButton(m_listPanel, wxID_ANY, wxString::FromUTF8("ИЗМЕНИТЬ"), true,wxDefaultPosition, wxSize(100, 35));
 	editButton->SetButtonLineColour(gui_MainColour);
 	editButton->SetLabelColour(gui_MainColour);
 
-	m_deleteButton = new MaterialButton(m_listPanel, wxID_ANY, "УДАЛИТЬ", false,wxDefaultPosition,wxSize(100, 35));
+	m_deleteButton = new MaterialButton(m_listPanel, wxID_ANY, wxString::FromUTF8("УДАЛИТЬ"), false,wxDefaultPosition,wxSize(100, 35));
 	m_deleteButton->SetButtonColour(wxColour(165, 42, 42));
 	m_deleteButton->SetLabelColour(*wxWHITE);
 	buttonSizer->AddStretchSpacer(1);
@@ -138,19 +139,19 @@ void cMain::initMainMenu()
 	m_mainMenu->SetBackgroundColour(gui_MainColour);
 	m_mainMenu->SetFont(wxFontInfo(10.5).FaceName("Segoe UI"));
 
-	m_menuButtonList = new MainMenuTabButton(m_mainMenu, "Таблица", ID_MAINMENU_LIST_BUTTON,false,wxSize(m_mainMenuWidth,50),wxPoint(0,150));
+	m_menuButtonList = new MainMenuTabButton(m_mainMenu, wxString::FromUTF8("Таблица"), ID_MAINMENU_LIST_BUTTON,false,wxSize(m_mainMenuWidth,50),wxPoint(0,150));
 	m_menuButtonList->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonList);
 
-	m_menuButtonAdd = new MainMenuTabButton(m_mainMenu, "Добавить запись", ID_MAINMENU_ADD_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 200));
+	m_menuButtonAdd = new MainMenuTabButton(m_mainMenu, wxString::FromUTF8("Добавить запись"), ID_MAINMENU_ADD_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 200));
 	m_menuButtonAdd->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonAdd);
 
-	m_menuButtonForm = new MainMenuTabButton(m_mainMenu, "Сформировать", ID_MAINMENU_FORM_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 250));
+	m_menuButtonForm = new MainMenuTabButton(m_mainMenu, wxString::FromUTF8("Сформировать"), ID_MAINMENU_FORM_BUTTON,false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 250));
 	m_menuButtonForm->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_allMenuButtons.push_back(m_menuButtonForm);
 
-	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, "Настройки", ID_MAINMENU_SETTINGS_BUTTON, false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
+	m_menuButtonSetting = new MainMenuTabButton(m_mainMenu, wxString::FromUTF8("Настройки"), ID_MAINMENU_SETTINGS_BUTTON, false, wxSize(m_mainMenuWidth, 50), wxPoint(0, 300));
 	m_menuButtonSetting->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnTabSwitch, this);
 	m_menuButtonSetting->setDropArrowtSize(wxSize(14, 30));
 	m_allMenuButtons.push_back(m_menuButtonSetting);
@@ -172,9 +173,9 @@ void cMain::initMainMenu()
 	m_orgChoice = new wxChoice(m_mainMenu, -1, wxPoint(120, 42), wxSize(140, 30), orgNames);
 	m_orgChoice->SetStringSelection(activeOrg);
 	m_orgChoice->SetFont(wxFontInfo(10).FaceName("Segoe UI"));
-	m_orgText = new wxStaticText(m_mainMenu, -1, "Организация:", wxPoint(8, 42));
+	m_orgText = new wxStaticText(m_mainMenu, -1, wxString::FromUTF8("Организация:"), wxPoint(8, 42));
 	m_orgText->SetForegroundColour(*wxWHITE);
-	m_unitText = new wxStaticText(m_mainMenu, -1, "Подразделение:", wxPoint(8, 82));
+	m_unitText = new wxStaticText(m_mainMenu, -1, wxString::FromUTF8("Подразделение:"), wxPoint(8, 82));
 	m_unitText->SetForegroundColour(*wxWHITE);
 	m_unitChoice = new wxChoice(m_mainMenu, -1, wxPoint(120, 82), wxSize(140, 30), unitNames);
 
@@ -211,13 +212,13 @@ void  cMain::initFormPDFPage()
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
 	// _____________POD9_____________
-	wxStaticText* labelPOD9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ПОД 9");
+	wxStaticText* labelPOD9 = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("ПОД 9"));
 	labelPOD9->SetForegroundColour(*wxBLACK);
 	labelPOD9->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
-	wxStaticText* txtFirstDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Сформировать с:");
+	wxStaticText* txtFirstDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("Сформировать с:"));
 	txtFirstDatePod9->SetForegroundColour(*wxBLACK);
 	m_date1_pod9 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, m_firstDate,wxPoint(300,200),wxDefaultSize,wxDP_DROPDOWN);
-	wxStaticText* txtSecondDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, "По:");
+	wxStaticText* txtSecondDatePod9 = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("По:"));
 	txtSecondDatePod9->SetForegroundColour(*wxBLACK);
 	m_date2_pod9 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
 	wxBoxSizer* sizerPod9Row1 = new wxBoxSizer(wxHORIZONTAL);
@@ -225,7 +226,7 @@ void  cMain::initFormPDFPage()
 	sizerPod9Row1->Add(m_date1_pod9,0, wxLEFT, 15);
 	sizerPod9Row1->Add(txtSecondDatePod9, 0, wxLEFT, 50);
 	sizerPod9Row1->Add(m_date2_pod9, 0, wxLEFT, 15);
-	MaterialButton* btnFormPOD9 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD9_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
+	MaterialButton* btnFormPOD9 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD9_BUTTON, wxString::FromUTF8("СФОРМИРОВАТЬ"), true, wxDefaultPosition, wxSize(155, 40));
 	btnFormPOD9->SetButtonLineColour(gui_MainColour);
 	btnFormPOD9->SetButtonFillColour(*wxWHITE);
 	btnFormPOD9->SetLabelColour(gui_MainColour);
@@ -233,13 +234,13 @@ void  cMain::initFormPDFPage()
 	m_date2_pod9->SetRange(m_firstDate, m_lastDate);
 
 	//______________POD10_____________
-	wxStaticText* labelPOD10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "ПОД 10");
+	wxStaticText* labelPOD10 = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("ПОД 10"));
 	labelPOD10->SetForegroundColour(*wxBLACK);
 	labelPOD10->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
-	wxStaticText* txtFirstDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "Сформировать с:");
+	wxStaticText* txtFirstDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("Сформировать с:"));
 	txtFirstDatePod10->SetForegroundColour(*wxBLACK);
 	m_date1_pod10 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, m_firstDate, wxPoint(300, 200), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* txtSecondDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, "По:");
+	wxStaticText* txtSecondDatePod10 = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("По:"));
 	txtSecondDatePod10->SetForegroundColour(*wxBLACK);
 	m_date2_pod10 = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
 	wxBoxSizer* sizerPod10Row1 = new wxBoxSizer(wxHORIZONTAL);
@@ -248,7 +249,7 @@ void  cMain::initFormPDFPage()
 	sizerPod10Row1->Add(txtSecondDatePod10, 0, wxLEFT, 50);
 	sizerPod10Row1->Add(m_date2_pod10, 0, wxLEFT, 15);
 
-	MaterialButton* btnFormPOD10 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD10_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
+	MaterialButton* btnFormPOD10 = new MaterialButton(m_formPDFPanel, ID_FORMPDF_POD10_BUTTON, wxString::FromUTF8("СФОРМИРОВАТЬ"), true, wxDefaultPosition, wxSize(155, 40));
 	btnFormPOD10->SetButtonLineColour(gui_MainColour);
 	btnFormPOD10->SetButtonFillColour(*wxWHITE);
 	btnFormPOD10->SetLabelColour(gui_MainColour);
@@ -256,13 +257,13 @@ void  cMain::initFormPDFPage()
 	m_date1_pod10->SetRange(m_firstDate, m_lastDate);
 	m_date2_pod10->SetRange(m_firstDate, m_lastDate);
 	//______________JOURNAL_____________
-	wxStaticText* labelJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "ЖУРНАЛ");
+	wxStaticText* labelJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("ЖУРНАЛ"));
 	labelJournal->SetForegroundColour(*wxBLACK);
 	labelJournal->SetFont(wxFontInfo(20).FaceName("Segoe UI").Bold());
-	wxStaticText* txtFirstDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "Сформировать с:");
+	wxStaticText* txtFirstDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("Сформировать с:"));
 	txtFirstDateJournal->SetForegroundColour(*wxBLACK);
 	m_date1_journal = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, m_firstDate, wxPoint(300, 200), wxDefaultSize, wxDP_DROPDOWN);
-	wxStaticText* txtSecondDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, "По:");
+	wxStaticText* txtSecondDateJournal = new wxStaticText(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("По:"));
 	txtSecondDateJournal->SetForegroundColour(*wxBLACK);
 	m_date2_journal = new wxDatePickerCtrl(m_formPDFPanel, wxID_ANY, wxDateTime::Today(), wxPoint(400, 200), wxDefaultSize, wxDP_DROPDOWN);
 	wxBoxSizer* sizerJournalRow1 = new wxBoxSizer(wxHORIZONTAL);
@@ -271,7 +272,7 @@ void  cMain::initFormPDFPage()
 	sizerJournalRow1->Add(m_date1_journal, 0, wxLEFT, 15);
 	sizerJournalRow1->Add(txtSecondDateJournal, 0, wxLEFT, 50);
 	sizerJournalRow1->Add(m_date2_journal, 0, wxLEFT, 15);
-	MaterialButton* btnFormJournal = new MaterialButton(m_formPDFPanel, ID_FORMPDF_JOURNAL_BUTTON, "СФОРМИРОВАТЬ", true, wxDefaultPosition, wxSize(155, 40));
+	MaterialButton* btnFormJournal = new MaterialButton(m_formPDFPanel, ID_FORMPDF_JOURNAL_BUTTON, wxString::FromUTF8("СФОРМИРОВАТЬ"), true, wxDefaultPosition, wxSize(155, 40));
 	btnFormJournal->SetButtonLineColour(gui_MainColour);
 	btnFormJournal->SetButtonFillColour(*wxWHITE);
 	btnFormJournal->SetLabelColour(gui_MainColour);
