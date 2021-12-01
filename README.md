@@ -1,22 +1,23 @@
 ![EcoIcon copy](https://user-images.githubusercontent.com/80005407/144196353-a12ff848-2947-4262-92cc-6bfb220270c8.png) EcoBaseBy
 ========================
 #### English
-EcoBaseBy is simple and easy-to-use application for reporting on ecological waste and creating reporting forms **"POD9"**, **"POD10"** and **"Passport registration log"** in accordance with the requirements of the Ministry of Nature of the Republic of Belarus for one or several organizations.
+EcoBaseBy is a simple and intuitive application for accounting in the field of industrial waste management at the enterprise, with the creation of books in the form: **"POD9"**, **"POD10"** and **"Journal of registration of accompanying passports"** in accordance with the requirements of the legislation of the Republic of Belarus. The ability to keep records of up to 20 organizations in one application.
 
 #### Русский
-EcoBaseBy простое и легкое в использовании приложение для ведения отчетности по экологическим отходам и составления форм отчетности **"ПОД9"**, **"ПОД10"** и **"Журнала регистрации паспортов"** в соответствии с требованиями министерства природы РБ для одной или нескольких организаций.
-
+EcoBaseBy простое и интуитивно понятное в использовании приложение для ведения учета в области обращения с отходами производства на предприятии, с формированием книг по формам: **"ПОД9"**, **"ПОД10"** и **"Журнала регистрации сопроводительных паспортов"** в соответствии с требованиями законодательства РБ. Возможность ведения учета до 20 организаций в одном приложении.
 ## Features
 #### English
  * Quick and easy entry of new entries.
  * Automatic counting of all values after inserting, changing or deleting entries.
- * Ability to keep records in several organizations.
- * Automatic compilation of reporting forms: "POD9", "POD10" and "Passport registration log" in pdf format.
+ * Ability to keep records of up to 20 organizations.
+ * Built-in waste classifier and autocomplete when making and editing records.
+ * Automatic creation of books in the following forms: "POD9", "POD10" and "Journal of registration of accompanying passports" in pdf format.
 #### Русский
- * Быстрое и легкое внесение новых записей.
+ * Простое и понятное внесение новых записей.
  * Автоматический подсчет всех значений после внесения, изменения или удаления записей.
- * Возможность ведения учета нескольких организаций.
- * Автоматическое составление форм отчетности: "ПОД9", "ПОД10" и "Журнала регистрации паспортов" в формате pdf.
+ * Возможность ведения учета до 20 организаций.
+ * Встроенный классификатор отходов и автозаполнение при внесении и редактировании записей.
+ * Автоматическое  формирование книг по формам: "ПОД9", "ПОД10" и "Журнала регистрации сопроводительных паспортов" в формате pdf.
 ## Download
 #### English
 You can [download](https://github.com/ioki9/EcoBaseBy/releases) the latest version of EcoBaseBy for Windows and Linux.
