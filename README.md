@@ -32,7 +32,7 @@ Packages used to create the application:
 
 [wxpdfdoc](https://github.com/utelle/wxpdfdoc)
 
-Special thanks to [Ulrich Telle](https://github.com/utelle/) for creating [wxsqlite3](https://github.com/utelle/wxsqlite3) and [wxpdfdoc](https://github.com/utelle/wxpdfdoc). Those helped me a lot with developing of my application.
+Special thanks to [Ulrich Telle](https://github.com/utelle/) for creating [wxsqlite3](https://github.com/utelle/wxsqlite3) and [wxpdfdoc](https://github.com/utelle/wxpdfdoc). Those helped me a lot with developement of my application.
 
 ## License
 [![License: GPL v2](https://img.shields.io/badge/License-GPL_v2-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
