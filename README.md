@@ -11,7 +11,7 @@ EcoBaseBy простое и легкое в использовании прил�
  * Quick and easy entry of new entries.
  * Automatic counting of all values after inserting, changing or deleting entries.
  * Ability to keep records in several organizations.
- * Automatic compilation of reporting forms: "POD9", "POD10" and "Passport registration log".
+ * Automatic compilation of reporting forms: "POD9", "POD10" and "Passport registration log" in pdf format.
 #### Русский
  * Быстрое и легкое внесение новых записей.
  * Автоматический подсчет всех значений после внесения, изменения или удаления записей.
