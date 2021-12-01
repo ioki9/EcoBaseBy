@@ -597,7 +597,7 @@ bool DBMain::deleteEntry(const addPageInfo& info)
 	}
 
 	//we have to combine entrys without structUnit10 into entry with structUnit10 or combine all the empty entrys into one
-	if (ExecuteScalar(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'")) > 1)
+	if (ExecuteScalar(wxS("SELECT COUNT(*) FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'")) > 1)
 	{
 		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable()
 			+ " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%' ORDER BY " + m_storageColumns[DB_COLUMN_STRUCTURAL_POD10] + " ASC"));
@@ -945,7 +945,7 @@ bool DBMain::editEntry(const addPageInfo& info, bool willHaveDepend)
 	m_rs.Finalize();
 
 	//we have to combine entrys without structUnit10 into entry with structUnit10 or combine all the empty entrys into one
-	if (ExecuteScalar(wxS("SELECT * FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'")) > 1)
+	if (ExecuteScalar(wxS("SELECT COUNT(*) FROM " + GetActiveStrgTable() + " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%'")) > 1)
 	{
 		m_rs = ExecuteQuery(wxS("SELECT * FROM " + GetActiveStrgTable()
 			+ " WHERE Code = '" + info.code + "' AND Date LIKE '%" + info.date.Mid(0, 7) + "%' ORDER BY " + m_storageColumns[DB_COLUMN_STRUCTURAL_POD10] + " ASC"));
