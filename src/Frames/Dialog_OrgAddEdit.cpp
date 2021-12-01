@@ -247,6 +247,8 @@ void Dialog_OrgAddEdit::OnCancel(wxCommandEvent& evt)
 		if (ask->GetReturnCode())
 		{
 			m_firstStartCanceled = true;
+			m_db.Restore("db.backup");
+			wxRemoveFile(wxGetCwd() + "/db.backup");
 			this->Close();
 		}
 		ask->Destroy();
@@ -307,7 +309,9 @@ void Dialog_OrgAddEdit::OnWasteListEdit(wxCommandEvent& evt)
 		codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
 		wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Норма образования:"));
 		staticWaste->SetForegroundColour(*wxBLACK);
-		wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY, m_wasteNormList->GetSelectedItemRef()->get()[1]);
+		wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString,
+			wxDefaultPosition, wxDefaultSize, 0L, utility::GetDoubleValidator(3, wxAtof(m_wasteNormList->GetSelectedItemRef()->get()[1])));
+
 
 		MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Отмена"), true, wxDefaultPosition, wxSize(70, 35));
 		btnNO->SetButtonLineColour(*wxWHITE);
@@ -378,7 +382,7 @@ void Dialog_OrgAddEdit::OnWasteListAdd(wxCommandEvent& evt)
 	wxTextCtrl* codeCtrl = new wxTextCtrl(main, wxID_ANY,wxEmptyString,wxDefaultPosition,wxDefaultSize,0L);
 	codeCtrl->AutoComplete(new CustomAutoComplete(dbTables::codes, DB_COLUMN_CODE));
 	wxStaticText* staticWaste = new wxStaticText(main, wxID_ANY, wxString::FromUTF8("Норма образования:"));
-	wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY);
+	wxTextCtrl* wasteCtrl = new wxTextCtrl(main, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0L, utility::GetDoubleValidator(3));
 	staticWaste->SetForegroundColour(*wxBLACK);
 	MaterialButton* btnNO = new MaterialButton(main, wxID_ANY, wxString::FromUTF8("Отмена"), true, wxDefaultPosition, wxSize(70, 35));
 	btnNO->SetButtonLineColour(*wxWHITE);
