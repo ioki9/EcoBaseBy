@@ -3,7 +3,10 @@
 #include <wx/pdfdoc.h>
 #include <wx/pdffontmanager.h>
 #include <wx/utils.h>
+#include <wx/wxsqlite3.h>
 #include <wx/busyinfo.h>
+#include <wx/listctrl.h>
+#include <optional>
 #include "MyBusyInfo.h"
 #include "../PDF/PDF_Main.h"
 #include "Dialog_cMainListEdit.h"
@@ -15,7 +18,8 @@
 #include "../Structs.h"
 #include "../Utility/CustomEvents.h"
 #include "../Utility/CustomAutoComplete.h"
-
+#include "../Controls/VirtualEntryDateList.h"
+#include "../Frames/Dialog_generic.h"
 
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSize(1024,600))
 {
@@ -253,6 +257,15 @@ void  cMain::initFormPDFPage()
 	btnFormPOD10->SetButtonLineColour(gui_MainColour);
 	btnFormPOD10->SetButtonFillColour(*wxWHITE);
 	btnFormPOD10->SetLabelColour(gui_MainColour);
+	MaterialButton* btnSetEntryDates = new MaterialButton(m_formPDFPanel, wxID_ANY, wxString::FromUTF8("ДАТЫ ВНЕСЕНИЯ"), 
+		true,wxDefaultPosition,wxSize(162,40));
+	btnSetEntryDates->SetButtonLineColour(gui_MainColour);
+	btnSetEntryDates->SetLabelColour(gui_MainColour);
+	btnSetEntryDates->SetTextFont(wxFontInfo(13).FaceName("Segoe UI").Bold());
+	wxBoxSizer* pod10BtnSizer = new wxBoxSizer(wxHORIZONTAL);
+	pod10BtnSizer->Add(btnFormPOD10, 0);
+	pod10BtnSizer->Add(btnSetEntryDates, 0,wxLEFT,40);
+
 
 	m_date1_pod10->SetRange(m_firstDate, m_lastDate);
 	m_date2_pod10->SetRange(m_firstDate, m_lastDate);
@@ -276,8 +289,10 @@ void  cMain::initFormPDFPage()
 	btnFormJournal->SetButtonLineColour(gui_MainColour);
 	btnFormJournal->SetButtonFillColour(*wxWHITE);
 	btnFormJournal->SetLabelColour(gui_MainColour);
+
 	m_date2_journal->SetRange(m_firstDate, m_lastDate);
 	m_date1_journal->SetRange(m_firstDate, m_lastDate);
+
 
 	mainSizer->Add(labelPOD9, 0, wxEXPAND | wxLEFT | wxTOP, 20);
 	mainSizer->Add(sizerPod9Row1, 0, wxLEFT | wxTOP, 20);
@@ -287,18 +302,20 @@ void  cMain::initFormPDFPage()
 	mainSizer->Add(labelPOD10, 0, wxEXPAND | wxLEFT | wxTOP, 20);
 	mainSizer->Add(sizerPod10Row1, 0, wxLEFT | wxTOP, 20);
 	mainSizer->AddSpacer(10);
-	mainSizer->Add(btnFormPOD10, 0, wxLEFT, 40);
+	mainSizer->Add(pod10BtnSizer, 0, wxLEFT, 40);
 	mainSizer->AddSpacer(30);
 	mainSizer->Add(labelJournal, 0, wxEXPAND | wxLEFT | wxTOP, 20);
 	mainSizer->Add(sizerJournalRow1, 0, wxLEFT | wxTOP, 20);
 	mainSizer->AddSpacer(10);
 	mainSizer->Add(btnFormJournal, 0, wxLEFT, 40);
 
-	btnFormPOD9->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFromPDFButton, this);
-	btnFormPOD10->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFromPDFButton, this);
-	btnFormJournal->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFromPDFButton, this);
+	btnFormPOD9->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFormPDFButton, this);
+	btnFormPOD10->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFormPDFButton, this);
+	btnFormJournal->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnFormPDFButton, this);
+	btnSetEntryDates->Bind(wxEVT_COMMAND_BUTTON_CLICKED, &cMain::OnPOD10EntryDateButton, this);
 	m_formPDFPanel->SetSizerAndFit(mainSizer);
 	m_formPDFPanel->SetScrollRate(5, 5);
+
 }
 
 void cMain::setAllMenuBtnInactive()
@@ -340,7 +357,7 @@ void cMain::OnSize(wxSizeEvent& evt)
 
 
 
-void cMain::OnFromPDFButton(wxCommandEvent& evt)
+void cMain::OnFormPDFButton(wxCommandEvent& evt)
 {
 	PDF_Main pdf;
 	wxString activeOrg{ Settings::getActiveOrgName() };
@@ -399,6 +416,83 @@ void cMain::OnFromPDFButton(wxCommandEvent& evt)
 	}
 	
 	
+}
+
+void cMain::OnPOD10EntryDateButton(wxCommandEvent& evt)
+{
+	Dialog_generic dlg(this, wxID_ANY, wxString::FromUTF8("Изменить дату внесения записи в ПОД10"),wxDefaultPosition,wxSize(450,400));
+	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+	dlg.SetProportions(1,5);
+	VirtualEntryDateList* list = new VirtualEntryDateList(dlg.GetMain(), m_dataBase, wxDefaultPosition, wxSize(300, 240));
+	MaterialButton* btn_listChange = new MaterialButton(dlg.GetMain(), wxID_ANY, wxString::FromUTF8("Изменить"), true, wxDefaultPosition, wxSize(80, 30));
+	btn_listChange->SetButtonLineColour(gui_MainColour);
+	btn_listChange->SetLabelColour(gui_MainColour);
+	btn_listChange->SetTextFont(wxFontInfo(11).FaceName("Segoe UI Semibold"));
+	wxBoxSizer* listSizer = new wxBoxSizer(wxHORIZONTAL);
+	listSizer->Add(list, 1, wxRIGHT, 10);
+	listSizer->Add(btn_listChange, 0);
+	MaterialButton* acceptButton = new MaterialButton(dlg.GetMain(), wxID_ANY, wxString::FromUTF8("ЗАКРЫТЬ"), false, wxDefaultPosition, wxSize(120, 40));
+	acceptButton->SetLabelColour(*wxWHITE);
+	acceptButton->SetButtonColour(gui_MainColour);
+	sizer->Add(listSizer,1,wxTOP | wxLEFT | wxBOTTOM,15);
+	sizer->Add(acceptButton, 0, wxALIGN_RIGHT | wxBOTTOM | wxRIGHT,15 );
+	dlg.GetMain()->SetSizer(sizer);
+	acceptButton->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&](wxCommandEvent& evt) { 
+		dlg.Close();
+		this->Refresh();
+		});
+	btn_listChange->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&](wxCommandEvent& evt) {
+		if (list->GetSelectedItemRef() != std::nullopt)
+		{
+			Dialog_generic dateDlg(&dlg, wxID_ANY, wxString::FromUTF8("Введите дату внесения записи"), wxDefaultPosition, wxSize(300, 150), true);
+			dateDlg.SetProportions(1,3);
+			wxStaticText* staticDate = new wxStaticText(dateDlg.GetMain(), wxID_ANY, wxString::FromUTF8("Дата внесения:"));
+			staticDate->SetForegroundColour(*wxBLACK);
+			wxDateTime currentDate = wxDateTime::Now();
+			if (list->GetSelectedItemRef()->get()[1] != "")
+				currentDate.ParseFormat(list->GetSelectedItemRef()->get()[1], wxS("%d.%m.%Y"));
+			wxDatePickerCtrl* dateCtrl = new wxDatePickerCtrl(dateDlg.GetMain(), wxID_ANY, currentDate, wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
+			wxBoxSizer* dateSizer = new wxBoxSizer(wxHORIZONTAL);
+			dateSizer->Add(staticDate,0,wxLEFT,15);
+			dateSizer->Add(dateCtrl, 0,wxLEFT,15);
+
+			MaterialButton* btnNO = new MaterialButton(dateDlg.GetMain(), wxID_ANY, wxString::FromUTF8("Отмена"), true, wxDefaultPosition, wxSize(70, 35));
+			btnNO->SetButtonLineColour(*wxWHITE);
+			btnNO->SetLabelColour(wxColour(90, 90, 90));
+			btnNO->SetButtonShadow(false);
+			btnNO->SetTextFont(wxFontInfo(13).FaceName("Segoe UI").Bold());
+			MaterialButton* btnYES = new MaterialButton(dateDlg.GetMain(), wxID_ANY, wxString::FromUTF8("Применить"), true, wxDefaultPosition, wxSize(95, 35));
+			btnYES->SetButtonLineColour(*wxWHITE);
+			btnYES->SetLabelColour(gui_MainColour);
+			btnYES->SetButtonShadow(false);
+			btnYES->SetTextFont(wxFontInfo(13).FaceName("Segoe UI").Bold());
+			wxBoxSizer* btnSizer = new wxBoxSizer(wxHORIZONTAL);
+
+			btnSizer->Add(btnYES, 0, wxRIGHT, 15);
+			btnSizer->Add(btnNO, 0, wxRIGHT);
+
+			wxBoxSizer* mSizer = new wxBoxSizer(wxVERTICAL);
+			mSizer->AddSpacer(20);
+			mSizer->Add(dateSizer);
+			mSizer->AddSpacer(10);
+			mSizer->Add(btnSizer,0,wxALIGN_RIGHT | wxRIGHT,5);
+			dateDlg.GetMain()->SetSizer(mSizer);
+
+			btnNO->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&](wxCommandEvent& evt) {dateDlg.Close(); dlg.Refresh(); });
+			btnYES->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&](wxCommandEvent& evt) {
+				list->EditSelectedEntryDate(dateCtrl->GetValue().Format(wxS("%Y.%m.%d")));
+				dateDlg.Close(); 
+				dlg.Refresh();
+					});
+			btnNO->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_HAND); });
+			btnNO->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_DEFAULT); });
+			btnYES->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_HAND); });
+			btnYES->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_DEFAULT); });
+			dateDlg.ShowModal();
+		}
+		});
+	dlg.ShowModal();
+
 }
 
 void cMain::initNewOrgPage()

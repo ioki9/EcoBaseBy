@@ -58,7 +58,7 @@ void PDF_Journal::drawTable()
 	int dateDiff{ 0 };
 
 	rowData.reserve(10);
-	for (int row{ 0 }; row < m_data.date.GetCount(); ++row)
+	for (size_t row{ 0 }; row < m_data.date.GetCount(); ++row)
 	{
 		if (m_data.amountTransferUsed[row] != 0.0)
 			m_amUsed = m_data.amountTransferUsed[row];
@@ -87,7 +87,7 @@ void PDF_Journal::drawTable()
 		else
 			m_precision = 3;
 
-		if(row!=0)
+		if (row != 0)
 			lastResultDate = utility::convertDate(m_data.date[row-1]);
 		newDate = utility::convertDate(m_data.date[row]);
 		if (compareDates(lastResultDate, newDate) != 0)

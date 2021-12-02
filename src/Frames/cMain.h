@@ -22,8 +22,6 @@ class cMain : public wxFrame
 public:
 	cMain();
 	~cMain();
-	void tryEvent(wxCommandEvent& evt);
-
 
 private:
 
@@ -90,7 +88,8 @@ private:
 	void OnListDeleteButton(wxCommandEvent& evt);
 	void PostOrgEvents(wxCommandEvent& evt);
 	void OnDbChange(wxCommandEvent& evt);
-	void OnFromPDFButton(wxCommandEvent& evt);
+	void OnFormPDFButton(wxCommandEvent& evt);
+	void OnPOD10EntryDateButton(wxCommandEvent& evt);
 	void OnSize(wxSizeEvent& evt);
 
 

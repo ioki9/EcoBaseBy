@@ -25,9 +25,9 @@ target_sources(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/resource/Eco
     foreach(LANG C CXX RC)
         set(CMAKE_${LANG}_STANDARD_INCLUDE_DIRECTORIES ${CUSTOM_INCLUDE_DIRECTORIES})
     endforeach()
-target_link_libraries(${PROJECT_NAME} PRIVATE wxWidgets wxSQLite3Lib wxPDFDocLib)
+    target_link_libraries(${PROJECT_NAME} PRIVATE wxWidgets wxSQLite3Lib wxPDFDocLib)
 else()
-target_link_libraries(${PROJECT_NAME} PRIVATE wxWidgets "/usr/local/lib/lib${wxSQLiteLibName}.a" "/usr/local/lib/lib${wxPDFLibName}.a")
+    target_link_libraries(${PROJECT_NAME} PRIVATE wxWidgets "/usr/local/lib/lib${wxSQLiteLibName}.a" "/usr/local/lib/lib${wxPDFLibName}.a")
 endif()
 target_link_directories(${PROJECT_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/3rd/wxpdfdoc/lib/fonts" PRIVATE ${PROJECT_BINARY_DIR})
 

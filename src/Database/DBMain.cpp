@@ -1873,6 +1873,33 @@ void DBMain::getCodeInfoList(std::vector<std::vector<wxString>>& list)
 		list[count].push_back(m_rs.GetAsString(m_codeInfoColumns[DB_COLUMN_WASTE_NORM]));
 		count++;
 	}
+	m_rs.Finalize();
+}
+
+void DBMain::getEntryDateList(std::vector<std::vector<wxString>>& list)
+{
+	m_rs = ExecuteQuery(wxS("SELECT " + m_storageColumns[DB_COLUMN_DATE] + ", " + m_storageColumns[DB_COLUMN_ENTRYDATE] + " FROM " + GetActiveStrgTable() 
+		+ " WHERE id IN (SELECT MIN(id) FROM " + GetActiveStrgTable() + " GROUP BY " + m_storageColumns[DB_COLUMN_DATE] + ")"));
+	int count{ 0 };
+
+	while (m_rs.NextRow())
+	{
+		list.push_back(std::vector<wxString>());
+		list[count].push_back(m_rs.GetAsString(0));
+		if (m_rs.GetDate(1) != wxInvalidDateTime)
+			list[count].push_back(m_rs.GetDate(1).Format(wxS("%d.%m.%Y")));
+		else
+			list[count].push_back("");
+		count++;
+	}
+	m_rs.Finalize();
+}
+
+bool DBMain::editEntryDate(const wxString& date, const wxString& newEntryDate)
+{
+	ExecuteUpdate(wxS("UPDATE " + GetActiveStrgTable() + " SET "
+		+ m_storageColumns[DB_COLUMN_ENTRYDATE] + " = '" + newEntryDate + "' WHERE " + m_storageColumns[DB_COLUMN_DATE] + " = '" + date + "'"));
+	return true;
 }
 
 void DBMain::getInitStorageList(std::vector<std::vector<wxString>>& list)
@@ -2233,7 +2260,7 @@ bool DBMain::DeleteCodeInfoEntry(const wxString& code)
 bool DBMain::EditCodeInfoEntry(const wxString& oldCode,const wxString& code, const wxString& wasteNorm)
 {
 	Begin();
-	m_rs = ExecuteQuery(wxS(" SELECT * FROM " + GetActiveCodeInfoTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + "= '" + oldCode + "'"));
+	m_rs = ExecuteQuery(wxS(" SELECT * FROM " + GetActiveCodeInfoTable() + " WHERE " + m_codeInfoColumns[DB_COLUMN_CODE] + " = '" + oldCode + "'"));
 	if (m_rs.NextRow())
 	{
 		m_rs.Finalize();

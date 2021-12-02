@@ -94,6 +94,8 @@ public:
 
 	void getInitStorageList(std::vector<std::vector<wxString>>& list);
 	void getCodeInfoList(std::vector<std::vector<wxString>>& list);
+	void getEntryDateList(std::vector<std::vector<wxString>>& list);
+	bool editEntryDate(const wxString& date, const wxString& newEntryDate);
 	int getCodeInfoRowAmount();
 	wxString GetWasteNormByCode(const wxString& code);
 

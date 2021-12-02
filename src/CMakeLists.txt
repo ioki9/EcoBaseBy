@@ -11,6 +11,7 @@ set(SRC_LIST
 	${SOURCE_DIR}/PDF/PDF_Main.h ${SOURCE_DIR}/PDF/PDF_Pod9.cpp
 	${SOURCE_DIR}/PDF/PDF_Pod9.h ${SOURCE_DIR}/PDF/PDF_Pod10.cpp 
 	${SOURCE_DIR}/PDF/PDF_Pod10.h ${SOURCE_DIR}/Frames/Add_panel.h 
+	${SOURCE_DIR}/Frames/Dialog_generic.cpp ${SOURCE_DIR}/Frames/Dialog_generic.h
 	${SOURCE_DIR}/Frames/Add_panel.cpp ${SOURCE_DIR}/Frames/cApp.cpp 
 	${SOURCE_DIR}/Frames/cApp.h ${SOURCE_DIR}/Frames/cMain.cpp 
 	${SOURCE_DIR}/Frames/cMain.h ${SOURCE_DIR}/Frames/Dialog_ask.cpp 
@@ -33,6 +34,8 @@ set(SRC_LIST
 	${SOURCE_DIR}/Controls/VirtualListCtrl.h ${SOURCE_DIR}/Controls/VirtualOrgList.cpp 
 	${SOURCE_DIR}/Controls/VirtualOrgList.h ${SOURCE_DIR}/Controls/VirtualStrgInitList.cpp 
 	${SOURCE_DIR}/Controls/VirtualStrgInitList.h ${SOURCE_DIR}/Controls/myGridLabelsEnum.h
+	${SOURCE_DIR}/Controls/VirtualEntryDateList.h ${SOURCE_DIR}/Controls/VirtualEntryDateList.cpp
+	
 )
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}Config.h.in" "${CMAKE_CURRENT_SOURCE_DIR}/src/${PROJECT_NAME}Config.h")
 
