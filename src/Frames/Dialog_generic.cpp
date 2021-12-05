@@ -19,6 +19,7 @@ Dialog_generic::Dialog_generic(wxWindow* parent, wxWindowID id, const wxString& 
 	m_headerSizer->Add(m_headerText, 0, wxALIGN_CENTER_VERTICAL | wxLEFT, 10);
 	m_headerPanel->SetSizer(m_headerSizer);
 	m_mainPanel = new wxPanel(m_dlgPanel);
+	m_mainPanel->SetBackgroundColour(*wxWHITE);
 	m_mainSizer = new wxBoxSizer(wxVERTICAL);
 	m_mainSizer->Add(m_headerPanel, m_headerProportion, wxEXPAND);
 	m_mainSizer->Add(m_mainPanel, m_mainPanelProportion, wxEXPAND);
