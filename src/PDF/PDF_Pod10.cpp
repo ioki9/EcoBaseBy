@@ -7,7 +7,7 @@ void PDF_Pod10::createDoc(const wxString &startDate, const wxString& endDate, co
     
     if (!wxDirExists(Settings::GetPdfSavePath() + "/" + wxString::FromUTF8(orgName)))
         wxFileName::Mkdir(Settings::GetPdfSavePath() + "/" + orgName, wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
-    m_dataBase = new DBMain();
+    m_dataBase = std::make_unique<DBMain>();
     m_dataBase->getPod10TableCount(m_data, startDate, endDate);
     int tableCount{ m_data.tableCount };
     int nextTable{ 0 };
@@ -242,64 +242,60 @@ void PDF_Pod10::drawTableSignature()
     {
         AddPage();
     }
- 
-        
 }
 
 wxString PDF_Pod10::convertDateToMonthString(const wxString &date)
 {
-    
     wxString year = date.Mid(0, 4);
     wxString month = date.Mid(5, 2);
-    wxString newDate;
     if (month == "01")
     {
-        newDate = wxString::FromUTF8("Январь " + year + "г.");
+        return wxString::FromUTF8("Январь " + year + "г.");
     }
     else if (month == "02")
     {
-        newDate = wxString::FromUTF8("Февраль " + year + "г.");
+        return wxString::FromUTF8("Февраль " + year + "г.");
     }
     else if (month == "03")
     {
-        newDate = wxString::FromUTF8("Март " + year + "г.");
+        return wxString::FromUTF8("Март " + year + "г.");
     }
     else if (month == "04")
     {
-        newDate = wxString::FromUTF8("Апрель " + year + "г.");
+        return wxString::FromUTF8("Апрель " + year + "г.");
     }
     else if (month == "05")
     {
-        newDate = wxString::FromUTF8("Май " + year + "г.");
+        return wxString::FromUTF8("Май " + year + "г.");
     }
     else if (month == "06")
     {
-        newDate = wxString::FromUTF8("Июнь " + year + "г.");
+        return wxString::FromUTF8("Июнь " + year + "г.");
     }
     else if (month == "07")
     {
-        newDate = wxString::FromUTF8("Июль " + year + "г.");
+        return wxString::FromUTF8("Июль " + year + "г.");
     }
     else if (month == "08")
     {
-        newDate = wxString::FromUTF8("Август " + year + "г.");
+        return wxString::FromUTF8("Август " + year + "г.");
     }
     else if (month == "09")
     {
-        newDate = wxString::FromUTF8("Сентябрь " + year + "г.");
+        return wxString::FromUTF8("Сентябрь " + year + "г.");
 
     }
     else if (month == "10")
     {
-        newDate = wxString::FromUTF8("Октябрь " + year + "г.");
+        return wxString::FromUTF8("Октябрь " + year + "г.");
     }
     else if (month == "11")
     {
-        newDate = wxString::FromUTF8("Ноябрь " + year + "г.");
+        return wxString::FromUTF8("Ноябрь " + year + "г.");
     }
     else if (month == "12")
     {
-        newDate = wxString::FromUTF8("Декабрь " + year + "г.");
+        return wxString::FromUTF8("Декабрь " + year + "г.");
     }
-    return newDate;
+    return "";
 }

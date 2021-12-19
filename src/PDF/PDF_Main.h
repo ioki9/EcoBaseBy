@@ -13,7 +13,7 @@ public:
 	}
 	~PDF_Main();
 private:
-	DBMain *m_dataBase = new DBMain;
+	std::unique_ptr<DBMain> m_dataBase = std::make_unique<DBMain>();
 	wxString formatToYMD(wxDateTime date);
 protected:
 	

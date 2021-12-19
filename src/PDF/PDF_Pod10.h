@@ -15,13 +15,13 @@ public:
 		SetMargins(10.0, 5.0, 10.0);
 		SetAutoPageBreak(1,5.0);
 	}
-	~PDF_Pod10() { delete m_dataBase; };
+	~PDF_Pod10() { };
 private:
 	wxFont font{ 12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL, false, "Times New Roman", wxFONTENCODING_CP1251 };
 	pod10Info m_data;
 	int m_precision{ };
 	bool m_tableLast{ 0 };
-	DBMain *m_dataBase;
+	std::unique_ptr<DBMain> m_dataBase;
 protected:
 
 	void drawTableSignature();

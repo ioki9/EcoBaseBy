@@ -9,11 +9,23 @@ vector<organization> Settings::m_organizations{};
 int Settings::m_activeUnitID = -1;
 int Settings::m_lastAddedOrgID = -1;
 wxString Settings::m_pdfSavePath{""};
+long Settings::m_timeElapsed{ -1 };
 std::int32_t Settings::m_gridActiveColumns = 0xffffffff;
 
 //we need to reinitialize our members since they can't be reassigned and we need to wait for wxwidgets to get initialized first
 void Settings::initAllVar()
 {
+}
+
+void Settings::SaveTimeElapsed(wxLongLong timeElapsed, long maxTimeElapsed)
+{
+	wxFileInputStream iStream(Settings::GetCfgFile());
+	wxFileConfig pConfig(iStream);
+	m_timeElapsed = ((m_timeElapsed + timeElapsed.ToLong()) % maxTimeElapsed);
+	pConfig.Write(wxS("timeElapsed"), m_timeElapsed);
+	pConfig.SetPath(wxS("/"));
+	wxFileOutputStream out(Settings::GetCfgFile());
+	pConfig.Save(out);
 }
 
 vector<organization>* Settings::GetOrgArrayPtr()
@@ -221,6 +233,7 @@ void Settings::LoadState()
 	wxFileConfig pConfig(iStream);
 	pConfig.Read(wxS("pdfSavePath"), &m_pdfSavePath, wxGetCwd() + "/Documents");
 	pConfig.Read(wxS("activeColumns"), &m_gridActiveColumns, 0xffffffff);
+	pConfig.Read(wxS("timeElapsed"), &m_timeElapsed, 0);
 	m_organizations = Settings::getAllOrgAndUnitNames();
 	pConfig.SetPath(wxS("/organizations"));
 	pConfig.Read(wxS("active"), &m_activeOrgID, -1);

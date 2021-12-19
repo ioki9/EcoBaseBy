@@ -3,6 +3,7 @@ set(SRC_LIST
 	${SOURCE_DIR}/Structs.h ${SOURCE_DIR}/Settings.cpp ${SOURCE_DIR}/Settings.h 
 	${SOURCE_DIR}/GUI_parameters.h ${SOURCE_DIR}/Utility/CustomAutoComplete.cpp 
 	${SOURCE_DIR}/Utility/CustomAutoComplete.h ${SOURCE_DIR}/Utility/CustomCodeValidator.cpp 
+	${SOURCE_DIR}/Utility/BackupDbTimer.h ${SOURCE_DIR}/Utility/BackupDbTimer.cpp 
 	${SOURCE_DIR}/Utility/CustomCodeValidator.h ${SOURCE_DIR}/Utility/CustomEvents.cpp 
 	${SOURCE_DIR}/Utility/CustomEvents.h ${SOURCE_DIR}/Utility/Utility.cpp 
 	${SOURCE_DIR}/Utility/Utility.h ${SOURCE_DIR}/PDF/PDF_Helper.cpp
@@ -18,7 +19,7 @@ set(SRC_LIST
 	${SOURCE_DIR}/Frames/Dialog_ask.h ${SOURCE_DIR}/Frames/Dialog_cMainListEdit.cpp 
 	${SOURCE_DIR}/Frames/Dialog_cMainListEdit.h ${SOURCE_DIR}/Frames/Dialog_ListColumnSelect.cpp 
 	${SOURCE_DIR}/Frames/Dialog_ListColumnSelect.h ${SOURCE_DIR}/Frames/Dialog_OrgAddEdit.cpp  
-	${SOURCE_DIR}/Frames/Dialog_OrgAddEdit.h ${SOURCE_DIR}/Frames/MyBusyInfo.cpp 
+	${SOURCE_DIR}/Frames/Dialog_OrgAddEdit.h ${SOURCE_DIR}/Frames/MyBusyInfo.cpp
 	${SOURCE_DIR}/Frames/MyBusyInfo.h ${SOURCE_DIR}/Frames/MyScrolledWindow.cpp 
 	${SOURCE_DIR}/Frames/MyScrolledWindow.h ${SOURCE_DIR}/Frames/Settings_page.cpp 
 	${SOURCE_DIR}/Frames/Settings_page.h ${SOURCE_DIR}/Database/DBMain.cpp 

@@ -4,7 +4,6 @@
 
 PDF_Main::~PDF_Main()
 {
-	delete m_dataBase;
 }
 
 wxString PDF_Main::formatToYMD(wxDateTime date)

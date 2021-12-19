@@ -20,7 +20,6 @@ public:
     CustomAutoComplete(CustomAutoComplete&& a) noexcept;
     ~CustomAutoComplete();
     void onChar(wxKeyEvent& evt);
-    wxDECLARE_EVENT_TABLE();
 private:
     DBMain m_db{};
     int m_columnEnum{};

@@ -103,7 +103,7 @@ void Dialog_ListColumnSelect::OnApply(wxMouseEvent& evt)
 	}
 	if (dlg_activeColFlags == 0x000000000)
 	{
-		wxMessageBox(wxString::FromUTF8("Ошибка: хотя бы 1 столбец должен быть активным."));
+		wxMessageBox(wxString::FromUTF8("Ошибка: 1 или более столбцов должны быть активными."));
 		return;
 	}
 	wxCommandEvent sndEvet(EVT_GRID_ACTIVE_COL_CHANGE);

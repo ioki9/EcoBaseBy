@@ -12,7 +12,7 @@
 #include "Settings_page.h"
 #include "Add_panel.h"
 #include "../Database/DBMain.h"
-
+#include "../Utility/BackupDbTimer.h"
 
 
 
@@ -25,15 +25,24 @@ public:
 
 private:
 
+	std::unique_ptr<BackupDbTimer> m_dbTimer = nullptr;
 
-	DBMain* m_dataBase = new DBMain();
+	//those are for database backup timer
+	int m_timerInterval{};
+	long m_maxTimerInterval{};
+	unsigned char m_dbOperationCount{};
+	wxDateTime m_appStartTime;
+	//_____________
+
+
+	std::unique_ptr <DBMain> m_dataBase = std::make_unique<DBMain>();
 
 	//LIST PANEL
 	wxPanel* m_listPanel = nullptr;
 	wxPanel* m_listTopPanel = nullptr;
 	wxPanel* m_listBottomPanel = nullptr;
-	MaterialButton* m_deleteButton;
-	wxBoxSizer* m_listMainSizer;
+	MaterialButton* m_deleteButton = nullptr;
+	wxBoxSizer* m_listMainSizer = nullptr;
 	myGridTable* m_grid = nullptr;
 	void initListPanel();
 	void OnOrgChanged(wxCommandEvent& evt);
@@ -41,10 +50,10 @@ private:
 	void OnUnitSelect(wxCommandEvent& evt);
 	void UpdateOrgChoices();
 	//MENU PANEL
-	wxChoice* m_orgChoice;
-	wxChoice* m_unitChoice;
-	wxStaticText* m_unitText;
-	wxStaticText* m_orgText;
+	wxChoice* m_orgChoice = nullptr;
+	wxChoice* m_unitChoice = nullptr;
+	wxStaticText* m_unitText = nullptr;
+	wxStaticText* m_orgText = nullptr;
 	wxPanel* m_mainMenu = nullptr;
 	wxWindow* m_activePanel = nullptr;
 	MainMenuTabButton* m_menuButtonList = nullptr;

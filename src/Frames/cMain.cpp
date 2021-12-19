@@ -21,6 +21,7 @@
 #include "../Controls/VirtualEntryDateList.h"
 #include "../Frames/Dialog_generic.h"
 
+
 cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSize(1024,600))
 {
 	SetIcons(wxIconBundle(wxGetCwd() + "/EcoIcon.ico"));
@@ -38,6 +39,15 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSi
 		dlg->Destroy();
 	}
 	wxPdfFontManager::GetFontManager()->RegisterFontDirectory(wxGetCwd() + "/Fonts");
+	//database backup logic
+	if (!wxDirExists(wxGetCwd() + "/Backup"))
+		wxFileName::Mkdir(wxGetCwd() + "/Backup", wxS_DIR_DEFAULT, wxPATH_MKDIR_FULL);
+	m_timerInterval = 600000;
+	m_maxTimerInterval = 7200000;
+	m_dbTimer = std::make_unique<BackupDbTimer>(Settings::getTimeElapsed(), m_timerInterval, m_maxTimerInterval);
+	m_appStartTime = wxDateTime::Now();
+
+
 	this->SetMinClientSize(wxSize(660, 480));
 	Center();
 	this->initListPanel();
@@ -58,6 +68,7 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSi
 	this->Bind(EVT_ORGANIZATION_CHANGED, &cMain::OnOrgChanged,this);
 	this->Bind(wxEVT_SIZE, &cMain::OnSize, this);
 	this->Bind(EVT_DATABASE_CHANGED, &cMain::OnDbChange, this);
+	//save database copy on exit logic
 	this->Bind(wxEVT_CLOSE_WINDOW, [&](wxCloseEvent& evt)
 		{
 			Dialog_ask* ask = new Dialog_ask(this, wxString::FromUTF8("Сохранение базы данных"), 
@@ -66,25 +77,34 @@ cMain::cMain() : wxFrame(nullptr, wxID_ANY, "EcoBaseBy", wxDefaultPosition, wxSi
 			Refresh();
 			if (ask->GetReturnCode())
 			{
-				wxDirDialog* dirDlg = new wxDirDialog(this, wxString::FromUTF8("Путь сохранения базы данных"), wxGetCwd(),
-					wxDD_DEFAULT_STYLE | wxDD_DIR_MUST_EXIST);
-				dirDlg->ShowModal();
-				wxCopyFile(wxGetCwd() + "/passport_data.db", dirDlg->GetPath() + "/passport_data.db");
-				dirDlg->Destroy();
+				wxFileDialog openFileSave(ask, wxString::FromUTF8("Путь сохранения базы данных"), wxGetCwd(), 
+					wxEmptyString, "Database (*.db)|*.db", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+				while (openFileSave.ShowModal() == wxID_OK)
+				{
+					if (openFileSave.GetPath() == (wxGetCwd() + "/passport_data.db") || openFileSave.GetPath() == (wxGetCwd() + "\\passport_data.db"))
+					{
+						wxMessageBox(wxString::FromUTF8("Ошибка: перезапись основного файла базы данных привдет к ее повреждению."
+							"Пожалуйста, выберите другой путь или имя файла."));
+					}
+					else
+					{
+						wxCopyFile(wxGetCwd() + "/passport_data.db", openFileSave.GetPath(), 1);
+						break;
+					}
+				}		
 			}
 			ask->Destroy();
 			evt.Skip();
-
 		});
 	
 }
 
 cMain::~cMain()
 {
-	delete m_dataBase;
-	utility::ClearVars();
+	wxTimeSpan time;
+	time = wxDateTime::Now().Subtract(m_appStartTime);
+	Settings::SaveTimeElapsed(time.GetMilliseconds(), m_maxTimerInterval);
 	Settings::SaveState();
-
 }
 
 void cMain::initListPanel()
@@ -423,7 +443,7 @@ void cMain::OnPOD10EntryDateButton(wxCommandEvent& evt)
 	Dialog_generic dlg(this, wxID_ANY, wxString::FromUTF8("Изменить дату внесения записи в ПОД10"),wxDefaultPosition,wxSize(450,400));
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	dlg.SetProportions(1,5);
-	VirtualEntryDateList* list = new VirtualEntryDateList(dlg.GetMain(), m_dataBase, wxDefaultPosition, wxSize(300, 240));
+	VirtualEntryDateList* list = new VirtualEntryDateList(dlg.GetMain(), m_dataBase.get(), wxDefaultPosition, wxSize(300, 240));
 	MaterialButton* btn_listChange = new MaterialButton(dlg.GetMain(), wxID_ANY, wxString::FromUTF8("Изменить"), true, wxDefaultPosition, wxSize(80, 30));
 	btn_listChange->SetButtonLineColour(gui_MainColour);
 	btn_listChange->SetLabelColour(gui_MainColour);
@@ -585,9 +605,9 @@ void cMain::OnListDeleteButton(wxCommandEvent& evt)
 			addPageInfo m_record;
 			m_grid->getSelectedRowData(m_record);
 			m_dataBase->deleteEntry(m_record);
+			wxPostEvent(this, wxCommandEvent(EVT_DATABASE_CHANGED));
 		}
 		askDlg->Destroy();
-		m_grid->updateGrid();
 		Refresh();
 	}
 }
@@ -667,6 +687,9 @@ void cMain::PostOrgEvents(wxCommandEvent& evt)
 
 void cMain::OnDbChange(wxCommandEvent& evt)
 {
+	m_dbOperationCount++;
+	if(m_dbOperationCount>=30)
+		wxCopyFile(wxGetCwd() + "/passport_data.db", wxGetCwd() + "/Backup/databackup-30operations.db", 1);
 	m_grid->updateGrid();
 	m_firstDate = m_dataBase->getFirstEntryDate();
 	m_lastDate = m_dataBase->getLastEntryDate();

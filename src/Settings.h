@@ -26,6 +26,7 @@ public:
 	static int getActiveOrg();
 	static bool setActiveUnit(int unitID, wxWindow* receiver);
 	static int getActiveUnitID();
+	static long getTimeElapsed() { return m_timeElapsed; }
 	static wxString getActiveUnitString();
 	static wxString getActiveOrgName();
 	static void addNewOrg(const organization& org);
@@ -44,17 +45,16 @@ public:
 	static std::int32_t GetGridActiveCol();
 	static void SaveGridActiveCol(std::int32_t activeCol);
 	static void initAllVar();
-
+	static void SaveTimeElapsed(wxLongLong timeElapsed, long maxTimeElapsed);
 private:
 	static wxString GetCfgFile();
-	//static wxFileConfig* pConfig;
-	//static wxFileInputStream* cfgInStream;
 	static wxString m_pdfSavePath;
 	static wxString m_activeOrgName;
 	static int m_activeOrgID;
 	static bool m_isInitialized;
 	static int m_lastAddedOrgID;
 	static int m_activeUnitID;
+
 	static void SendEventOrgChanged(wxWindow* receiver);
 	static void SendEventActiveOrgChanged(wxWindow* receiver);
 	static void SendEventActiveUnitChanged(wxWindow* receiver);
@@ -63,7 +63,7 @@ private:
 	static std::vector<organization> getAllOrgAndUnitNames();
 
 	static std::int32_t m_gridActiveColumns;
-
+	static long m_timeElapsed;
 	Settings() {};
 };
 

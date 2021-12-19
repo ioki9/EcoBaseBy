@@ -7,7 +7,7 @@ set(CXX_)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-project ("EcoBaseBy" VERSION 0.1.1)
+project ("EcoBaseBy" VERSION 0.1.2)
 
 
 include("${CMAKE_CURRENT_SOURCE_DIR}/3rd/CMakeLists.txt")

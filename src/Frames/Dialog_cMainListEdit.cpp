@@ -533,7 +533,7 @@ void Dialog_cMainListEdit::OnApply(wxMouseEvent& evt)
 		}
 	}
 
-	wxPostEvent(GetParent(), wxCommandEvent(EVT_DATABASE_CHANGED));
+	
 	info.oldDate = m_record.date;
 	info.oldCode = m_record.code;
 	info.dependency = m_record.dependency;
@@ -546,7 +546,7 @@ void Dialog_cMainListEdit::OnApply(wxMouseEvent& evt)
 	{
 		db.editEntry(info, false);
 	}
-
+	wxPostEvent(GetParent(), wxCommandEvent(EVT_DATABASE_CHANGED));
 	this -> Close();
 }
 

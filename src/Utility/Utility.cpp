@@ -85,7 +85,7 @@ namespace {
 		}
 	};
 	
-	const u_pattern_list* pattern_list;
+	std::unique_ptr<u_pattern_list> pattern_list;
 
 }
 
@@ -93,7 +93,7 @@ namespace {
 wxString utility::Hyphenate(const wxString &word)
 {
 	if(!pattern_list)
-		pattern_list = new u_pattern_list();
+		pattern_list = std::make_unique<u_pattern_list>();
 
 	wxString word_string{ "." + word + "." };
 	wxString word_levels{};
@@ -103,7 +103,7 @@ wxString utility::Hyphenate(const wxString &word)
 	for (size_t ch{ 1 }; ch < word_string.size() - 2; ++ch) //word
 	{
 		std::vector<u_pattern*>::const_iterator pattern_iter = pattern_list->list.begin();
-
+		std::vector<u_pattern*>::const_iterator pattern_iter_end = pattern_list->list.end();
 		for (size_t count{ 1 }; count <= word_string.size() - ch; ++count) //word pattern
 		{
 			u_pattern word_pattern;
@@ -111,7 +111,8 @@ wxString utility::Hyphenate(const wxString &word)
 			
 			if (pattern_compare(&word_pattern, *pattern_iter))
 				continue;
-			pattern_iter = std::lower_bound(pattern_iter, pattern_list->list.end(), &word_pattern, pattern_compare);
+
+			pattern_iter = std::lower_bound(pattern_iter, pattern_iter_end, &word_pattern, pattern_compare);
 			if (pattern_iter == pattern_list->list.end())
 				break;
 			if (!pattern_compare(&word_pattern, *pattern_iter))
@@ -171,12 +172,6 @@ wxFloatingPointValidator<double> utility::GetDoubleValidator(int precision, doub
 	validDoubleVal = initValue;
 	wxFloatingPointValidator<double> validDouble(precision, &validDoubleVal, wxNUM_VAL_ZERO_AS_BLANK | wxNUM_VAL_NO_TRAILING_ZEROES);
 	return validDouble;
-}
-
-void utility::ClearVars()
-{
-	if (pattern_list)
-		delete pattern_list;
 }
 
 
