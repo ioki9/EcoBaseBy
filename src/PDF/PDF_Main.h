@@ -3,7 +3,7 @@
 #include "PDF_Pod9.h"
 #include "PDF_Pod10.h"
 #include "PDF_Journal.h"
-
+#include <memory>
 
 class PDF_Main
 {

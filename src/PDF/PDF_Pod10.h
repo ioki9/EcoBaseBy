@@ -1,5 +1,6 @@
 #pragma once
 #include <wx/pdfdoc.h>
+#include <memory>
 #include "PDF_Main.h"
 #include "PDF_Helper.h"
 #include "../Structs.h"

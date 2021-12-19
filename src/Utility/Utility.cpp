@@ -3,7 +3,7 @@
 #include <wx/textfile.h>
 #include <wx/graphics.h>
 #include <string>
-
+#include <memory>
 #include "../Database/DBColumnEnums.h"
 
 

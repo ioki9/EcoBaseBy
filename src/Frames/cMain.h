@@ -5,6 +5,7 @@
 #include <string>
 #include <cstdint>
 #include <vector>
+#include <memory>
 #include "../Controls/MainMenuTabButton.h"
 #include "../Controls/myDirPicker.h"
 #include "../Controls/MaterialButton.h"
