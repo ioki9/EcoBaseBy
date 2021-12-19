@@ -19,7 +19,7 @@ Add_panel::Add_panel(wxWindow* parent)
 	:wxPanel(parent,wxID_ANY)
 {
 	SetDoubleBuffered(true);
-	if(wxPlatformInfo::Get().GetOperatingSystemId() == wxOS_UNIX)
+	if(wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_UNIX)
 		txtCtrlSize = wxSize(420, 40);
 	else
 		txtCtrlSize = wxSize(420, 30);

@@ -6,6 +6,7 @@
 #include <wx/wxsqlite3.h>
 #include <wx/busyinfo.h>
 #include <wx/listctrl.h>
+#include <wx/platinfo.h>
 #include <optional>
 #include "MyBusyInfo.h"
 #include "../PDF/PDF_Main.h"
@@ -464,7 +465,12 @@ void cMain::OnPOD10EntryDateButton(wxCommandEvent& evt)
 	btn_listChange->Bind(wxEVT_COMMAND_BUTTON_CLICKED, [&](wxCommandEvent& evt) {
 		if (list->GetSelectedItemRef() != std::nullopt)
 		{
-			Dialog_generic dateDlg(&dlg, wxID_ANY, wxString::FromUTF8("Введите дату внесения записи"), wxDefaultPosition, wxSize(300, 150), true);
+			int dlgHeight{};
+			if(wxPlatformInfo::Get().GetOperatingSystemId() & wxOS_UNIX)
+				dlgHeight = 200;
+			else
+				dlgHeight = 150;
+			Dialog_generic dateDlg(&dlg, wxID_ANY, wxString::FromUTF8("Введите дату внесения записи"), wxDefaultPosition, wxSize(300, dlgHeight), true);
 			dateDlg.SetProportions(1,3);
 			wxStaticText* staticDate = new wxStaticText(dateDlg.GetMain(), wxID_ANY, wxString::FromUTF8("Дата внесения:"));
 			staticDate->SetForegroundColour(*wxBLACK);
@@ -504,10 +510,10 @@ void cMain::OnPOD10EntryDateButton(wxCommandEvent& evt)
 				dateDlg.Close(); 
 				dlg.Refresh();
 					});
-			btnNO->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_HAND); });
-			btnNO->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_DEFAULT); });
-			btnYES->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_HAND); });
-			btnYES->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { SetCursor(wxCURSOR_DEFAULT); });
+			btnNO->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { SetCursor(wxCursor(wxCURSOR_HAND)); });
+			btnNO->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { SetCursor(wxCursor(wxCURSOR_DEFAULT)); });
+			btnYES->Bind(wxEVT_MOTION, [this](wxMouseEvent& evt) { SetCursor(wxCursor(wxCURSOR_HAND)); });
+			btnYES->Bind(wxEVT_LEAVE_WINDOW, [this](wxMouseEvent& evt) { SetCursor(wxCursor(wxCURSOR_DEFAULT)); });
 			dateDlg.ShowModal();
 		}
 		});
